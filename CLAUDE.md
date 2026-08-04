@@ -105,6 +105,22 @@ src/
 
 모바일 대응 필수. 지도 핀 툴팁의 링크는 탭 영역을 넉넉히.
 
+## 4개국어(i18n) 규칙
+
+- `react-i18next` + 정적 번역 파일: `src/i18n/ko.json / en.json / zh.json / ja.json` (중국어는 간체 zh-CN).
+- **런타임 자동번역(Google Translate 등) 절대 금지.** 모든 문자열은 사람이 작성한 번역으로 관리.
+- 언어 선택은 상단 네비 우측(KO/EN/中/日), URL 쿼리 `?lang=` 동기화, `<html lang>` 자동 변경. 브라우저 언어 자동 감지하되 사용자 선택 우선.
+- 데이터 파일(`alumni.js`, `awards.js`)의 항목별 번역은 `lang: { en/zh/ja: {...} }` 오버라이드 + `localizeField()` 헬퍼 사용.
+- **번역하지 않는 항목 (모든 언어에서 원문 유지)**: 논문 제목(SSCI 영문/KCI 국문 원제), 저널명, 사람 이름(한국어 화면은 한글+영문 병기, 그 외 영문 표기·영문 미확인자는 한글 유지), 기관 공식 영문명, 학위·직함 약어(Ph.D., SSCI, KCI, MSI, BK21 등).
+- 용어 통일은 `src/i18n/glossary.md` 용어집 기준. 확신 없는 번역은 원문 유지 + TODO (추측 번역 금지).
+- 키 무결성: `scripts/check-i18n.mjs`가 4개 파일의 키 일치를 검증하며 `npm run build`에 포함되어 있음. 번역 키 추가 시 4개 파일 모두 갱신할 것.
+
+## 논문 링크 규칙
+
+- 논문 카드 전체가 원문 링크 (`<a target="_blank">`). `paperUrl()` (`src/data/publications.js`) 사용.
+- DOI가 있으면 `https://doi.org/{doi}`, 없으면 폴백: KCI → KCI 포털 검색, SSCI → Google Scholar 검색.
+- **DOI를 추측해서 만들지 말 것.** 확인된 DOI만 `doi` 필드에 추가 (현재 10건 확인).
+
 ## 논문 섹션 규칙
 
 `키워드별 보기` / `저널별 보기` 토글 2개 + `전체 / SSCI / KCI` 타입 토글 (기본 `전체`).
@@ -166,6 +182,12 @@ src/
 | 김혜정 | Hyejeong Kim | 나규원 | 미확인 |
 | 윤여홍 | Yeohong Yoon | 김정현 | 미확인 |
 | 윤여림 | Yeo Lim Yoon | 오가령 | 미확인 |
+
+### 수상·연구비 (확정)
+
+수상 **정확히 23건**, 연구비 **7건** — `src/data/awards.js`에 전체 수록 (연도 내림차순, 반올림 금지).
+히어로 스탯 카드도 `수상 23건`으로 표기. 국제 수상 ★ 강조는 MSI Young Scholar(2015)·Buzzell MSI Best Paper(2013)·AMA TechSIG(2011)·Ackoff Award(2007–2009) 4건만.
+한국어 수상명의 영문 표기는 잠정 번역 — `// TODO: 공식 영문 명칭 확인 후 교체` (glossary.md 참고).
 
 ### ⚠️ 동명이인 경고 (중요)
 

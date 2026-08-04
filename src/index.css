@@ -36,6 +36,19 @@ body {
   overflow-x: hidden;
 }
 
+/* 언어별 폰트 및 줄바꿈 규칙 */
+html[lang="ko"] body {
+  word-break: keep-all;
+}
+html[lang="zh-CN"] body {
+  font-family: "Noto Sans SC", "Pretendard Variable", system-ui, sans-serif;
+  line-break: strict;
+}
+html[lang="ja"] body {
+  font-family: "Noto Sans JP", "Pretendard Variable", system-ui, sans-serif;
+  line-break: strict;
+}
+
 ::selection {
   background: rgba(47, 127, 242, 0.35);
 }

@@ -1,60 +1,63 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Reveal, SectionHeading } from "./common.jsx";
 import { AWARDS, GRANTS } from "../data/awards.js";
+import { localizeField } from "../i18n/index.js";
 
-function TimelineItem({ item, gold = false }) {
+const VISIBLE_COUNT = 8;
+
+// 프로필 섹션과 동일한 2단 나열 행
+function Row({ item, lng, star = false }) {
+  const title = localizeField(item, "title", lng);
+  const org = localizeField(item, "org", lng);
+  const period = localizeField(item, "period", lng) ?? item.year;
   return (
-    <li className="relative pl-8 pb-8 last:pb-0">
-      {/* 세로 라인 */}
-      <span className="absolute left-[5px] top-2 bottom-0 w-px bg-line" aria-hidden="true" />
-      {/* 노드 */}
-      <span
-        className={`absolute left-0 top-1.5 h-[11px] w-[11px] rounded-full border-2 ${
-          gold
-            ? "border-gold-400 bg-gold-500/30 shadow-[0_0_10px_rgba(217,178,92,0.4)]"
-            : "border-accent-400 bg-accent-500/30"
-        }`}
-        aria-hidden="true"
-      />
-      <p className="font-display text-xs tabular-nums text-ink-600 mb-1">
-        {item.year ?? item.period}
-      </p>
-      <p className="text-[15px] font-semibold text-ink-100 leading-snug">{item.title}</p>
-      {(item.org || item.note) && (
-        <p className="text-[13px] text-ink-500 mt-1">
-          {[item.org, item.note].filter(Boolean).join(" — ")}
-        </p>
-      )}
+    <li className="flex gap-3 text-sm py-2 border-b border-line/50 last:border-0">
+      <span className="font-display text-ink-600 tabular-nums shrink-0 w-32">{period}</span>
+      <span className="min-w-0">
+        <span className={star ? "text-ink-100 font-semibold" : "text-ink-100"}>
+          {star && (
+            <span className="text-gold-300 mr-1.5" aria-hidden="true">
+              ★
+            </span>
+          )}
+          {title}
+        </span>
+        {org && <span className="block text-[12px] text-ink-500 mt-0.5">{org}</span>}
+      </span>
     </li>
   );
 }
 
 export default function Awards() {
+  const { t, i18n } = useTranslation();
+  const lng = i18n.language;
   const [showAll, setShowAll] = useState(false);
-  const highlights = AWARDS.filter((a) => a.highlight);
-  const rest = AWARDS.filter((a) => !a.highlight);
+  const visible = showAll ? AWARDS : AWARDS.slice(0, VISIBLE_COUNT);
 
   return (
     <section id="awards" className="relative mx-auto max-w-6xl px-5 md:px-8 py-20 md:py-28">
       <SectionHeading
         index="05"
-        label="Trophy Room"
-        title="수상 & 연구비"
-        desc="세계 마케팅 학계가 인정한 수상 이력과, 장기간 이어져 온 대형 연구 지원."
+        label={t("sections.awards.label")}
+        title={t("sections.awards.title")}
+        desc={t("sections.awards.desc")}
       />
 
-      <div className="grid lg:grid-cols-2 gap-5">
+      <div className="grid lg:grid-cols-2 gap-5 items-start">
         {/* 수상 */}
         <Reveal>
-          <div className="h-full rounded-2xl border border-line bg-base-900/70 p-6 md:p-8">
-            <h3 className="font-display text-xs tracking-[0.25em] uppercase text-gold-300 mb-6">
-              Honors · 수상
+          <div className="rounded-2xl border border-line bg-base-900/70 p-6 md:p-8">
+            <h3 className="font-display text-xs tracking-[0.25em] uppercase text-gold-300 mb-4">
+              {t("awardsUI.awardsTitle")}
+              <span className="ml-2 rounded-full bg-base-800/80 px-2 py-0.5 text-[11px] text-ink-500 tracking-normal">
+                {AWARDS.length}
+              </span>
             </h3>
             <ul>
-              {highlights.map((a) => (
-                <TimelineItem key={a.title} item={a} gold />
+              {visible.map((a, i) => (
+                <Row key={`${a.year}-${i}`} item={a} lng={lng} star={a.star} />
               ))}
-              {showAll && rest.map((a) => <TimelineItem key={a.title} item={a} gold />)}
             </ul>
             <button
               type="button"
@@ -65,25 +68,27 @@ export default function Awards() {
               <span className={`inline-block transition-transform ${showAll ? "rotate-90" : ""}`}>
                 ▸
               </span>
-              {showAll ? "접기" : `그 외 수상 ${rest.length}건 더보기`}
+              {showAll ? t("awardsUI.showLess") : t("awardsUI.showAll", { n: AWARDS.length })}
             </button>
           </div>
         </Reveal>
 
         {/* 연구비 */}
         <Reveal delay={80}>
-          <div className="h-full rounded-2xl border border-line bg-base-900/70 p-6 md:p-8">
-            <h3 className="font-display text-xs tracking-[0.25em] uppercase text-accent-400 mb-6">
-              Grants · 연구비
+          <div className="rounded-2xl border border-line bg-base-900/70 p-6 md:p-8">
+            <h3 className="font-display text-xs tracking-[0.25em] uppercase text-accent-400 mb-4">
+              {t("awardsUI.grantsTitle")}
+              <span className="ml-2 rounded-full bg-base-800/80 px-2 py-0.5 text-[11px] text-ink-500 tracking-normal">
+                {GRANTS.length}
+              </span>
             </h3>
             <ul>
-              {GRANTS.map((g) => (
-                <TimelineItem key={g.title} item={g} />
+              {GRANTS.map((g, i) => (
+                <Row key={i} item={g} lng={lng} />
               ))}
             </ul>
             <p className="mt-6 rounded-xl border border-line bg-base-850/60 p-4 text-[13px] leading-relaxed text-ink-500">
-              한국연구재단 SSK 사업을 2011년부터 2027년까지 다수 회차 연속 수행 —
-              장기 대형 과제를 안정적으로 이끌어 온 연구실입니다.
+              {t("awardsUI.grantNote")}
             </p>
           </div>
         </Reveal>

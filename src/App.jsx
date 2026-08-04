@@ -1,31 +1,54 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { useTranslation } from "react-i18next";
+import { LANGS } from "./i18n/index.js";
 import Hero from "./components/Hero.jsx";
 import Interests from "./components/Interests.jsx";
 import StudentsSection from "./components/StudentsSection.jsx";
 import Publications from "./components/Publications.jsx";
 import Awards from "./components/Awards.jsx";
 
-const SECTIONS = [
-  { id: "profile", label: "프로필" },
-  { id: "interests", label: "관심분야" },
-  { id: "alumni", label: "제자 진출" },
-  { id: "publications", label: "논문·저서" },
-  { id: "awards", label: "수상·연구비" },
-];
+const SECTION_IDS = ["profile", "interests", "alumni", "publications", "awards"];
 
 const getSectionFromHash = () => {
   const h = window.location.hash.replace("#", "");
-  return SECTIONS.some((s) => s.id === h) ? h : "profile";
+  return SECTION_IDS.includes(h) ? h : "profile";
 };
 
+function LangSwitcher() {
+  const { i18n } = useTranslation();
+  return (
+    <div
+      className="inline-flex rounded-lg border border-line bg-base-850/80 p-0.5"
+      role="group"
+      aria-label="Language"
+    >
+      {LANGS.map((l) => (
+        <button
+          key={l.code}
+          type="button"
+          onClick={() => i18n.changeLanguage(l.code)}
+          aria-pressed={i18n.language === l.code}
+          className={`rounded-md px-2 py-1 text-[12px] font-display font-semibold transition-colors ${
+            i18n.language === l.code
+              ? "bg-accent-500/20 text-accent-300"
+              : "text-ink-500 hover:text-ink-300"
+          }`}
+        >
+          {l.label}
+        </button>
+      ))}
+    </div>
+  );
+}
+
 export default function App() {
+  const { t } = useTranslation();
   const [section, setSection] = useState(getSectionFromHash);
   const [payload, setPayload] = useState(null);
   const payloadRef = useRef(null);
   const reduced = useReducedMotion();
 
-  // 스탯 카드 등에서 호출 — 해시를 바꾸면 hashchange 핸들러가 섹션을 교체
   const navigate = useCallback((id, pl = null) => {
     payloadRef.current = pl;
     if (window.location.hash !== `#${id}`) {
@@ -35,7 +58,6 @@ export default function App() {
     }
   }, []);
 
-  // URL 해시 동기화 — 뒤로가기/새로고침 대응
   useEffect(() => {
     const onHash = () => {
       setSection(getSectionFromHash());
@@ -46,7 +68,6 @@ export default function App() {
     return () => window.removeEventListener("hashchange", onHash);
   }, []);
 
-  // 섹션 전환 시 항상 맨 위로
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [section]);
@@ -61,25 +82,24 @@ export default function App() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      {/* 상단 내비게이션 */}
       <nav className="fixed top-0 inset-x-0 z-50 border-b border-line/60 bg-base-950/80 backdrop-blur-md">
-        <div className="mx-auto max-w-6xl px-5 md:px-8 h-14 flex items-center justify-between">
+        <div className="mx-auto max-w-6xl px-5 md:px-8 h-14 flex items-center justify-between gap-3">
           <button
             type="button"
             onClick={() => navigate("profile")}
-            className="font-display text-sm font-semibold tracking-wide"
+            className="font-display text-sm font-semibold tracking-wide shrink-0"
           >
             <span className="text-accent-300">JC</span>
-            <span className="text-ink-500 ml-2 hidden sm:inline">Jeonghye Choi Lab</span>
+            <span className="text-ink-500 ml-2 hidden lg:inline">{t("nav.brand")}</span>
           </button>
           <div className="flex items-center gap-1 md:gap-2 overflow-x-auto thin-scroll">
-            {SECTIONS.map((n) => {
-              const isActive = section === n.id;
+            {SECTION_IDS.map((id) => {
+              const isActive = section === id;
               return (
                 <button
-                  key={n.id}
+                  key={id}
                   type="button"
-                  onClick={() => navigate(n.id)}
+                  onClick={() => navigate(id)}
                   aria-current={isActive ? "page" : undefined}
                   className={`relative shrink-0 rounded-lg px-2.5 md:px-3 py-1.5 text-[13px] transition-colors ${
                     isActive
@@ -87,7 +107,7 @@ export default function App() {
                       : "text-ink-500 hover:text-ink-100 hover:bg-base-800/70"
                   }`}
                 >
-                  {n.label}
+                  {t(`nav.${id}`)}
                   {isActive && (
                     <motion.span
                       layoutId="nav-active"
@@ -101,10 +121,12 @@ export default function App() {
               );
             })}
           </div>
+          <div className="shrink-0">
+            <LangSwitcher />
+          </div>
         </div>
       </nav>
 
-      {/* 섹션 전환 영역 */}
       <main className="flex-1 pt-14">
         <AnimatePresence mode="wait">
           <motion.div
@@ -128,7 +150,6 @@ export default function App() {
             }
             className="relative"
           >
-            {/* 전환 시 지나가는 스캔라인 */}
             {!reduced && (
               <motion.div
                 key={`scan-${section}`}
@@ -146,8 +167,10 @@ export default function App() {
 
       <footer className="border-t border-line/60 py-10">
         <div className="mx-auto max-w-6xl px-5 md:px-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-3 text-[13px] text-ink-600">
-          <p>© {new Date().getFullYear()} Jeonghye Choi · Yonsei School of Business</p>
-          <p>경영관 537 · 02-2123-6575 · jeonghye@yonsei.ac.kr</p>
+          <p>
+            © {new Date().getFullYear()} {t("footer.copyright")}
+          </p>
+          <p>{t("footer.contact")}</p>
         </div>
       </footer>
     </div>

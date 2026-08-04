@@ -1,0 +1,307 @@
+{
+  "meta": { "htmlLang": "en" },
+  "nav": {
+    "brand": "Jeonghye Choi Lab",
+    "profile": "Profile",
+    "interests": "Interests",
+    "alumni": "Alumni",
+    "publications": "Publications",
+    "awards": "Awards & Grants"
+  },
+  "hero": {
+    "kicker": "Yonsei School of Business · Marketing",
+    "name": "Jeonghye Choi",
+    "subtitle": "Professor of Marketing",
+    "tagline": "A lab that reads the market's next move through digital marketing and data",
+    "photoAlt": "Professor Jeonghye Choi",
+    "officeLabel": "Office",
+    "office": "Business Hall 537",
+    "phoneLabel": "Phone",
+    "emailLabel": "Email",
+    "statAria": "Go to section",
+    "stats": {
+      "ssci": "SSCI Publications",
+      "kci": "KCI Publications",
+      "alumni": "Ph.D. & Master's Alumni",
+      "alumniSub": "2 Ph.D. · 11 Master's",
+      "awards": "Awards"
+    },
+    "suffix": { "plus": "+", "people": "", "count": "" },
+    "cards": {
+      "education": "Education",
+      "positions": "Positions",
+      "board": "Board Memberships",
+      "academic": "Academic Service",
+      "industry": "Industry & Public"
+    },
+    "positionsMain": "Primary",
+    "positionsAdjunct": "Adjunct · Distinguished",
+    "current": "Current",
+    "past": "Past",
+    "pastToggleOpen": "Show all {{n}} past partners",
+    "pastToggleClose": "Hide {{n}} past partners"
+  },
+  "profile": {
+    "education": [
+      { "degree": "Ph.D.", "detail": "Wharton School, University of Pennsylvania" },
+      { "degree": "M.S. · B.S.", "detail": "KAIST" }
+    ],
+    "careerMain": [
+      { "period": "2020 – Present", "role": "Professor, Yonsei School of Business" },
+      { "period": "2015 – 2020", "role": "Associate Professor, Yonsei School of Business" },
+      { "period": "2010 – 2015", "role": "Assistant Professor, Yonsei School of Business" }
+    ],
+    "careerAdjunct": [
+      { "period": "2021 – Present", "role": "Underwood Distinguished Professor, Yonsei University" },
+      { "period": "2020 – Present", "role": "Distinguished Research Professor, Yonsei School of Business" },
+      { "period": "2016 – 2017", "role": "Visiting Professor, Dept. of Industrial Engineering, KAIST" },
+      { "period": "2014 – 2020", "role": "Research Professor, Yonsei School of Business" }
+    ],
+    "board": [
+      { "period": "Current", "org": "T3 Entertainment" },
+      { "period": "2023 – 2024", "org": "SK Happynarae" },
+      { "period": "2020 – 2023", "org": "KB Insurance" },
+      { "period": "2020 – 2022", "org": "ABL Bio" }
+    ],
+    "academic": [
+      "Vice President, Korea Distribution Association",
+      "Vice President, Korea Service Marketing Association",
+      "Auditor, Korean Marketing Association",
+      "Executive Director, Korean Academy of Marketing Management",
+      "Director, Korean Operations Research and Management Science Society",
+      "Editor-in-Chief, Journal of Marketing Management Research"
+    ],
+    "industryCurrent": [
+      "National Museum Foundation of Korea",
+      "KCCI Distribution & Logistics Agency",
+      "Ministry of Trade, Industry and Energy — Distribution & Logistics Division",
+      "KOTRA Service Industry Team",
+      "GS Retail Viewer Committee"
+    ],
+    "industryPast": [
+      "Olive Young",
+      "Korea SMEs & Startups Institute",
+      "Korea TV Home Shopping Association",
+      "Korea Institute of Intellectual Property",
+      "Thermo Fisher Scientific",
+      "Small Ticket",
+      "Eagon Windows & Doors",
+      "Hyosung ITX",
+      "POSCO ICT",
+      "Encored",
+      "Class101",
+      "OCI/DCRE",
+      "Kantar TNS",
+      "Yuhan Corporation",
+      "Hana Members",
+      "NAVER",
+      "Incheon International Airport",
+      "Big Dipper (Data Analytics)",
+      "KB Kookmin Card",
+      "Ntreev (Games)",
+      "Samsung SDS",
+      "Samsung Electro-Mechanics",
+      "Diapers.com (Amazon subsidiary)"
+    ]
+  },
+  "sections": {
+    "interests": {
+      "label": "Skill Set",
+      "title": "Interests",
+      "desc": "Where teaching and research are headed — the domains and methods for solving digital market problems with data."
+    },
+    "alumni": {
+      "label": "World Map",
+      "title": "Where Our Alumni Are",
+      "desc": "Students who trained in this lab now lead the next generation at universities and companies around the world."
+    },
+    "publications": {
+      "label": "Research Archive",
+      "title": "Publications & Books",
+      "desc": "Browse SSCI international and KCI Korean journal articles together. Search by keyword or by journal — every paper comes with a plain-language summary for non-specialists."
+    },
+    "awards": {
+      "label": "Trophy Room",
+      "title": "Awards & Grants",
+      "desc": "Honors recognized by the global marketing academy, and major long-running research funding."
+    }
+  },
+  "interests": {
+    "teachingTitle": "Teaching",
+    "researchTitle": "Research",
+    "domain": "Research Domains",
+    "method": "Methods",
+    "teaching": [
+      {
+        "level": "Undergraduate",
+        "courses": [
+          "Digital Marketing Strategy & Applications",
+          "Marketing Strategy Models (New Product Demand Forecasting)",
+          "Marketing Research",
+          "Principles of Marketing"
+        ]
+      },
+      { "level": "M.S. / Ph.D.", "courses": ["Digital Marketing Seminar"] },
+      { "level": "EMBA", "courses": ["Digital Marketing"] }
+    ],
+    "domains": [
+      "Digital Marketing",
+      "Retail / Logistics",
+      "Startups",
+      "Platforms",
+      "Content (OTT, Games)",
+      "Healthcare",
+      "Health Supplements / OTC",
+      "Pet Care",
+      "ESG",
+      "Public Policy Impact Analysis"
+    ],
+    "methods": [
+      "Field Experiments",
+      "Big Data Analytics",
+      "Text Analysis",
+      "Image Analysis",
+      "Log Data Analysis",
+      "AI/GenAI"
+    ]
+  },
+  "map": {
+    "hud": "Alumni World Map",
+    "svgLabel": "Alumni world map",
+    "legendFaculty": "Faculty Placements",
+    "legendOther": "Ph.D. / Industry",
+    "close": "Close",
+    "statLine": "This lab: 40+ SSCI · 50+ KCI publications",
+    "badges": [
+      { "value": "4", "label": "Faculty placements abroad" },
+      { "value": "8", "label": "Ph.D. placements abroad" },
+      { "value": "4", "label": "Continents reached" },
+      { "value": "5", "label": "Current members" }
+    ],
+    "note": "Hover or tap a pin to see placement details. Alumni whose names could not be confirmed remain anonymous."
+  },
+  "students": {
+    "facultyHeading": "Faculty Placements",
+    "othersHeading": "Ph.D. & Industry Placements",
+    "membersTitle": "Active Members",
+    "membersSub": "Current Lab Members",
+    "membersDesc": "{{n}} graduate students are currently doing research in the lab. Some have already co-authored SSCI journal publications during their studies.",
+    "worksShow": "Show {{n}} co-authored works",
+    "worksHide": "Hide {{n}} co-authored works",
+    "book": "Book",
+    "topJournal": "Top-tier journal"
+  },
+  "pubsUI": {
+    "viewKeyword": "By Keyword",
+    "viewJournal": "By Journal",
+    "all": "All",
+    "filterKeyword": "Keyword",
+    "filterYear": "Year",
+    "none": "No publications match this filter.",
+    "partial": "Some publications are still being compiled.",
+    "kciTitle": "KCI Korean Journal Articles",
+    "kciDesc": "Around 50 Korean-language articles on the front lines of the Korean market — social media, live commerce, OTT, healthcare, creators, brands, and COVID-19 consumer behavior. Confirmed articles are searchable above under the KCI tag. Some publications are still being compiled.",
+    "booksTitle": "Books",
+    "badgeStudentCoauthor": "Co-authored with students",
+    "topJournalBadge": "★ Top Journal",
+    "openLink": "Open publication in new tab"
+  },
+  "keywords": {
+    "모바일·앱": "Mobile & Apps",
+    "소셜미디어": "Social Media",
+    "온라인 리테일·이커머스": "Online Retail & E-commerce",
+    "게임": "Games",
+    "OTT·미디어": "OTT & Media",
+    "광고·프로모션": "Advertising & Promotion",
+    "헬스케어·제약": "Healthcare & Pharma",
+    "소비자 행동": "Consumer Behavior",
+    "플랫폼·B2B": "Platforms & B2B",
+    "데이터분석·AI": "Data Analytics & AI",
+    "옴니채널(온-오프라인)": "Omnichannel (Online–Offline)",
+    "유통·프랜차이즈": "Retail & Franchise",
+    "프라이버시·정책": "Privacy & Policy"
+  },
+  "awardsUI": {
+    "awardsTitle": "Awards",
+    "grantsTitle": "Research Grants",
+    "showAll": "Show all {{n}}",
+    "showLess": "Show less",
+    "grantNote": "The lab has carried out the NRF Social Science Korea (SSK) program across multiple consecutive rounds from 2011 through 2027 — a track record of leading large, long-term projects."
+  },
+  "footer": {
+    "copyright": "Jeonghye Choi · Yonsei School of Business",
+    "contact": "Business Hall 537 · +82-2-2123-6575 · jeonghye@yonsei.ac.kr"
+  },
+  "pubs": {
+    "ssci-2026-01": "Paid OTT like Netflix versus ad-supported free streaming — how do viewers split between them? This study examines how conversations on social media influence the use of free and paid video streaming services.",
+    "ssci-2026-02": "On luxury resale platforms, a high price can attract buyers at one moment and repel them at another. This study identifies the conditions under which price premiums drive or deter demand.",
+    "ssci-2026-03": "Do we open apps more on rainy days? This study uses data to analyze how the spaces people occupy and daily weather conditions shape mobile app engagement.",
+    "ssci-2026-04": "The same push notification lands differently when it feels personal. This field experiment tests whether personalized push notifications actually increase user engagement.",
+    "ssci-2026-05": "Do we use an app more when its notifications speak with human-like emotion? This study examines how the effect of emotionally anthropomorphized notifications varies with usage frequency.",
+    "ssci-2025-01": "Do we spend more when playing games alongside strangers? Using real online game data, this study shows that even anonymous strangers influence our spending.",
+    "ssci-2025-02": "Click → sign up → purchase. This study shows consumers respond differently to real-time mobile offers at each stage of the decision journey, with implications for when to send which offer.",
+    "ssci-2025-03": "Does a bigger brand logo help promotion, or suppress sharing? This empirical study analyzes how logo size in social media posts affects content virality.",
+    "ssci-2025-04": "In immersive technologies like VR and AR, is being a foreign firm an asset or a liability? This study analyzes the liability of foreignness in extended reality innovation from an international business perspective.",
+    "ssci-2024-01": "\"Your card was charged\" — even routine payment alerts can change how we spend. This study reveals the surprising consequences of innocuous mobile transaction reminders on consumer spending.",
+    "ssci-2024-02": "Does a nearby physical store lift online sales? This study shows the effect of offline store presence on digital sales depends on product functionality.",
+    "ssci-2024-03": "How do older adults choose healthcare providers? This study examines what older consumers' choices mean amid local competition in healthcare services — a question central to aging societies.",
+    "ssci-2023-01": "How much does the fear of data leaks hold back technology use? This meta-analysis synthesizes a large body of prior research on privacy concern and information technology.",
+    "ssci-2023-02": "Tastes are not fixed — they keep shifting. This study designs a recommendation system that reflects dynamic preferences and applies it to the mobile game industry.",
+    "ssci-2022-01": "Does a handwritten note in the delivery box actually work? This field experiment tests how handwritten notes from online retailers affect customer response.",
+    "ssci-2022-02": "The emotion in a video's thumbnail and title can change the fate of the ad that precedes it. This study analyzes how pre-roll advertising effectiveness varies with the emotional tone of content.",
+    "ssci-2022-03": "Does more time on Instagram lead to more time in shopping apps? This study traces the link from social media app usage to shopping app usage on smartphones.",
+    "ssci-2022-04": "Bad news spreads faster and louder. Analyzing microblog and news data, this study documents sentiment change and negative herding in public opinion.",
+    "ssci-2022-05": "What happens to incumbents when everyday medicines can be sold outside pharmacies? This study analyzes incumbent firms' performance and responses to OTC drug market deregulation.",
+    "ssci-2021-01": "Does living digitally make us happier? Focusing on Asian consumers, this study examines the moderating roles of digital-native status and privacy concern in digital well-being.",
+    "ssci-2021-02": "When buying electronics, do we stick with the channel we used before? Comparing consumer data from China and South Korea, this study analyzes channel stickiness in the shopping journey.",
+    "ssci-2021-03": "How do SMEs find trading partners in online B2B marketplaces? This study empirically analyzes buyer–supplier matching among small and medium-sized enterprises.",
+    "ssci-2021-04": "Who are the shoppers who move between stores and online? Using French apparel industry data, this study profiles multichannel shoppers and how retailers can use them.",
+    "ssci-2020-01": "Buy now, enjoy later — products like concert tickets are shaped by both online and offline environments. This study analyzes how the two drive online social interactions and sales.",
+    "ssci-2020-02": "There is a reason online-first brands open physical stores. This 'clicks to bricks' study analyzes what happens when digital retailers launch products in offline stores.",
+    "ssci-2020-03": "Do usage-restriction rules like game 'shutdown laws' actually work? This study evaluates the real consequences of such laws on online game usage and spending, adding evidence to the policy debate.",
+    "ssci-2019-01": "Do earlier reviews sway the next person's rating? Analyzing TripAdvisor review data, this study examines how eWOM characteristics affect consumer ratings.",
+    "ssci-2019-02": "Can a celebrity endorser lift firm value itself? This study analyzes the effect of celebrity endorsement on sustainable firm value in the Korean telecommunications industry.",
+    "ssci-2019-03": "Do neighborhoods with more social contact shop differently online? This study analyzes how the degree of offline social interactions affects online shopping demand.",
+    "ssci-2019-04": "What do consumers look at when buying feature-augmented products? This study examines the role of design innovation in understanding purchase behavior for augmented products.",
+    "ssci-2017-01": "What brings customers back — money (discounts and rewards) or people (social influence)? This study compares how social interactions and monetary incentives drive consumer repeat behavior.",
+    "ssci-2017-02": "Installing a shopping app does not mean buying. This study separates app possession from mobile purchase to understand the structure of mobile shopping behavior.",
+    "ssci-2017-03": "The performance of online niche products is tied to offline brand conditions. This study links online niche sales to the state of brands offline.",
+    "ssci-2012-01": "How are new customers acquired on the internet? Comparing traditional and IS-enabled acquisition, this study laid groundwork for online customer acquisition strategy.",
+    "ssci-2012-02": "What matters most in internet retailing? This study distills the key drivers of online retail success for practicing managers.",
+    "ssci-2011-01": "When your tastes make you a local minority, the internet matters more. This study shows that 'preference minorities' — those underserved offline — rely more on online shopping.",
+    "ssci-2010-01": "Even online grocery shopping starts by following the neighbors. This study analyzes the spatiotemporal pattern of imitation among new buyers at an online grocery retailer.",
+    "kci-2026-01": "Does an influencer's word really convert to purchases? This study analyzes how the effect of influencer communication on purchase conversion varies with product type and regional characteristics.",
+    "kci-2026-02": "When convenience stores and franchise supermarkets compete in the same trade area, do private-brand (PB) products sell more? This study analyzes how channel competition affects PB sales performance.",
+    "kci-2026-03": "When a franchise headquarters hits a crisis, what happens to its portfolio of brands? This study analyzes the ripple effects of headquarters crises on portfolio performance.",
+    "kci-2025-01": "What makes people first install a food delivery app? This study analyzes the role of social influence — the usage of people around us — in food delivery app adoption.",
+    "kci-2025-02": "Why do luxury brands open stores in the metaverse? This study examines how marketing in virtual spaces drives consumer brand engagement for luxury fashion brands.",
+    "kci-2024-01": "For virtual influencers, what kind of face works? This study analyzes how the facial characteristics of virtual influencers affect social media user responses.",
+    "kci-2024-02": "During the pandemic, which neighborhoods lost more gyms? This study shows that risk exposure and compensatory spending had distinct effects on regional gym closures.",
+    "kci-2023-01": "Is fandom driven by wins or by communication? This study analyzes how a club's match performance and social media operations affect fan engagement, and how fan tokens moderate the relationship.",
+    "kci-2023-02": "Is being physically close to other firms really an advantage? Using machine learning, this study unveils the role of industrial similarity and revisits assumptions about proximity.",
+    "kci-2023-03": "What makes us trust an unfamiliar food product online? This study analyzes how trust-building product strategies translate into word of mouth on online food platforms.",
+    "kci-2023-04": "What makes someone who tried a chatbot keep using it? This study analyzes the determinants of continuance intention for chatbot services.",
+    "kci-2023-05": "Can a single new app shake an entire market? This study analyzes how a new app launch reshapes the existing app ecosystem in digital healthcare.",
+    "kci-2023-06": "What drives the finger that hits 'skip ad'? This study analyzes how video genre, viewers' digital-native traits, and media attributes affect pre-roll ad avoidance.",
+    "kci-2022-01": "How should branded content appear in short-form video to work? This study shows that perceived belongingness mediates the path from short-form branded content exposure to consumer response.",
+    "kci-2022-02": "When a webtoon becomes a drama, how much do news articles help? This study analyzes the effect of news publicity on viewers' online word of mouth for webtoon-based dramas.",
+    "kci-2022-03": "When lockdowns lift, do people immediately socialize again? Using a Bayesian multilevel difference-in-differences approach, this study precisely measures the effect of lockdown repeal on socialization.",
+    "kci-2022-04": "Does easier payment mean more shopping? Using the cases of KakaoPay and Kakao Gift, this study analyzes how adopting simple payment affects shopping app usage.",
+    "kci-2022-05": "What should moderators do to keep a community alive? Analyzing university 'Bamboo Forest' communities, this study derives management strategies that boost user participation.",
+    "kci-2022-06": "Does the same ad perform differently on PC and mobile? This study compares the effectiveness of food ad targeting on video platforms across devices.",
+    "kci-2022-07": "Who considered leaving their job during the pandemic? This study analyzes the determinants of online job search behavior during COVID-19.",
+    "kci-2021-01": "Does social media buzz translate into actual usage? Using time-series data on Seoul's bike-sharing service, this study analyzes the relationship between social media and consumer purchase decisions.",
+    "kci-2021-02": "In the era of remote work and distancing, what determined job satisfaction? This study analyzes the determinants of job satisfaction and mobile productivity during COVID-19.",
+    "kci-2020-01": "How did a small craft brewery break into the market? Through the case of Amazing Brewing Company, this study analyzes the startup strategy of craft breweries.",
+    "kci-2020-02": "Is a health food's name half the battle? This study analyzes how product naming, customer product experience, and firm promotions each affect health food purchases.",
+    "kci-2020-03": "Where do we shop on hot, humid days? This study analyzes how weather discomfort and shopping preferences shape retail store choice.",
+    "kci-2018-01": "The same luxury item performs differently depending on where it is sold. This study shows the effects of product, customer, and assortment on luxury sales vary by store type.",
+    "kci-2016-01": "The words firms write and consumers leave online hold clues to sales. This study analyzes online text data to derive strategies for growing online revenue.",
+    "kci-2016-02": "Does marketing work in B2B too? This study analyzes how B2B firms' marketing activities and their customers' market environments affect sales performance.",
+    "kci-2015-01": "When local stores disappear, do niche products sell more online? This study analyzes how changes in the offline environment affect online demand for niche products.",
+    "kci-2015-02": "What makes people pay for video on their phones? This empirical study verifies the factors driving mobile VOD content purchases.",
+    "kci-2014-01": "How far has social media research come? This review maps the trends and gaps in social media research across the social sciences.",
+    "kci-2014-02": "How big can a shopping mall grow while depending on portals? This study analyzes how resource dependence on internet portals affects the growth of online shopping mall firms.",
+    "kci-2013-01": "What sets apart platforms where creators are active? This study shows producer participation on user-generated content platforms has distinct effects on consumer choice and engagement."
+  }
+}

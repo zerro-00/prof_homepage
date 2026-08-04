@@ -44,6 +44,7 @@ const _SSCI = [
   },
   {
     id: "ssci-2026-03",
+    doi: "10.1108/JRIM-04-2025-0234",
     title:
       "Weathering the Digital Shift: How Interaction Spaces and Weather Conditions Shape Mobile App Engagement",
     journal: "Journal of Research in Interactive Marketing",
@@ -55,6 +56,7 @@ const _SSCI = [
   },
   {
     id: "ssci-2026-04",
+    doi: "10.1177/14413582251356702",
     title:
       "Push the Paw: A Field Experiment on Personalised Push Notifications and User Engagement",
     journal: "Australasian Marketing Journal",
@@ -66,6 +68,7 @@ const _SSCI = [
   },
   {
     id: "ssci-2026-05",
+    doi: "10.1108/JRIM-10-2024-0488",
     title:
       "Emotional Anthropomorphism of Notifications and App Engagement: Does the Usage Frequency Matter?",
     journal: "Journal of Research in Interactive Marketing",
@@ -79,6 +82,7 @@ const _SSCI = [
   // ---------- 2021–2025 ----------
   {
     id: "ssci-2025-01",
+    doi: "10.1093/jcr/ucae075",
     title:
       "In the Company of Strangers: Social Influence from Anonymous Peers in Online Game Settings",
     journal: "Journal of Consumer Research",
@@ -90,6 +94,7 @@ const _SSCI = [
   },
   {
     id: "ssci-2025-02",
+    doi: "10.1080/02650487.2024.2444857",
     title:
       "Click, Sign-up and Purchase: Consumer Responses to Real-Time Mobile Offers along the Consumer Decision Journey",
     journal: "International Journal of Advertising",
@@ -101,6 +106,7 @@ const _SSCI = [
   },
   {
     id: "ssci-2025-03",
+    doi: "10.1007/s11002-024-09736-4",
     title:
       "A Picture's Worth a Thousand Shares: An Empirical Analysis of Logo Sizes in Social Media Posts and Their Impact on Content Virality",
     journal: "Marketing Letters",
@@ -310,6 +316,7 @@ const _SSCI = [
   },
   {
     id: "ssci-2019-01",
+    doi: "10.1080/02650487.2018.1541391",
     title:
       "The Effects of eWOM Characteristics on Consumer Ratings: Evidence from TripAdvisor.com",
     journal: "International Journal of Advertising",
@@ -354,6 +361,7 @@ const _SSCI = [
   },
   {
     id: "ssci-2017-01",
+    doi: "10.1509/jmr.13.0482",
     title:
       "Social Interactions and Monetary Incentives in Driving Consumer Repeat Behavior",
     journal: "Journal of Marketing Research",
@@ -365,6 +373,7 @@ const _SSCI = [
   },
   {
     id: "ssci-2017-02",
+    doi: "10.1016/j.intmar.2017.02.001",
     title:
       "Mobile Shopping through Applications: Understanding Application Possession and Mobile Purchase",
     journal: "Journal of Interactive Marketing",
@@ -408,6 +417,7 @@ const _SSCI = [
   },
   {
     id: "ssci-2011-01",
+    doi: "10.1509/jmkr.48.4.670",
     title: "Preference Minorities and the Internet",
     journal: "Journal of Marketing Research",
     year: 2011,
@@ -814,6 +824,15 @@ export const KCI_PUBLICATIONS = _KCI.map((p) => ({ ...p, type: "KCI" }));
 
 // SSCI + KCI 통합 목록 — 논문 섹션의 전체/키워드/저널 필터가 이 목록을 사용
 export const ALL_PUBLICATIONS = [...SSCI_PUBLICATIONS, ...KCI_PUBLICATIONS];
+
+// 논문 원문 링크 — DOI가 있으면 doi.org, 없으면 검색 폴백 (DOI 추측 생성 금지)
+// KCI 논문은 KCI 포털 검색, SSCI 논문은 Google Scholar 검색으로 폴백
+export function paperUrl(p) {
+  if (p.doi) return `https://doi.org/${p.doi}`;
+  if (p.type === "KCI")
+    return `https://www.kci.go.kr/kciportal/po/search/poSereArtiSearList.kci?searchQuery=${encodeURIComponent(p.title)}`;
+  return `https://scholar.google.com/scholar?q=${encodeURIComponent(`"${p.title}" Jeonghye Choi`)}`;
+}
 
 // ---------------------------------------------------------------
 // 저서 및 역서 (서지 정보 확정 완료)
