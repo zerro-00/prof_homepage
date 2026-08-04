@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm --version)",
+      "Bash(npm install *)",
+      "Bash(curl -sL -o /Users/ryung/홈페/src/data/countries-110m.json https://unpkg.com/world-atlas@2.0.2/countries-110m.json)",
+      "Bash(npm run *)",
+      "Skill(claude-in-chrome)",
+      "Bash(git add *)",
+      "Bash(git commit -m '최정혜 교수 연구실 홈페이지 초기 버전 *)"
+    ]
+  }
+}
