@@ -13,12 +13,18 @@ export const BASIC_INFO = {
     "디지털 마케팅과 데이터로 시장의 다음 수를 읽는 연구실",
 };
 
-// 히어로 스탯 카운터
+// 히어로 스탯 카운터 — section/focus: 클릭 시 이동할 섹션과 초기 상태
 export const HERO_STATS = [
-  { value: 40, suffix: "+", label: "SSCI 논문" },
-  { value: 50, suffix: "+", label: "KCI 논문" },
-  { value: 13, suffix: "명", label: "지도 박사·석사 배출", sub: "박사 2 · 석사 11" },
-  { value: 20, suffix: "+", label: "수상" },
+  { value: 40, suffix: "+", label: "SSCI 논문", section: "publications", focus: "ssci" },
+  { value: 50, suffix: "+", label: "KCI 논문", section: "publications", focus: "kci" },
+  {
+    value: 13,
+    suffix: "명",
+    label: "지도 박사·석사 배출",
+    sub: "박사 2 · 석사 11",
+    section: "alumni",
+  },
+  { value: 20, suffix: "+", label: "수상", section: "awards" },
 ];
 
 export const EDUCATION = [

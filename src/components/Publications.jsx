@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Reveal, SectionHeading } from "./common.jsx";
 import {
   SSCI_PUBLICATIONS,
@@ -231,11 +231,21 @@ function JournalView() {
 }
 
 /* ---------- KCI + 저서 ---------- */
-function KciAndBooks() {
-  const [openKci, setOpenKci] = useState(false);
+function KciAndBooks({ focusKci = false }) {
+  const [openKci, setOpenKci] = useState(focusKci);
+  const kciRef = useRef(null);
+
+  // 히어로 KCI 스탯 카드에서 진입한 경우, 섹션 전환이 끝난 뒤 KCI 영역으로 스크롤
+  useEffect(() => {
+    if (!focusKci || !kciRef.current) return;
+    const t = setTimeout(() => {
+      kciRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+    }, 450);
+    return () => clearTimeout(t);
+  }, [focusKci]);
 
   return (
-    <div className="mt-14 grid md:grid-cols-2 gap-4 md:gap-5">
+    <div ref={kciRef} className="mt-14 grid md:grid-cols-2 gap-4 md:gap-5">
       {/* KCI */}
       <Reveal>
         <div className="h-full rounded-2xl border border-line bg-base-900/70 p-6">
@@ -304,7 +314,8 @@ function KciAndBooks() {
 }
 
 /* ---------- 메인 ---------- */
-export default function Publications() {
+// focus: 'ssci' → 기본(SSCI 목록 상단) / 'kci' → KCI 영역 펼침 + 스크롤
+export default function Publications({ focus = null }) {
   const [mode, setMode] = useState("keyword"); // 'keyword' | 'journal'
 
   return (
@@ -341,7 +352,7 @@ export default function Publications() {
 
       {mode === "keyword" ? <KeywordView /> : <JournalView />}
 
-      <KciAndBooks />
+      <KciAndBooks focusKci={focus === "kci"} />
     </section>
   );
 }

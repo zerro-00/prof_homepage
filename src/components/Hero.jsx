@@ -11,17 +11,36 @@ import {
   INDUSTRY_PAST,
 } from "../data/profile.js";
 
-function StatCard({ stat, delay }) {
+function StatCard({ stat, delay, navigate }) {
   return (
     <Reveal delay={delay}>
-      <div className="relative rounded-xl border border-line bg-base-850/80 px-5 py-4 backdrop-blur">
-        <div className="absolute left-0 top-3 bottom-3 w-[2px] rounded bg-gradient-to-b from-accent-400 to-accent-600/20" />
-        <div className="font-display text-3xl md:text-4xl font-bold text-ink-100 tabular-nums">
-          <CountUp value={stat.value} suffix={stat.suffix} />
-        </div>
-        <div className="mt-1 text-[13px] text-ink-500">{stat.label}</div>
-        {stat.sub && <div className="text-[11px] text-ink-600 mt-0.5">{stat.sub}</div>}
-      </div>
+      <button
+        type="button"
+        onClick={() => navigate(stat.section, stat.focus ? { focus: stat.focus } : null)}
+        className="group relative w-full cursor-pointer rounded-xl border border-line bg-base-850/80 px-5 py-4 text-left backdrop-blur transition-all duration-200 hover:-translate-y-1 hover:border-accent-400/60 hover:shadow-[0_0_24px_rgba(47,127,242,0.25)] focus-visible:outline-2 focus-visible:outline-accent-400"
+        aria-label={`${stat.label} — 해당 섹션으로 이동`}
+      >
+        <span className="absolute left-0 top-3 bottom-3 w-[2px] rounded bg-gradient-to-b from-accent-400 to-accent-600/20" />
+        {/* 숫자와 단위를 분리해 폰트 겹침 방지 (leading-none + baseline 정렬) */}
+        <span className="flex items-baseline gap-0.5 leading-none">
+          <CountUp
+            value={stat.value}
+            className="font-display text-3xl md:text-4xl font-bold text-ink-100 tabular-nums leading-none"
+          />
+          <span className="text-xl md:text-2xl font-bold text-ink-100 leading-none">
+            {stat.suffix}
+          </span>
+        </span>
+        <span className="mt-2 block text-[13px] text-ink-500">{stat.label}</span>
+        {stat.sub && <span className="block text-[11px] text-ink-600 mt-0.5">{stat.sub}</span>}
+        {/* 클릭 가능 신호 — 우측 하단 화살표 */}
+        <span
+          aria-hidden="true"
+          className="absolute bottom-3 right-4 font-display text-sm text-ink-600 transition-all duration-200 group-hover:text-accent-300 group-hover:translate-x-0.5"
+        >
+          →
+        </span>
+      </button>
     </Reveal>
   );
 }
@@ -39,7 +58,7 @@ function InfoCard({ title, children, className = "", delay = 0 }) {
   );
 }
 
-export default function Hero() {
+export default function Hero({ navigate }) {
   const [showPast, setShowPast] = useState(false);
 
   return (
@@ -132,7 +151,7 @@ export default function Hero() {
         {/* ---- 스탯 카운터 ---- */}
         <div className="mt-14 grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
           {HERO_STATS.map((s, i) => (
-            <StatCard key={s.label} stat={s} delay={i * 90} />
+            <StatCard key={s.label} stat={s} delay={i * 90} navigate={navigate} />
           ))}
         </div>
 

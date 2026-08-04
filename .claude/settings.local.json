@@ -7,7 +7,12 @@
       "Bash(npm run *)",
       "Skill(claude-in-chrome)",
       "Bash(git add *)",
-      "Bash(git commit -m '최정혜 교수 연구실 홈페이지 초기 버전 *)"
+      "Bash(git commit -m '최정혜 교수 연구실 홈페이지 초기 버전 *)",
+      "Bash(brew install *)",
+      "Bash(git branch *)",
+      "Bash(git remote *)",
+      "Bash(git push *)",
+      "Bash(npm i *)"
     ]
   }
 }
