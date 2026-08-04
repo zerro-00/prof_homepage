@@ -71,8 +71,39 @@ export default function Hero({ navigate }) {
       />
 
       <div className="relative mx-auto max-w-6xl px-5 md:px-8 pt-24 md:pt-32 pb-16">
-        <div className="grid md:grid-cols-[1fr_auto] gap-10 md:gap-14 items-start">
-          {/* ---- 좌: 이름/소개/연락처 ---- */}
+        <div className="grid md:grid-cols-[auto_1fr] gap-10 md:gap-14 items-start">
+          {/* ---- 좌(데스크톱)/상단(모바일): 프로필 사진 ---- */}
+          <Reveal delay={60} className="justify-self-center md:justify-self-start">
+            <div className="group relative">
+              <div className="absolute -inset-2 rounded-3xl bg-gradient-to-br from-accent-500/35 via-transparent to-mint-400/20 blur-md transition-opacity duration-300 group-hover:opacity-100 opacity-70" />
+              <div className="relative h-64 w-52 md:h-80 md:w-60 overflow-hidden rounded-2xl border border-accent-500/25">
+                <img
+                  src="/profile.jpg"
+                  alt="최정혜 교수"
+                  loading="eager"
+                  className="h-full w-full object-cover grayscale-[35%] transition-all duration-500 group-hover:grayscale-0 group-hover:scale-[1.02]"
+                  onError={(e) => {
+                    e.currentTarget.style.display = "none";
+                    e.currentTarget.nextElementSibling.style.display = "flex";
+                  }}
+                />
+                {/* fallback — 이미지 없을 때 이니셜 블록 */}
+                <div
+                  className="hidden h-full w-full bg-base-800 items-center justify-center"
+                  aria-hidden="true"
+                >
+                  <span className="font-display text-4xl font-bold text-accent-300/60">JC</span>
+                </div>
+                {/* 은은한 다크 그라디언트 오버레이 */}
+                <div
+                  className="pointer-events-none absolute inset-0 bg-gradient-to-t from-base-950/45 via-transparent to-transparent"
+                  aria-hidden="true"
+                />
+              </div>
+            </div>
+          </Reveal>
+
+          {/* ---- 이름/소개/연락처 ---- */}
           <div>
             <Reveal>
               <p className="font-display text-xs md:text-sm tracking-[0.35em] uppercase text-accent-300/90">
@@ -123,29 +154,6 @@ export default function Hero({ navigate }) {
             </Reveal>
           </div>
 
-          {/* ---- 우: 프로필 사진 ---- */}
-          <Reveal delay={140} className="justify-self-center md:justify-self-end">
-            <div className="relative">
-              <div className="absolute -inset-2 rounded-3xl bg-gradient-to-br from-accent-500/30 via-transparent to-mint-400/20 blur-md" />
-              {/* TODO: /public/profile.jpg 에 실제 프로필 사진을 넣으면 자동 표시됩니다 */}
-              <img
-                src="/profile.jpg"
-                alt="최정혜 교수 프로필 사진"
-                className="relative h-56 w-44 md:h-72 md:w-56 rounded-2xl object-cover border border-line bg-base-800"
-                onError={(e) => {
-                  e.currentTarget.style.display = "none";
-                  e.currentTarget.nextElementSibling.style.display = "flex";
-                }}
-              />
-              <div
-                className="relative hidden h-56 w-44 md:h-72 md:w-56 rounded-2xl border border-line bg-base-800 flex-col items-center justify-center text-ink-600 text-xs gap-2"
-                aria-hidden="true"
-              >
-                <div className="h-16 w-16 rounded-full border border-line bg-base-700/50" />
-                <span>profile.jpg</span>
-              </div>
-            </div>
-          </Reveal>
         </div>
 
         {/* ---- 스탯 카운터 ---- */}

@@ -128,24 +128,36 @@ src/
 - Ph.D. Wharton School, University of Pennsylvania / M.S., B.S. KAIST
 - 경영관 537 · 02-2123-6575 · jeonghye@yonsei.ac.kr
 
-교수로 임용된 제자 4명 — 검증 완료. 지도에서 골드 핀으로 강조:
+졸업생 13명 전원 — 연세대 공식 페이지에서 실명 확인 완료 (연도 역순):
 
-| 이름 | 소속 | 경로 |
-|---|---|---|
-| 김민경 (Mingyung Kim) | Ohio State University, Fisher — Asst. Prof. of Marketing | 2015 학사 → Wharton 박사 → 2024 임용 |
-| 조우용 (Wooyong Jo) | Purdue University, Daniels School — Asst. Prof. of Marketing | 2017 석사 → Emory 박사(2022) → 임용 |
-| 김상화 (Sanghwa Kim) | McMaster University, DeGroote — Asst. Prof. of Marketing | 2019 석사 → Maryland 박사(2024) → 임용 |
-| 김지연 (Jeeyeon Kim) | La Trobe University, LBS — Lecturer of Marketing | 2014 석사 → 연세 박사(2018) → 대만 국립중산대 → 임용 |
+| 이름 | 졸업 | 진출 | isFaculty |
+|---|---|---|---|
+| 이예령 (Li Yiling) | 2025 박사 | 교수 임용 — **소속 미확정** (고려대 디지털경영 / 화성의과학대 의료경영, 페이지 간 불일치. 임의 확정 금지, 확정 전까지 일반 핀) | 잠정 false |
+| 정현우 | 2025 석사 | Wharton School, Univ. of Pennsylvania 마케팅 박사 진학 (2025) | false |
+| 김혜정 | 2024 석사 | Georgia Institute of Technology 마케팅 박사 진학 (2024) | false |
+| 윤여림 | 2023 통합과정 | University of Minnesota 마케팅 박사 진학 (2023) | false |
+| 곽유신 | 2022 석사 | Emory University 마케팅 박사 진학 (2022) | false |
+| 윤여홍 | 2021 석사 | Emory University 마케팅 박사 진학 (2021) | false |
+| 이지연 | 2021 석사 | 롯데면세점 입사 | false |
+| 송혜신 | 2020 석사 | Georgia State University 마케팅 박사 진학 (2021) | false |
+| 김상화 (Sanghwa Kim) | 2019 석사 | Maryland 박사 → **McMaster University, DeGroote — Asst. Prof. of Marketing** | true |
+| 장연 (Jiang Yan) | 2018 석사 | University of Houston 마케팅 박사 진학 (2024) | false |
+| 조우용 (Wooyong Jo) | 2017 석사 | Emory 박사(2022) → **Purdue University, Daniels School — Asst. Prof. of Marketing** | true |
+| 김민경 (Mingyung Kim) | 2015 학사 | Wharton 박사(2017 진학) → **Ohio State University, Fisher — Asst. Prof. of Marketing** | true |
+| 김지연 (Jeeyeon Kim) | 2014 석사, 2018 박사 | 대만 국립중산대 → **La Trobe University, LBS — Lecturer of Marketing** | true |
 
-박사과정 진학: 장연(Jiang Yan, Houston 2024), 이예령(Li Yiling, 연세 박사 2025), 그 외 익명 졸업생 다수(Wharton·Georgia Tech·Minnesota·Emory×2·Georgia State).
-애틀랜타에 4명이 겹치므로 핀 하나로 묶어 툴팁에 목록 표시.
+교수 임용 4명은 지도에서 골드 핀으로 강조. 애틀랜타 4명(김혜정·곽유신·윤여홍·송혜신)은 핀 하나로 묶어 툴팁에 목록 표시. 서울 핀 2명(이예령·이지연).
+
+재학생 (현재 연구실 구성원) 5명 — 학교 페이지 기준(2026.08), 이름만 확인됨:
+**김우경, 황인서, 나규원, 김정현, 오가령**
+칩 형태로만 표시. 링크·사진·상세정보 금지. 지도 핀·배출 카운트에 포함하지 않음.
 
 ## 현재 미완 항목 (TODO)
 
 - KCI 논문 약 50편: 데이터 미확보. `publications.js`에 SSCI와 동일 스키마로 추가 예정. 지금은 카운터 + 접이식 플레이스홀더.
-- 저서 4건: 원본 페이지 인코딩 문제로 정확한 서명 미확인. 확인 후 교체 필요.
 - 김지연(Jeeyeon Kim) 링크: 현재 ORCID. La Trobe Scholars 공식 프로필 URL로 교체 필요.
-- 이름 미확인 제자 다수: 교수님 확인 후 실명 반영 예정.
+- 이예령 교수 소속 확정 필요 (고려대 디지털경영 / 화성의과학대 의료경영 — 학교 페이지 간 불일치). 확정 시 골드 핀 + 교수 카드로 승격.
+- 재학생 명단 교수님 확인 후 갱신.
 
 ## 작업 방식
 

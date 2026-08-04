@@ -440,35 +440,36 @@ export const KCI_PUBLICATIONS = [
 ];
 
 // ---------------------------------------------------------------
-// 저서 및 역서
-// TODO: 일부 서지 정보가 인코딩 문제로 미확보 — 확보 시 title/publisher 보완
+// 저서 및 역서 (서지 정보 확정 완료)
+// badge: 카드에 표시할 특별 뱃지 (예: 제자 공저)
 export const BOOKS = [
   {
     id: "book-2020",
-    title: "디지털 시대 다르게 건강하게 소통: ICT와 사회",
-    role: "공저",
+    title: "비대면 시대 바르고 건강하게 살기: '빠른'을 넘어 '바른' ICT로",
+    role: "김범수·김승현·김재엽·도보람·박경기·양희동·오주현·장대연·장재영·최강식·최정혜·한치훈·한영애 공저",
     publisher: "한국학술정보",
     year: 2020,
   },
   {
     id: "book-2016",
-    title: "자동차 산업 관련 고용영향평가",
-    role: "공저",
+    title: "자동차 자율주행 규제 완화 고용영향평가 연구",
+    role: "박경민·최정혜·김태완·김주만, 고용영향평가 연구시리즈",
     publisher: "한국노동연구원",
     year: 2016,
   },
   {
     id: "book-2015",
-    title: "정보통신 관련 저서", // TODO: 정확한 서명 확인 후 교체
-    role: "공저",
-    publisher: "",
+    title: "기술혁신에 따른 지역간 정보격차",
+    role: "최정혜·김지연·김민경 공저",
+    publisher: "집문당",
     year: 2015,
+    badge: "제자 공저", // 공저자 김지연(La Trobe)·김민경(Ohio State)은 현재 교수가 된 제자
   },
   {
     id: "book-2013",
-    title: "디지털 네트워크 관련 역서", // TODO: 정확한 서명 확인 후 교체 (David L. Rogers 저)
-    role: "공역 (David L. Rogers 저)",
-    publisher: "",
+    title: "고객네트워크전략",
+    role: "David L. Rogers 저, 최정혜·오윤조 공역",
+    publisher: "박영사",
     year: 2013,
   },
 ];

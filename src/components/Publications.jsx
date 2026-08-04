@@ -299,7 +299,14 @@ function KciAndBooks({ focusKci = false }) {
           <ul className="space-y-3.5">
             {BOOKS.map((b) => (
               <li key={b.id} className="text-sm">
-                <p className="text-ink-100 font-medium leading-snug">『{b.title}』</p>
+                <p className="text-ink-100 font-medium leading-snug">
+                  『{b.title}』
+                  {b.badge && (
+                    <span className="ml-2 inline-flex items-center rounded-md border border-gold-500/40 bg-gold-500/10 px-1.5 py-0.5 align-middle font-display text-[10px] font-semibold tracking-wide text-gold-300">
+                      {b.badge}
+                    </span>
+                  )}
+                </p>
                 <p className="text-[12px] text-ink-500 mt-0.5">
                   {b.role}
                   {b.publisher && ` · ${b.publisher}`} · {b.year}

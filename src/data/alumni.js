@@ -1,8 +1,6 @@
-// 제자 진출 데이터 — 도시 단위 핀 + 각 핀의 소속 인원 목록
-// entry 스키마: { nameKo, nameEn, grad, affiliation, title, path,
-//                isFaculty, link, linkLabel, subLink, subLinkLabel }
-// coordinates: [경도, 위도]
-// 이름이 확인되지 않은 졸업생은 익명 유지 — 실명·링크 창작 금지.
+// 제자 진출 데이터 — 도시 단위 핀 + 각 핀의 소속 인원 목록 (스키마: CLAUDE.md 참고)
+// coordinates: [경도, 위도] 순서 주의
+// 실명은 연세대 공식 페이지에서 확인된 명단만 사용 — 추측·창작 금지.
 
 export const LAB_STAT_LINE = "본 연구실 SSCI 40+편 · KCI 50+편";
 
@@ -137,16 +135,18 @@ export const CITY_PINS = [
     labelDy: -8,
     entries: [
       {
+        // TODO: 이예령 교수 소속 확정 필요 (고려대 디지털경영 / 화성의과학대 의료경영 - 학교 페이지 간 불일치)
+        // 소속 확정 전까지 isFaculty: false (일반 핀) 유지
         nameKo: "이예령",
         nameEn: "Li Yiling",
         grad: "2025 박사",
-        affiliation: "연세대학교 경영대학",
-        title: "박사 (2025)",
-        path: "2025 박사 졸업",
+        affiliation: "TODO: 소속 확인 필요",
+        title: "교수",
+        path: "2025 박사 졸업 → 교수 임용",
         isFaculty: false,
       },
       {
-        nameKo: "졸업생",
+        nameKo: "이지연",
         nameEn: null,
         grad: "2021 석사",
         affiliation: "롯데면세점",
@@ -161,12 +161,12 @@ export const CITY_PINS = [
     city: "필라델피아",
     country: "미국",
     coordinates: [-75.1652, 39.9526],
-    label: "졸업생",
+    label: "정현우",
     labelDx: 10,
     labelDy: -8,
     entries: [
       {
-        nameKo: "졸업생",
+        nameKo: "정현우",
         nameEn: null,
         grad: "2025 석사",
         affiliation: "Wharton School, University of Pennsylvania",
@@ -186,7 +186,7 @@ export const CITY_PINS = [
     labelDy: 14,
     entries: [
       {
-        nameKo: "졸업생",
+        nameKo: "김혜정",
         nameEn: null,
         grad: "2024 석사",
         affiliation: "Georgia Institute of Technology",
@@ -195,7 +195,7 @@ export const CITY_PINS = [
         isFaculty: false,
       },
       {
-        nameKo: "졸업생",
+        nameKo: "곽유신",
         nameEn: null,
         grad: "2022 석사",
         affiliation: "Emory University",
@@ -204,7 +204,7 @@ export const CITY_PINS = [
         isFaculty: false,
       },
       {
-        nameKo: "졸업생",
+        nameKo: "윤여홍",
         nameEn: null,
         grad: "2021 석사",
         affiliation: "Emory University",
@@ -213,12 +213,12 @@ export const CITY_PINS = [
         isFaculty: false,
       },
       {
-        nameKo: "졸업생",
+        nameKo: "송혜신",
         nameEn: null,
         grad: "2020 석사",
         affiliation: "Georgia State University",
         title: "마케팅 박사과정",
-        path: "2020 진학",
+        path: "2021 진학",
         isFaculty: false,
       },
     ],
@@ -228,14 +228,14 @@ export const CITY_PINS = [
     city: "미니애폴리스",
     country: "미국",
     coordinates: [-93.265, 44.9778],
-    label: "졸업생",
+    label: "윤여림",
     labelDx: -8,
     labelDy: -10,
     entries: [
       {
-        nameKo: "졸업생",
+        nameKo: "윤여림",
         nameEn: null,
-        grad: "2023 석사",
+        grad: "2023 통합과정",
         affiliation: "University of Minnesota",
         title: "마케팅 박사과정",
         path: "2023 진학",
@@ -250,4 +250,17 @@ export const MAP_BADGES = [
   { value: "4명", label: "해외 대학 교수 임용" },
   { value: "8명", label: "해외 박사과정 진학" },
   { value: "4개 대륙", label: "제자 진출 무대" },
+  { value: "5명", label: "재학생" },
+];
+
+// ---------------------------------------------------------------
+// 현재 연구실 구성원 (재학생)
+// TODO: 재학생 명단은 학교 페이지 기준(2026.08). 교수님 확인 후 갱신 필요.
+// 확인된 정보가 이름뿐이므로 이름 외 필드는 넣지 않는다 (링크·사진·상세정보 금지).
+export const CURRENT_MEMBERS = [
+  { nameKo: "김우경" },
+  { nameKo: "황인서" },
+  { nameKo: "나규원" },
+  { nameKo: "김정현" },
+  { nameKo: "오가령" },
 ];
