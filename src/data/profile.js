@@ -32,24 +32,28 @@ export const EDUCATION = [
   { degree: "M.S. · B.S.", detail: "KAIST" },
 ];
 
-export const CAREER = [
+// 주요경력 — 재직 직위 (시작연도 내림차순)
+export const CAREER_MAIN = [
   { period: "2020 – 현재", role: "연세대학교 경영대학 교수" },
-  { period: "2021 – 현재", role: "연세대학교 언더우드 특훈교수" },
-  { period: "2020 – 현재", role: "연세대학교 경영대학 우수연구업적교수" },
-  { period: "2016 – 2017", role: "KAIST 산업공학과 방문교수" },
   { period: "2015 – 2020", role: "연세대학교 경영대학 부교수" },
-  { period: "2014 – 2020", role: "연세대학교 경영대학 연구업적교수" },
   { period: "2010 – 2015", role: "연세대학교 경영대학 조교수" },
 ];
 
-export const OUTSIDE_DIRECTOR = {
-  current: ["티쓰리엔터테인먼트"],
-  past: [
-    "SK행복나래 (2023–2024)",
-    "KB손해보험 (2020–2023)",
-    "에이비엘바이오 (2020–2022)",
-  ],
-};
+// 주요경력 — 겸직·특훈 (시작연도 내림차순)
+export const CAREER_ADJUNCT = [
+  { period: "2021 – 현재", role: "연세대학교 언더우드 특훈교수" },
+  { period: "2020 – 현재", role: "연세대학교 경영대학 우수연구업적교수" },
+  { period: "2016 – 2017", role: "KAIST 산업공학과 방문교수" },
+  { period: "2014 – 2020", role: "연세대학교 경영대학 연구업적교수" },
+];
+
+// 사외이사 — 주요경력과 동일한 2단 나열용
+export const BOARD = [
+  { period: "현재", org: "티쓰리엔터테인먼트" },
+  { period: "2023 – 2024", org: "SK행복나래" },
+  { period: "2020 – 2023", org: "KB손해보험" },
+  { period: "2020 – 2022", org: "에이비엘바이오" },
+];
 
 export const ACADEMIC_SERVICE = [
   "한국유통학회 부회장",
@@ -57,7 +61,7 @@ export const ACADEMIC_SERVICE = [
   "한국마케팅학회 감사",
   "마케팅관리학회 상임이사",
   "한국경영과학회 이사",
-  "마케팅관려연구 편집위원장",
+  "마케팅관련연구 편집위원장",
 ];
 
 export const INDUSTRY_CURRENT = [

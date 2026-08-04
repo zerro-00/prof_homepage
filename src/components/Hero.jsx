@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { Reveal, CountUp, Chip } from "./common.jsx";
+import { Reveal, CountUp } from "./common.jsx";
 import {
   BASIC_INFO,
   HERO_STATS,
   EDUCATION,
-  CAREER,
-  OUTSIDE_DIRECTOR,
+  CAREER_MAIN,
+  CAREER_ADJUNCT,
+  BOARD,
   ACADEMIC_SERVICE,
   INDUSTRY_CURRENT,
   INDUSTRY_PAST,
@@ -33,7 +34,6 @@ function StatCard({ stat, delay, navigate }) {
         </span>
         <span className="mt-2 block text-[13px] text-ink-500">{stat.label}</span>
         {stat.sub && <span className="block text-[11px] text-ink-600 mt-0.5">{stat.sub}</span>}
-        {/* 클릭 가능 신호 — 우측 하단 화살표 */}
         <span
           aria-hidden="true"
           className="absolute bottom-3 right-4 font-display text-sm text-ink-600 transition-all duration-200 group-hover:text-accent-300 group-hover:translate-x-0.5"
@@ -58,6 +58,25 @@ function InfoCard({ title, children, className = "", delay = 0 }) {
   );
 }
 
+// 2단 나열 공통 행 — 좌측 라벨(연도/구분) + 우측 내용
+function Row({ label, children }) {
+  return (
+    <li className="flex gap-3 text-sm">
+      <span className="font-display text-ink-600 tabular-nums shrink-0 w-28">{label}</span>
+      <span className="text-ink-300">{children}</span>
+    </li>
+  );
+}
+
+// 그룹 소제목 (예: 재직 / 겸직·특훈)
+function GroupLabel({ children }) {
+  return (
+    <p className="mt-5 mb-2 first:mt-0 text-[11px] font-display tracking-[0.2em] uppercase text-ink-600">
+      {children}
+    </p>
+  );
+}
+
 export default function Hero({ navigate }) {
   const [showPast, setShowPast] = useState(false);
 
@@ -72,16 +91,16 @@ export default function Hero({ navigate }) {
 
       <div className="relative mx-auto max-w-6xl px-5 md:px-8 pt-24 md:pt-32 pb-16">
         <div className="grid md:grid-cols-[auto_1fr] gap-10 md:gap-14 items-start">
-          {/* ---- 좌(데스크톱)/상단(모바일): 프로필 사진 ---- */}
+          {/* ---- 좌(데스크톱)/상단(모바일): 프로필 사진 — 항상 밝은 원본 컬러 유지 ---- */}
           <Reveal delay={60} className="justify-self-center md:justify-self-start">
-            <div className="group relative">
-              <div className="absolute -inset-2 rounded-3xl bg-gradient-to-br from-accent-500/35 via-transparent to-mint-400/20 blur-md transition-opacity duration-300 group-hover:opacity-100 opacity-70" />
+            <div className="group relative transition-transform duration-300 hover:-translate-y-0.5">
+              <div className="absolute -inset-2 rounded-3xl bg-gradient-to-br from-accent-500/35 via-transparent to-mint-400/20 blur-md opacity-70 transition-opacity duration-300 group-hover:opacity-100" />
               <div className="relative h-64 w-52 md:h-80 md:w-60 overflow-hidden rounded-2xl border border-accent-500/25">
                 <img
                   src="/profile.jpg"
                   alt="최정혜 교수"
                   loading="eager"
-                  className="h-full w-full object-cover grayscale-[35%] transition-all duration-500 group-hover:grayscale-0 group-hover:scale-[1.02]"
+                  className="h-full w-full object-cover"
                   onError={(e) => {
                     e.currentTarget.style.display = "none";
                     e.currentTarget.nextElementSibling.style.display = "flex";
@@ -94,16 +113,11 @@ export default function Hero({ navigate }) {
                 >
                   <span className="font-display text-4xl font-bold text-accent-300/60">JC</span>
                 </div>
-                {/* 은은한 다크 그라디언트 오버레이 */}
-                <div
-                  className="pointer-events-none absolute inset-0 bg-gradient-to-t from-base-950/45 via-transparent to-transparent"
-                  aria-hidden="true"
-                />
               </div>
             </div>
           </Reveal>
 
-          {/* ---- 이름/소개/연락처 ---- */}
+          {/* ---- 이름/직함/소개/연락처 ---- */}
           <div>
             <Reveal>
               <p className="font-display text-xs md:text-sm tracking-[0.35em] uppercase text-accent-300/90">
@@ -114,7 +128,7 @@ export default function Hero({ navigate }) {
               <h1 className="mt-4 text-5xl md:text-7xl font-extrabold tracking-tight leading-[1.05]">
                 최정혜
                 <span className="block mt-2 font-display text-xl md:text-2xl font-medium text-ink-500 tracking-normal">
-                  Jeonghye Choi, Ph.D.
+                  Jeonghye Choi · Professor of Marketing
                 </span>
               </h1>
             </Reveal>
@@ -125,14 +139,6 @@ export default function Hero({ navigate }) {
             </Reveal>
             <Reveal delay={220}>
               <ul className="mt-8 space-y-1.5 text-sm text-ink-500">
-                <li>
-                  <span className="text-ink-600 mr-2">직위</span>
-                  {BASIC_INFO.position}
-                </li>
-                <li>
-                  <span className="text-ink-600 mr-2">학위</span>
-                  {BASIC_INFO.degree}
-                </li>
                 <li>
                   <span className="text-ink-600 mr-2">연구실</span>
                   {BASIC_INFO.office}
@@ -153,7 +159,6 @@ export default function Hero({ navigate }) {
               </ul>
             </Reveal>
           </div>
-
         </div>
 
         {/* ---- 스탯 카운터 ---- */}
@@ -169,7 +174,7 @@ export default function Hero({ navigate }) {
             <ul className="space-y-3">
               {EDUCATION.map((e) => (
                 <li key={e.detail} className="flex gap-3 text-sm">
-                  <span className="font-display font-semibold text-ink-100 shrink-0 w-20">
+                  <span className="font-display font-semibold text-ink-100 shrink-0 w-28">
                     {e.degree}
                   </span>
                   <span className="text-ink-300">{e.detail}</span>
@@ -179,62 +184,59 @@ export default function Hero({ navigate }) {
           </InfoCard>
 
           <InfoCard title="Positions · 주요경력" delay={60}>
+            <GroupLabel>재직</GroupLabel>
             <ul className="space-y-2.5">
-              {CAREER.map((c) => (
-                <li key={c.role} className="flex gap-3 text-sm">
-                  <span className="font-display text-ink-600 tabular-nums shrink-0 w-28">
-                    {c.period}
-                  </span>
-                  <span className="text-ink-300">{c.role}</span>
-                </li>
+              {CAREER_MAIN.map((c) => (
+                <Row key={c.role} label={c.period}>
+                  {c.role}
+                </Row>
+              ))}
+            </ul>
+            <GroupLabel>겸직 · 특훈</GroupLabel>
+            <ul className="space-y-2.5">
+              {CAREER_ADJUNCT.map((c) => (
+                <Row key={c.role} label={c.period}>
+                  {c.role}
+                </Row>
               ))}
             </ul>
           </InfoCard>
 
           <InfoCard title="Board · 사외이사" delay={90}>
-            <div className="space-y-3 text-sm">
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="text-ink-600 text-xs shrink-0">현재</span>
-                {OUTSIDE_DIRECTOR.current.map((c) => (
-                  <Chip key={c} tone="accent">
-                    {c}
-                  </Chip>
-                ))}
-              </div>
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="text-ink-600 text-xs shrink-0">역임</span>
-                {OUTSIDE_DIRECTOR.past.map((c) => (
-                  <Chip key={c}>{c}</Chip>
-                ))}
-              </div>
-            </div>
+            <ul className="space-y-2.5">
+              {BOARD.map((b) => (
+                <Row key={b.org} label={b.period}>
+                  {b.org}
+                </Row>
+              ))}
+            </ul>
           </InfoCard>
 
           <InfoCard title="Academic Service · 학술활동" delay={120}>
-            <div className="flex flex-wrap gap-2">
-              {ACADEMIC_SERVICE.map((a) => (
-                <Chip key={a}>{a}</Chip>
+            <ul className="space-y-2.5">
+              {ACADEMIC_SERVICE.map((a, i) => (
+                <Row key={a} label={i === 0 ? "현재" : ""}>
+                  {a}
+                </Row>
               ))}
-            </div>
+            </ul>
           </InfoCard>
 
           <InfoCard title="Industry & Public · 산관연협력" delay={150} className="md:col-span-2">
-            <div className="space-y-4">
-              <div>
-                <p className="text-xs text-ink-600 mb-2">현재 협력 중</p>
-                <div className="flex flex-wrap gap-2">
-                  {INDUSTRY_CURRENT.map((c) => (
-                    <Chip key={c} tone="mint">
-                      {c}
-                    </Chip>
-                  ))}
-                </div>
-              </div>
-              <div>
+            <ul className="space-y-2.5">
+              {INDUSTRY_CURRENT.map((c, i) => (
+                <Row key={c} label={i === 0 ? "현재" : ""}>
+                  {c}
+                </Row>
+              ))}
+            </ul>
+            <div className="mt-4 flex gap-3 text-sm">
+              <span className="font-display text-ink-600 shrink-0 w-28">과거</span>
+              <div className="text-ink-300 min-w-0">
                 <button
                   type="button"
                   onClick={() => setShowPast((v) => !v)}
-                  className="text-xs text-ink-500 hover:text-accent-300 transition-colors mb-2 inline-flex items-center gap-1.5"
+                  className="text-xs text-ink-500 hover:text-accent-300 transition-colors inline-flex items-center gap-1.5"
                   aria-expanded={showPast}
                 >
                   <span
@@ -242,14 +244,12 @@ export default function Hero({ navigate }) {
                   >
                     ▸
                   </span>
-                  과거 협력 기관 {INDUSTRY_PAST.length}곳 {showPast ? "접기" : "모두 보기"}
+                  협력 기관 {INDUSTRY_PAST.length}곳 {showPast ? "접기" : "모두 보기"}
                 </button>
                 {showPast && (
-                  <div className="flex flex-wrap gap-2">
-                    {INDUSTRY_PAST.map((c) => (
-                      <Chip key={c}>{c}</Chip>
-                    ))}
-                  </div>
+                  <p className="mt-2 leading-relaxed text-ink-300">
+                    {INDUSTRY_PAST.join(" · ")}
+                  </p>
                 )}
               </div>
             </div>

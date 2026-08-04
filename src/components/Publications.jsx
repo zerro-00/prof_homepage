@@ -1,8 +1,7 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import { Reveal, SectionHeading } from "./common.jsx";
 import {
-  SSCI_PUBLICATIONS,
-  KCI_PUBLICATIONS,
+  ALL_PUBLICATIONS,
   KCI_COUNT_LABEL,
   BOOKS,
   KEYWORDS,
@@ -10,11 +9,27 @@ import {
   groupByJournal,
 } from "../data/publications.js";
 
+/* ---------- SSCI / KCI 타입 태그 ---------- */
+function TypeTag({ type }) {
+  const styles =
+    type === "SSCI"
+      ? "border-accent-500/40 bg-accent-500/10 text-accent-300"
+      : "border-mint-400/40 bg-mint-400/10 text-mint-400";
+  return (
+    <span
+      className={`inline-flex items-center rounded-md border px-1.5 py-0.5 font-display text-[10px] font-semibold tracking-wide ${styles}`}
+    >
+      {type}
+    </span>
+  );
+}
+
 /* ---------- 논문 카드 (키워드별/저널별 공용) ---------- */
 function PaperCard({ paper }) {
   return (
     <article className="group rounded-2xl border border-line bg-base-900/70 p-5 md:p-6 transition-colors hover:border-accent-500/40">
       <div className="flex flex-wrap items-center gap-2 mb-3">
+        <TypeTag type={paper.type} />
         {paper.tier === "top" && (
           <span className="inline-flex items-center gap-1 rounded-md border border-gold-500/40 bg-gold-500/10 px-2 py-0.5 font-display text-[11px] font-semibold tracking-wide text-gold-300">
             ★ Top Journal
@@ -61,19 +76,34 @@ function FilterBtn({ activeState, onClick, children }) {
   );
 }
 
-/* ---------- 키워드별 보기 ---------- */
-function KeywordView() {
-  const [keyword, setKeyword] = useState(KEYWORDS[0]);
-  const papers = useMemo(
-    () => SSCI_PUBLICATIONS.filter((p) => p.keywords.includes(keyword)),
-    [keyword]
+/* ---------- 목록 하단 안내 (KCI 일부 미확보) ---------- */
+function PartialNote({ show }) {
+  if (!show) return null;
+  return (
+    <p className="mt-6 text-center text-xs text-ink-600">
+      일부 논문은 정리 중입니다.
+    </p>
   );
+}
+
+/* ---------- 키워드별 보기 ---------- */
+function KeywordView({ pool }) {
+  const available = useMemo(
+    () => KEYWORDS.filter((k) => pool.some((p) => p.keywords.includes(k))),
+    [pool]
+  );
+  const [keyword, setKeyword] = useState(available[0]);
+  const papers = useMemo(
+    () => pool.filter((p) => p.keywords.includes(keyword)),
+    [pool, keyword]
+  );
+  const hasKci = pool.some((p) => p.type === "KCI");
 
   return (
     <div>
       <div className="flex flex-wrap gap-2 mb-8">
-        {KEYWORDS.map((k) => {
-          const count = SSCI_PUBLICATIONS.filter((p) => p.keywords.includes(k)).length;
+        {available.map((k) => {
+          const count = pool.filter((p) => p.keywords.includes(k)).length;
           return (
             <FilterBtn key={k} activeState={keyword === k} onClick={() => setKeyword(k)}>
               {k} <span className="opacity-60 font-display">{count}</span>
@@ -86,14 +116,15 @@ function KeywordView() {
           <PaperCard key={p.id} paper={p} />
         ))}
       </div>
+      <PartialNote show={hasKci} />
     </div>
   );
 }
 
 /* ---------- 저널별 보기 ---------- */
-function JournalView() {
-  const journals = useMemo(() => groupByJournal(SSCI_PUBLICATIONS), []);
-  const [journal, setJournal] = useState(journals[0].journal);
+function JournalView({ pool }) {
+  const journals = useMemo(() => groupByJournal(pool), [pool]);
+  const [journal, setJournal] = useState(journals[0]?.journal ?? null);
   const [subMode, setSubMode] = useState("keyword"); // 'keyword' | 'year'
   const [subKeyword, setSubKeyword] = useState(null);
   const [subRange, setSubRange] = useState(null);
@@ -103,7 +134,6 @@ function JournalView() {
     [journals, journal]
   );
 
-  // 해당 저널에 존재하는 키워드/연도 구간만 필터 버튼으로 노출
   const availableKeywords = useMemo(
     () => KEYWORDS.filter((k) => currentPapers.some((p) => p.keywords.includes(k))),
     [currentPapers]
@@ -129,6 +159,7 @@ function JournalView() {
     setSubKeyword(null);
     setSubRange(null);
   };
+  const hasKci = pool.some((p) => p.type === "KCI");
 
   return (
     <div>
@@ -226,26 +257,15 @@ function JournalView() {
       {filtered.length === 0 && (
         <p className="text-sm text-ink-600 py-8 text-center">해당 조건의 논문이 없습니다.</p>
       )}
+      <PartialNote show={hasKci} />
     </div>
   );
 }
 
-/* ---------- KCI + 저서 ---------- */
-function KciAndBooks({ focusKci = false }) {
-  const [openKci, setOpenKci] = useState(focusKci);
-  const kciRef = useRef(null);
-
-  // 히어로 KCI 스탯 카드에서 진입한 경우, 섹션 전환이 끝난 뒤 KCI 영역으로 스크롤
-  useEffect(() => {
-    if (!focusKci || !kciRef.current) return;
-    const t = setTimeout(() => {
-      kciRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
-    }, 450);
-    return () => clearTimeout(t);
-  }, [focusKci]);
-
+/* ---------- KCI 안내 + 저서 ---------- */
+function KciAndBooks() {
   return (
-    <div ref={kciRef} className="mt-14 grid md:grid-cols-2 gap-4 md:gap-5">
+    <div className="mt-14 grid md:grid-cols-2 gap-4 md:gap-5">
       {/* KCI */}
       <Reveal>
         <div className="h-full rounded-2xl border border-line bg-base-900/70 p-6">
@@ -257,36 +277,10 @@ function KciAndBooks({ focusKci = false }) {
           </div>
           <p className="text-[13px] text-ink-500 leading-relaxed">
             소셜미디어, 라이브커머스, OTT, 헬스케어, 크리에이터, 브랜드, 코로나19
-            소비행동 등 국내 시장 최전선의 주제를 다룬 국문 논문 50여 편.
+            소비행동 등 국내 시장 최전선의 주제를 다룬 국문 논문 50여 편. 확인된
+            논문은 위 목록에서 KCI 태그로 함께 검색·필터링됩니다. 일부 논문은 정리
+            중입니다.
           </p>
-          <button
-            type="button"
-            onClick={() => setOpenKci((v) => !v)}
-            className="mt-4 text-xs text-ink-500 hover:text-accent-300 transition-colors inline-flex items-center gap-1.5"
-            aria-expanded={openKci}
-          >
-            <span className={`inline-block transition-transform ${openKci ? "rotate-90" : ""}`}>
-              ▸
-            </span>
-            목록 {openKci ? "접기" : "펼치기"}
-          </button>
-          {openKci && (
-            <div className="mt-4 rounded-xl border border-dashed border-line p-4 text-[13px] text-ink-600">
-              {KCI_PUBLICATIONS.length === 0 ? (
-                <>
-                  전체 목록 준비 중입니다.
-                  {/* TODO: KCI 논문 데이터 추가 — src/data/publications.js 의
-                      KCI_PUBLICATIONS 배열에 SSCI와 동일 스키마로 추가하면 이 영역에 렌더링됩니다. */}
-                </>
-              ) : (
-                <div className="grid gap-3">
-                  {KCI_PUBLICATIONS.map((p) => (
-                    <PaperCard key={p.id} paper={p} />
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
         </div>
       </Reveal>
 
@@ -321,9 +315,20 @@ function KciAndBooks({ focusKci = false }) {
 }
 
 /* ---------- 메인 ---------- */
-// focus: 'ssci' → 기본(SSCI 목록 상단) / 'kci' → KCI 영역 펼침 + 스크롤
+// focus: 'ssci' → SSCI 필터 선택 / 'kci' → KCI 필터 선택 (히어로 스탯 카드 진입용)
 export default function Publications({ focus = null }) {
   const [mode, setMode] = useState("keyword"); // 'keyword' | 'journal'
+  const [typeFilter, setTypeFilter] = useState(
+    focus === "kci" ? "KCI" : focus === "ssci" ? "SSCI" : "ALL"
+  );
+
+  const pool = useMemo(
+    () =>
+      typeFilter === "ALL"
+        ? ALL_PUBLICATIONS
+        : ALL_PUBLICATIONS.filter((p) => p.type === typeFilter),
+    [typeFilter]
+  );
 
   return (
     <section id="publications" className="relative mx-auto max-w-6xl px-5 md:px-8 py-20 md:py-28">
@@ -331,11 +336,11 @@ export default function Publications({ focus = null }) {
         index="04"
         label="Research Archive"
         title="주요 연구 논문 및 저서"
-        desc="SSCI 국제 학술지 논문 전체. 키워드로 탐색하거나 저널별로 모아 볼 수 있으며, 모든 논문에 비전공자를 위한 쉬운 요약을 담았습니다."
+        desc="SSCI 국제 학술지와 KCI 국내 학술지 논문을 함께 탐색할 수 있습니다. 키워드로 찾거나 저널별로 모아 볼 수 있으며, 모든 논문에 비전공자를 위한 쉬운 요약을 담았습니다."
       />
 
-      {/* 보기 모드 토글 */}
-      <Reveal className="mb-8">
+      {/* 보기 모드 + 타입 토글 */}
+      <Reveal className="mb-8 flex flex-wrap items-center gap-3">
         <div className="inline-flex rounded-xl border border-line bg-base-850/80 p-1">
           {[
             { key: "keyword", label: "키워드별 보기" },
@@ -355,11 +360,35 @@ export default function Publications({ focus = null }) {
             </button>
           ))}
         </div>
+        <div className="inline-flex rounded-xl border border-line bg-base-850/80 p-1">
+          {[
+            { key: "ALL", label: "전체" },
+            { key: "SSCI", label: "SSCI" },
+            { key: "KCI", label: "KCI" },
+          ].map((t) => (
+            <button
+              key={t.key}
+              type="button"
+              onClick={() => setTypeFilter(t.key)}
+              className={`rounded-lg px-3.5 md:px-4 py-2 text-sm font-medium transition-colors ${
+                typeFilter === t.key
+                  ? "bg-accent-500/20 text-accent-300"
+                  : "text-ink-500 hover:text-ink-300"
+              }`}
+            >
+              {t.label}
+            </button>
+          ))}
+        </div>
       </Reveal>
 
-      {mode === "keyword" ? <KeywordView /> : <JournalView />}
+      {mode === "keyword" ? (
+        <KeywordView key={typeFilter} pool={pool} />
+      ) : (
+        <JournalView key={typeFilter} pool={pool} />
+      )}
 
-      <KciAndBooks focusKci={focus === "kci"} />
+      <KciAndBooks />
     </section>
   );
 }
