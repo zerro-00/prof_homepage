@@ -1,9 +1,9 @@
 import { useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { ComposableMap, Geographies, Geography, Marker } from "react-simple-maps";
-import { Reveal } from "./common.jsx";
 import { CITY_PINS } from "../data/alumni.js";
 import { localizeField } from "../i18n/index.js";
+import { worksForStudent } from "../data/publications.js";
 import geoData from "../data/countries-110m.json";
 
 function displayName(entry, lng) {
@@ -43,6 +43,7 @@ function EntryLinks({ entry, lng }) {
 
 function TooltipEntry({ entry, lng }) {
   const name = displayName(entry, lng);
+  const works = worksForStudent(entry.personId);
   return (
     <li className="text-[13px] leading-snug">
       <p>
@@ -52,6 +53,12 @@ function TooltipEntry({ entry, lng }) {
         </span>
         <span className="text-ink-600 mx-1.5">·</span>
         <span className="text-ink-500">{localizeField(entry, "grad", lng)}</span>
+        {works.length > 0 && (
+          <span className="ml-2 font-display text-[11px] text-ink-600">
+            SSCI {works.filter((w) => w.type === "SSCI").length} · KCI{" "}
+            {works.filter((w) => w.type === "KCI").length}
+          </span>
+        )}
       </p>
       <p className="text-ink-100 mt-0.5">{localizeField(entry, "affiliation", lng)}</p>
       <p className="text-ink-300">{localizeField(entry, "title", lng)}</p>
@@ -68,7 +75,6 @@ export default function WorldMap() {
   const lng = i18n.language;
   const [active, setActive] = useState(null);
   const activePin = CITY_PINS.find((p) => p.id === active) ?? null;
-  const badges = t("map.badges", { returnObjects: true });
 
   const toggle = useCallback(
     (id) => setActive((cur) => (cur === id ? null : id)),
@@ -146,22 +152,43 @@ export default function WorldMap() {
                     strokeWidth={1.5}
                     style={{ transition: "all .2s" }}
                   />
+                  {/* 인원수 표시 (핀 위) — 사람 이름 라벨은 넣지 않는다 */}
+                  {pin.entries.length > 1 && (
+                    <text
+                      textAnchor="middle"
+                      y={-10}
+                      className="pointer-events-none select-none"
+                      style={{
+                        fontFamily: "'Space Grotesk', sans-serif",
+                        fontSize: 9.5,
+                        fontWeight: 700,
+                        fill: isFaculty ? "#e8c877" : "#7cc5ff",
+                        paintOrder: "stroke",
+                        stroke: "#0a101d",
+                        strokeWidth: 3,
+                      }}
+                    >
+                      ×{pin.entries.length}
+                    </text>
+                  )}
+                  {/* 지역명 라벨 — 영문, 전 언어 공통, 데스크톱만 */}
                   <text
                     x={pin.labelDx ?? 10}
                     y={pin.labelDy ?? 4}
                     textAnchor={(pin.labelDx ?? 10) < 0 ? "end" : "start"}
                     className="hidden md:block pointer-events-none select-none"
                     style={{
-                      fontFamily: "'Pretendard Variable', Pretendard, sans-serif",
-                      fontSize: 10.5,
+                      fontFamily: "'Space Grotesk', sans-serif",
+                      fontSize: 8.5,
                       fontWeight: 600,
-                      fill: isFaculty ? "#e8c877" : "#8b98b0",
+                      letterSpacing: "0.08em",
+                      fill: "#667191",
                       paintOrder: "stroke",
                       stroke: "#0a101d",
                       strokeWidth: 3,
                     }}
                   >
-                    {localizeField(pin, "label", lng)}
+                    {pin.region}
                   </text>
                 </g>
               </Marker>
@@ -211,19 +238,6 @@ export default function WorldMap() {
             {t("map.legendOther")}
           </span>
         </div>
-      </div>
-
-      <div className="mt-5 grid grid-cols-2 sm:grid-cols-4 gap-3">
-        {badges.map((b, i) => (
-          <Reveal key={b.label} delay={i * 70}>
-            <div className="rounded-xl border border-line bg-base-900/70 px-5 py-4 flex items-baseline gap-3">
-              <span className="font-display text-2xl font-bold text-accent-300 tabular-nums">
-                {b.value}
-              </span>
-              <span className="text-sm text-ink-500">{b.label}</span>
-            </div>
-          </Reveal>
-        ))}
       </div>
 
       <p className="mt-4 text-xs text-ink-600">{t("map.note")}</p>

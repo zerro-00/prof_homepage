@@ -1,5 +1,7 @@
 {
-  "meta": { "htmlLang": "zh-CN" },
+  "meta": {
+    "htmlLang": "zh-CN"
+  },
   "nav": {
     "brand": "Jeonghye Choi Lab",
     "profile": "教授简介",
@@ -12,7 +14,6 @@
     "kicker": "Yonsei School of Business · Marketing",
     "name": "Jeonghye Choi",
     "subtitle": "市场营销教授",
-    "tagline": "以数字营销与数据洞察市场下一步的研究室",
     "photoAlt": "Jeonghye Choi 教授",
     "officeLabel": "办公室",
     "office": "Business Hall 537",
@@ -26,7 +27,11 @@
       "alumniSub": "博士 2 · 硕士 11",
       "awards": "获奖"
     },
-    "suffix": { "plus": "+", "people": "名", "count": "项" },
+    "suffix": {
+      "people": "名",
+      "count": "项",
+      "papers": "篇"
+    },
     "cards": {
       "education": "Education · 学历",
       "positions": "Positions · 主要经历",
@@ -43,25 +48,64 @@
   },
   "profile": {
     "education": [
-      { "degree": "Ph.D.", "detail": "Wharton School, University of Pennsylvania" },
-      { "degree": "M.S. · B.S.", "detail": "KAIST" }
+      {
+        "degree": "Ph.D.",
+        "detail": "Wharton School, University of Pennsylvania"
+      },
+      {
+        "degree": "M.S. · B.S.",
+        "detail": "KAIST"
+      }
     ],
     "careerMain": [
-      { "period": "2020 – 至今", "role": "Yonsei School of Business 教授" },
-      { "period": "2015 – 2020", "role": "Yonsei School of Business 副教授" },
-      { "period": "2010 – 2015", "role": "Yonsei School of Business 助理教授" }
+      {
+        "period": "2020 – 至今",
+        "role": "Yonsei School of Business 教授"
+      },
+      {
+        "period": "2015 – 2020",
+        "role": "Yonsei School of Business 副教授"
+      },
+      {
+        "period": "2010 – 2015",
+        "role": "Yonsei School of Business 助理教授"
+      }
     ],
     "careerAdjunct": [
-      { "period": "2021 – 至今", "role": "Yonsei University Underwood 特聘教授" },
-      { "period": "2020 – 至今", "role": "Yonsei School of Business 杰出研究业绩教授" },
-      { "period": "2016 – 2017", "role": "KAIST 产业工程系访问教授" },
-      { "period": "2014 – 2020", "role": "Yonsei School of Business 研究业绩教授" }
+      {
+        "period": "2021 – 至今",
+        "role": "Yonsei University Underwood 特聘教授"
+      },
+      {
+        "period": "2020 – 至今",
+        "role": "Yonsei School of Business 杰出研究业绩教授"
+      },
+      {
+        "period": "2016 – 2017",
+        "role": "KAIST 产业工程系访问教授"
+      },
+      {
+        "period": "2014 – 2020",
+        "role": "Yonsei School of Business 研究业绩教授"
+      }
     ],
     "board": [
-      { "period": "现任", "org": "T3 Entertainment" },
-      { "period": "2023 – 2024", "org": "SK Happynarae" },
-      { "period": "2020 – 2023", "org": "KB Insurance" },
-      { "period": "2020 – 2022", "org": "ABL Bio" }
+      {
+        "period": "现任",
+        "org": "T3 Entertainment"
+      },
+      {
+        "period": "2023 – 2024",
+        "org": "SK Happynarae"
+      },
+      {
+        "period": "2020 – 2023",
+        "org": "KB Insurance"
+      },
+      {
+        "period": "2020 – 2022",
+        "org": "ABL Bio"
+      }
     ],
     "academic": [
       "Korea Distribution Association 副会长",
@@ -141,8 +185,18 @@
           "市场营销原理"
         ]
       },
-      { "level": "硕博", "courses": ["数字营销研讨课"] },
-      { "level": "EMBA", "courses": ["数字营销"] }
+      {
+        "level": "硕博",
+        "courses": [
+          "数字营销研讨课"
+        ]
+      },
+      {
+        "level": "EMBA",
+        "courses": [
+          "数字营销"
+        ]
+      }
     ],
     "domains": [
       "数字营销",
@@ -171,25 +225,38 @@
     "legendFaculty": "教授任职",
     "legendOther": "博士课程·企业",
     "close": "关闭",
-    "statLine": "本研究室 SSCI 40+ 篇 · KCI 50+ 篇",
+    "statLine": "本研究室 SSCI 37 篇 · KCI 42 篇",
     "badges": [
-      { "value": "4名", "label": "海外大学教授任职" },
-      { "value": "8名", "label": "海外博士课程升学" },
-      { "value": "4个大洲", "label": "毕业生足迹" },
-      { "value": "5名", "label": "在读成员" }
+      {
+        "value": "4名",
+        "label": "海外大学教授任职"
+      },
+      {
+        "value": "8名",
+        "label": "海外博士课程升学"
+      },
+      {
+        "value": "4个大洲",
+        "label": "毕业生足迹"
+      },
+      {
+        "value": "5名",
+        "label": "在读成员"
+      }
     ],
     "note": "将鼠标悬停或点按图钉即可查看去向详情。姓名未确认的毕业生以匿名处理。"
   },
   "students": {
     "facultyHeading": "Faculty Placements · 教授任职",
-    "othersHeading": "Ph.D. & Industry · 博士升学及企业就职",
     "membersTitle": "Active Members",
     "membersSub": "现任研究室成员",
     "membersDesc": "目前有 {{n}} 名研究生在研究室共同开展研究。其中已有成员在读期间即取得国际期刊（SSCI）合著成果。",
     "worksShow": "查看 {{n}} 篇合著成果",
     "worksHide": "收起 {{n}} 篇合著成果",
     "book": "著作",
-    "topJournal": "顶级期刊"
+    "topJournal": "顶级期刊",
+    "phdHeading": "Ph.D. · 博士课程升学",
+    "industryHeading": "Industry · 企业就职"
   },
   "pubsUI": {
     "viewKeyword": "按关键词浏览",
@@ -198,9 +265,8 @@
     "filterKeyword": "关键词",
     "filterYear": "年份",
     "none": "没有符合该条件的论文。",
-    "partial": "部分论文正在整理中。",
     "kciTitle": "KCI 韩文论文",
-    "kciDesc": "约 50 篇韩文论文，涵盖社交媒体、直播电商、OTT、医疗健康、创作者、品牌、新冠消费行为等韩国市场前沿主题。已确认的论文可在上方列表中通过 KCI 标签检索。部分论文正在整理中。",
+    "kciDesc": "42 篇韩文论文，涵盖社交媒体、直播电商、OTT、医疗健康、创作者、品牌、新冠消费行为等韩国市场前沿主题。全部可在上方列表中通过 KCI 标签检索。",
     "booksTitle": "Books · 著作/译作",
     "badgeStudentCoauthor": "师生合著",
     "topJournalBadge": "★ Top Journal",
@@ -302,6 +368,15 @@
     "kci-2015-02": "是什么让人在手机上「购买」视频？本研究用实际数据验证驱动移动 VOD 内容购买的因素。",
     "kci-2014-01": "社交媒体研究走到了哪一步？本研究梳理社会科学领域的社交媒体研究，总结趋势与空白的研究动向分析。",
     "kci-2014-02": "依赖门户网站的购物平台能做多大？本研究分析对互联网门户的资源依赖对在线购物企业成长的影响。",
-    "kci-2013-01": "创作者活跃的平台有何不同？本研究表明在用户生成内容（UGC）平台上，生产者参与对消费者选择与沉浸产生差异化影响。"
+    "kci-2013-01": "创作者活跃的平台有何不同？本研究表明在用户生成内容（UGC）平台上，生产者参与对消费者选择与沉浸产生差异化影响。",
+    "kci-2026-04": "使用再生材料制造的运动鞋在转售市场上能卖得更贵吗？本研究以 Asics 为例，分析环保材料产品价格溢价的形成机制。",
+    "kci-2023-07": "职场压力累积时，手机 App 是解药还是负担？本研究分析移动 App 使用在职场压力源与积极情绪之间的调节作用。",
+    "kci-2016-03": "被规制的青少年自己如何看待游戏规制？本研究聚焦规制对象的逆反心理与同伴文化，从青少年视角审视网络游戏规制。",
+    "kci-2016-04": "同一品牌在不同地区的线上线下业绩也不同。本研究分析地区特殊性如何造成线下与线上渠道业绩的差异。",
+    "kci-2016-05": "生意好的门店有何不同？本研究分析门店内外环境及所在地区市场环境对门店业绩的影响。",
+    "kci-2016-06": "游戏币与现金付费，玩家何时花哪种钱？本研究从经验、成就与地区差距的角度实证分析游戏币与现金消费。",
+    "kci-2015-03": "搬家后在网上购买的品牌也会变吗？本研究分析消费者的地区迁移对在线品牌偏好变化的影响。",
+    "kci-2015-04": "新产品与既有产品因销售渠道不同而业绩各异。本研究通过经验品的时间序列分析，考察线下与线上渠道的销售业绩差异。",
+    "kci-2014-03": "新玩家与老玩家离开游戏的原因不同。本研究按客户类型分析网络游戏用户流失的驱动因素。"
   }
 }

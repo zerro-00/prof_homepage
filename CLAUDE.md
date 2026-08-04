@@ -68,7 +68,9 @@ src/
 }
 ```
 
-지도 하단 요약 배지는 같은 파일의 `MAP_BADGES`, 툴팁 하단 연구실 실적 문구는 `LAB_STAT_LINE`에서 수정한다.
+지도 하단 요약 배지 문구와 툴팁 하단 연구실 실적 문구는 i18n(`map.badges`, `map.statLine`)에서 수정한다.
+각 인물(entry)에는 `personId`가 있으며, 실적은 `publications.js`의 `studentIds` 매핑으로만 계산된다 (수기 works 배열 금지).
+지도 위 상시 텍스트는 지역명(`region`, 영문 공통) + 인원수(×N)만 — 사람 이름 라벨 금지.
 
 콘텐츠 추가·수정은 **항상 `src/data/` 안에서**. 컴포넌트에 데이터를 하드코딩하지 말 것.
 
@@ -169,19 +171,26 @@ src/
 **김우경, 황인서, 나규원, 김정현, 오가령**
 링크·사진·과정·이메일 등 상세정보 금지 (이름 + 확인된 공저 실적만). 지도 핀·배출 카운트에 포함하지 않음.
 
-### 한국어 ↔ 영문 이름 매핑 (검증 완료)
+### 한국어 ↔ 영문 이름 매핑 및 인물 id (검증 완료)
 
-| 한국어 | 영문 표기 | 한국어 | 영문 표기 |
-|---|---|---|---|
-| 김민경 | Mingyung Kim | 송혜신 | Hyeasinn Song |
-| 조우용 | Wooyong Jo | 김우경 | Wookyoung Kim |
-| 김상화 | Sanghwa Kim | 황인서 | Inseo Hwang |
-| 김지연 | Jeeyeon Kim | 정현우 | Hyunwoo Jung |
-| 이예령 | Yiling Li | 곽유신 | 미확인 |
-| 장연 | Yan Jiang | 이지연 | 미확인 |
-| 김혜정 | Hyejeong Kim | 나규원 | 미확인 |
-| 윤여홍 | Yeohong Yoon | 김정현 | 미확인 |
-| 윤여림 | Yeo Lim Yoon | 오가령 | 미확인 |
+| 한국어 | 영문 표기 | id | 한국어 | 영문 표기 | id |
+|---|---|---|---|---|---|
+| 김민경 | Mingyung Kim | `kim-mingyung` | 송혜신 | Hyeasinn Song | `song-hyeasinn` |
+| 조우용 | Wooyong Jo | `jo-wooyong` | 김우경 | Wookyoung Kim | `kim-wookyoung` |
+| 김상화 | Sanghwa Kim | `kim-sanghwa` | 황인서 | Inseo Hwang | `hwang-inseo` |
+| 김지연 | Jeeyeon Kim | `kim-jeeyeon` | 정현우 | Hyunwoo Jung | `jung-hyunwoo` |
+| 이예령 | **Li Yiling** | `li-yiling` | **오가령** | **Wu Jialing** | `wu-jialing` |
+| 장연 | Yan Jiang | `jiang-yan` | 곽유신 | 미확인 | `kwak-yushin` |
+| 김혜정 | Hyejeong Kim | `kim-hyejeong` | 이지연 | 미확인 | `lee-jiyeon` |
+| 윤여홍 | Yeohong Yoon | `yoon-yeohong` | 나규원 | 미확인 | `na-gyuwon` |
+| 윤여림 | Yeo Lim Yoon | `yoon-yeolim` | 김정현 | 미확인 | `kim-junghyun` |
+
+### 학생 실적 연결 원칙 (중요)
+
+**학생 실적은 `publications.js`의 논문별 `authors` 배열 + `studentIds`(id 매칭)로만 연결한다. 이름 문자열 추론 절대 금지.**
+- `authors`/`studentIds`가 없는 논문은 저자 미확인 → 어떤 학생에게도 연결하지 않음
+- 화면의 실적은 `worksForStudent(personId)`로 계산 (수기 works 배열 없음)
+- `scripts/check-authorship.mjs`가 학생별 편수를 검증하며 `npm run build`에 포함됨
 
 ### 수상·연구비 (확정)
 
@@ -191,16 +200,23 @@ src/
 
 ### ⚠️ 동명이인 경고 (중요)
 
-논문의 `Kim, Jikyung (Jeanne)`은 **제자 김지연(Jeeyeon Kim)이 아니다.** IE University 소속 외부 공동연구자.
-해당 논문(Channel Stickiness 2021, Purchase Now and Consume Later 2020, Sentiment Change 2022,
-Surprising Consequences 2024 등)을 김지연 실적에 배정하지 말 것.
-또한 저자 표기가 이니셜뿐인 논문(예: 'Yoon, Y.' — 윤여홍/윤여림 불명, 'Kim, J.' — 김지연/김정현 불명)은
-어느 학생에게도 배정하지 않는다.
+- **이예령(Li Yiling, 졸업생 2025 박사)과 오가령(Wu Jialing, 재학생)은 완전히 다른 인물이다. 절대 섞지 말 것.**
+- 논문의 `Kim, Jikyung (Jeanne)`은 **제자 김지연(Jeeyeon Kim)이 아니다.** IE University 소속 외부 공동연구자.
+  해당 논문(Channel Stickiness 2021, Purchase Now and Consume Later 2020, Sentiment Change 2022,
+  Surprising Consequences 2024 등)을 김지연 실적에 배정하지 말 것.
+- 저자 표기가 이니셜뿐인 논문(예: 'Y. Yoon' — 윤여홍/윤여림 불명, 'J. Kim' — 김지연/김정현 불명)은
+  어느 학생에게도 배정하지 않는다.
+
+## 확정 편수 (임의 변경 금지)
+
+**SSCI 37편 · KCI 42편 · 저서 4권. 수상 23건 · 연구비 7건.**
+히어로 카운터는 정확 편수 표기 (`40+`, `50+` 같은 어림 표기 금지).
 
 ## 현재 미완 항목 (TODO)
 
-- KCI 전체 목록 미확보(33/50): 확인된 33편은 `publications.js`에 수록 완료. 나머지는 교수님 CV 확보 후 보완. 카운터는 "50+" 유지.
-- 김혜정 2024 KCI 1건, 정현우 외 이니셜 저자 논문 등 배정 불확실 건: 교수님 확인 필요 (`alumni.js` 상단 주석 참고).
+- 저자 미확인 논문(SSCI 14편·KCI 다수 — `authors` 필드 없는 항목): 저자 확인 후 `authors`/`studentIds` 추가.
+- 이예령 KCI 편수 불일치: 10차 지령 1-3 확정표 기준 9편, 1-4 검증표 기준 7편. 현재 1-3표를 우선 적용(9편). 교수님 확인 필요.
+- 김혜정 2024 KCI 1건 등 배정 불확실 건: 교수님 확인 필요 (`alumni.js` 상단 주석 참고).
 - 김지연(Jeeyeon Kim) 링크: 현재 ORCID. La Trobe Scholars 공식 프로필 URL로 교체 필요.
 - 이예령 교수 소속 확정 필요 (고려대 디지털경영 / 화성의과학대 의료경영 — 학교 페이지 간 불일치). 확정 시 골드 핀 + 교수 카드로 승격.
 - 재학생 명단 교수님 확인 후 갱신.

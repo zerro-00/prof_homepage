@@ -135,11 +135,6 @@ export default function Hero({ navigate }) {
                 </span>
               </h1>
             </Reveal>
-            <Reveal delay={160}>
-              <p className="mt-6 text-lg md:text-xl text-ink-300 max-w-xl leading-relaxed">
-                {t("hero.tagline")}
-              </p>
-            </Reveal>
             <Reveal delay={220}>
               <ul className="mt-8 space-y-1.5 text-sm text-ink-500">
                 <li>

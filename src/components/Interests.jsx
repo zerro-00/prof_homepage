@@ -1,5 +1,15 @@
 import { useTranslation } from "react-i18next";
-import { Reveal, SectionHeading, Chip } from "./common.jsx";
+import { Reveal, SectionHeading } from "./common.jsx";
+
+// 프로필·수상과 동일한 2단 나열 행 — 좌측 라벨 + 가운뎃점으로 이어진 문단 (칩 금지, 클릭 불가)
+function Row({ label, items }) {
+  return (
+    <li className="flex gap-3 text-sm">
+      <span className="font-display text-ink-600 shrink-0 w-24 md:w-28">{label}</span>
+      <span className="text-ink-300 leading-relaxed min-w-0">{items.join(" · ")}</span>
+    </li>
+  );
+}
 
 export default function Interests() {
   const { t } = useTranslation();
@@ -16,22 +26,15 @@ export default function Interests() {
         desc={t("sections.interests.desc")}
       />
 
-      <div className="grid lg:grid-cols-[1fr_1.2fr] gap-5">
+      <div className="grid lg:grid-cols-2 gap-5 items-start">
         <Reveal>
           <div className="h-full rounded-2xl border border-line bg-base-900/70 p-6 md:p-7">
             <h3 className="font-display text-xs tracking-[0.25em] uppercase text-accent-400 mb-5">
               {t("interests.teachingTitle")}
             </h3>
-            <ul className="space-y-5">
+            <ul className="space-y-4">
               {teaching.map((tc) => (
-                <li key={tc.level}>
-                  <p className="text-sm font-semibold text-ink-100 mb-2">{tc.level}</p>
-                  <div className="flex flex-wrap gap-2">
-                    {tc.courses.map((c) => (
-                      <Chip key={c}>{c}</Chip>
-                    ))}
-                  </div>
-                </li>
+                <Row key={tc.level} label={tc.level} items={tc.courses} />
               ))}
             </ul>
           </div>
@@ -42,39 +45,10 @@ export default function Interests() {
             <h3 className="font-display text-xs tracking-[0.25em] uppercase text-accent-400 mb-5">
               {t("interests.researchTitle")}
             </h3>
-            <div className="space-y-6">
-              <div>
-                <div className="flex items-baseline justify-between mb-2">
-                  <p className="text-sm font-semibold text-ink-100">{t("interests.domain")}</p>
-                  <span className="font-display text-[11px] tracking-widest text-ink-600 uppercase">
-                    Domain
-                  </span>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {domains.map((d) => (
-                    <Chip key={d} tone="accent">
-                      {d}
-                    </Chip>
-                  ))}
-                </div>
-              </div>
-              <div className="h-px bg-line" />
-              <div>
-                <div className="flex items-baseline justify-between mb-2">
-                  <p className="text-sm font-semibold text-ink-100">{t("interests.method")}</p>
-                  <span className="font-display text-[11px] tracking-widest text-ink-600 uppercase">
-                    Method
-                  </span>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {methods.map((m) => (
-                    <Chip key={m} tone="mint">
-                      {m}
-                    </Chip>
-                  ))}
-                </div>
-              </div>
-            </div>
+            <ul className="space-y-4">
+              <Row label={t("interests.domain")} items={domains} />
+              <Row label={t("interests.method")} items={methods} />
+            </ul>
           </div>
         </Reveal>
       </div>

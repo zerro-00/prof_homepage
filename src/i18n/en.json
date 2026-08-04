@@ -1,5 +1,7 @@
 {
-  "meta": { "htmlLang": "en" },
+  "meta": {
+    "htmlLang": "en"
+  },
   "nav": {
     "brand": "Jeonghye Choi Lab",
     "profile": "Profile",
@@ -12,7 +14,6 @@
     "kicker": "Yonsei School of Business · Marketing",
     "name": "Jeonghye Choi",
     "subtitle": "Professor of Marketing",
-    "tagline": "A lab that reads the market's next move through digital marketing and data",
     "photoAlt": "Professor Jeonghye Choi",
     "officeLabel": "Office",
     "office": "Business Hall 537",
@@ -26,7 +27,11 @@
       "alumniSub": "2 Ph.D. · 11 Master's",
       "awards": "Awards"
     },
-    "suffix": { "plus": "+", "people": "", "count": "" },
+    "suffix": {
+      "people": "",
+      "count": "",
+      "papers": ""
+    },
     "cards": {
       "education": "Education",
       "positions": "Positions",
@@ -43,25 +48,64 @@
   },
   "profile": {
     "education": [
-      { "degree": "Ph.D.", "detail": "Wharton School, University of Pennsylvania" },
-      { "degree": "M.S. · B.S.", "detail": "KAIST" }
+      {
+        "degree": "Ph.D.",
+        "detail": "Wharton School, University of Pennsylvania"
+      },
+      {
+        "degree": "M.S. · B.S.",
+        "detail": "KAIST"
+      }
     ],
     "careerMain": [
-      { "period": "2020 – Present", "role": "Professor, Yonsei School of Business" },
-      { "period": "2015 – 2020", "role": "Associate Professor, Yonsei School of Business" },
-      { "period": "2010 – 2015", "role": "Assistant Professor, Yonsei School of Business" }
+      {
+        "period": "2020 – Present",
+        "role": "Professor, Yonsei School of Business"
+      },
+      {
+        "period": "2015 – 2020",
+        "role": "Associate Professor, Yonsei School of Business"
+      },
+      {
+        "period": "2010 – 2015",
+        "role": "Assistant Professor, Yonsei School of Business"
+      }
     ],
     "careerAdjunct": [
-      { "period": "2021 – Present", "role": "Underwood Distinguished Professor, Yonsei University" },
-      { "period": "2020 – Present", "role": "Distinguished Research Professor, Yonsei School of Business" },
-      { "period": "2016 – 2017", "role": "Visiting Professor, Dept. of Industrial Engineering, KAIST" },
-      { "period": "2014 – 2020", "role": "Research Professor, Yonsei School of Business" }
+      {
+        "period": "2021 – Present",
+        "role": "Underwood Distinguished Professor, Yonsei University"
+      },
+      {
+        "period": "2020 – Present",
+        "role": "Distinguished Research Professor, Yonsei School of Business"
+      },
+      {
+        "period": "2016 – 2017",
+        "role": "Visiting Professor, Dept. of Industrial Engineering, KAIST"
+      },
+      {
+        "period": "2014 – 2020",
+        "role": "Research Professor, Yonsei School of Business"
+      }
     ],
     "board": [
-      { "period": "Current", "org": "T3 Entertainment" },
-      { "period": "2023 – 2024", "org": "SK Happynarae" },
-      { "period": "2020 – 2023", "org": "KB Insurance" },
-      { "period": "2020 – 2022", "org": "ABL Bio" }
+      {
+        "period": "Current",
+        "org": "T3 Entertainment"
+      },
+      {
+        "period": "2023 – 2024",
+        "org": "SK Happynarae"
+      },
+      {
+        "period": "2020 – 2023",
+        "org": "KB Insurance"
+      },
+      {
+        "period": "2020 – 2022",
+        "org": "ABL Bio"
+      }
     ],
     "academic": [
       "Vice President, Korea Distribution Association",
@@ -141,8 +185,18 @@
           "Principles of Marketing"
         ]
       },
-      { "level": "M.S. / Ph.D.", "courses": ["Digital Marketing Seminar"] },
-      { "level": "EMBA", "courses": ["Digital Marketing"] }
+      {
+        "level": "M.S. / Ph.D.",
+        "courses": [
+          "Digital Marketing Seminar"
+        ]
+      },
+      {
+        "level": "EMBA",
+        "courses": [
+          "Digital Marketing"
+        ]
+      }
     ],
     "domains": [
       "Digital Marketing",
@@ -171,25 +225,38 @@
     "legendFaculty": "Faculty Placements",
     "legendOther": "Ph.D. / Industry",
     "close": "Close",
-    "statLine": "This lab: 40+ SSCI · 50+ KCI publications",
+    "statLine": "This lab: 37 SSCI · 42 KCI publications",
     "badges": [
-      { "value": "4", "label": "Faculty placements abroad" },
-      { "value": "8", "label": "Ph.D. placements abroad" },
-      { "value": "4", "label": "Continents reached" },
-      { "value": "5", "label": "Current members" }
+      {
+        "value": "4",
+        "label": "Faculty placements abroad"
+      },
+      {
+        "value": "8",
+        "label": "Ph.D. placements abroad"
+      },
+      {
+        "value": "4",
+        "label": "Continents reached"
+      },
+      {
+        "value": "5",
+        "label": "Current members"
+      }
     ],
     "note": "Hover or tap a pin to see placement details. Alumni whose names could not be confirmed remain anonymous."
   },
   "students": {
     "facultyHeading": "Faculty Placements",
-    "othersHeading": "Ph.D. & Industry Placements",
     "membersTitle": "Active Members",
     "membersSub": "Current Lab Members",
     "membersDesc": "{{n}} graduate students are currently doing research in the lab. Some have already co-authored SSCI journal publications during their studies.",
     "worksShow": "Show {{n}} co-authored works",
     "worksHide": "Hide {{n}} co-authored works",
     "book": "Book",
-    "topJournal": "Top-tier journal"
+    "topJournal": "Top-tier journal",
+    "phdHeading": "Ph.D. Placements",
+    "industryHeading": "Industry Placements"
   },
   "pubsUI": {
     "viewKeyword": "By Keyword",
@@ -198,9 +265,8 @@
     "filterKeyword": "Keyword",
     "filterYear": "Year",
     "none": "No publications match this filter.",
-    "partial": "Some publications are still being compiled.",
     "kciTitle": "KCI Korean Journal Articles",
-    "kciDesc": "Around 50 Korean-language articles on the front lines of the Korean market — social media, live commerce, OTT, healthcare, creators, brands, and COVID-19 consumer behavior. Confirmed articles are searchable above under the KCI tag. Some publications are still being compiled.",
+    "kciDesc": "42 Korean-language articles on the front lines of the Korean market — social media, live commerce, OTT, healthcare, creators, brands, and COVID-19 consumer behavior. All are searchable above under the KCI tag.",
     "booksTitle": "Books",
     "badgeStudentCoauthor": "Co-authored with students",
     "topJournalBadge": "★ Top Journal",
@@ -302,6 +368,15 @@
     "kci-2015-02": "What makes people pay for video on their phones? This empirical study verifies the factors driving mobile VOD content purchases.",
     "kci-2014-01": "How far has social media research come? This review maps the trends and gaps in social media research across the social sciences.",
     "kci-2014-02": "How big can a shopping mall grow while depending on portals? This study analyzes how resource dependence on internet portals affects the growth of online shopping mall firms.",
-    "kci-2013-01": "What sets apart platforms where creators are active? This study shows producer participation on user-generated content platforms has distinct effects on consumer choice and engagement."
+    "kci-2013-01": "What sets apart platforms where creators are active? This study shows producer participation on user-generated content platforms has distinct effects on consumer choice and engagement.",
+    "kci-2026-04": "Do sneakers made with recycled materials fetch a premium on the resale market? Using the case of Asics, this study analyzes how price premiums form for eco-material products.",
+    "kci-2023-07": "When workplace stress builds up, are smartphone apps a remedy or a burden? This study analyzes the moderating role of mobile app use between workplace stressors and positive affect.",
+    "kci-2016-03": "How do teenagers themselves see game regulation? Focusing on the targets' reactance and peer culture, this study examines online game regulation from the youths' perspective.",
+    "kci-2016-04": "Even the same brand performs differently online and offline by region. This study analyzes how regional specificity creates differences in offline and online channel performance.",
+    "kci-2016-05": "What sets high-performing stores apart? This study analyzes how in-store and surrounding environments, along with local market conditions, affect store performance.",
+    "kci-2016-06": "In-game currency versus real cash — when do players spend which? This empirical study analyzes game money and cash money consumption through experience, achievement, and regional disparity.",
+    "kci-2015-03": "Does moving to a new region change the brands we buy online? This study analyzes how consumers' regional migration affects changes in online brand preference.",
+    "kci-2015-04": "New and existing products perform differently depending on the channel. Analyzing time-series data on experience goods, this study examines sales performance across offline and online channels.",
+    "kci-2014-03": "The reasons players leave differ between new and long-time users. This study analyzes the churn drivers of online game customers by customer type."
   }
 }

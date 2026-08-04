@@ -92,12 +92,6 @@ function FilterBtn({ activeState, onClick, children }) {
   );
 }
 
-function PartialNote({ show }) {
-  const { t } = useTranslation();
-  if (!show) return null;
-  return <p className="mt-6 text-center text-xs text-ink-600">{t("pubsUI.partial")}</p>;
-}
-
 /* ---------- 키워드별 보기 ---------- */
 function KeywordView({ pool }) {
   const { t } = useTranslation();
@@ -110,7 +104,6 @@ function KeywordView({ pool }) {
     () => pool.filter((p) => p.keywords.includes(keyword)),
     [pool, keyword]
   );
-  const hasKci = pool.some((p) => p.type === "KCI");
 
   return (
     <div>
@@ -129,7 +122,6 @@ function KeywordView({ pool }) {
           <PaperCard key={p.id} paper={p} />
         ))}
       </div>
-      <PartialNote show={hasKci} />
     </div>
   );
 }
@@ -173,7 +165,6 @@ function JournalView({ pool }) {
     setSubKeyword(null);
     setSubRange(null);
   };
-  const hasKci = pool.some((p) => p.type === "KCI");
 
   return (
     <div>
@@ -269,7 +260,6 @@ function JournalView({ pool }) {
       {filtered.length === 0 && (
         <p className="text-sm text-ink-600 py-8 text-center">{t("pubsUI.none")}</p>
       )}
-      <PartialNote show={hasKci} />
     </div>
   );
 }

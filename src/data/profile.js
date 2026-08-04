@@ -11,8 +11,8 @@ export const BASIC_INFO = {
 // 히어로 스탯 카운터 — labelKey는 i18n hero.stats.*, suffixKey는 hero.suffix.*
 // section/focus: 클릭 시 이동할 섹션과 초기 상태
 export const HERO_STATS = [
-  { key: "ssci", value: 40, suffixKey: "plus", section: "publications", focus: "ssci" },
-  { key: "kci", value: 50, suffixKey: "plus", section: "publications", focus: "kci" },
+  { key: "ssci", value: 37, suffixKey: "papers", section: "publications", focus: "ssci" },
+  { key: "kci", value: 42, suffixKey: "papers", section: "publications", focus: "kci" },
   { key: "alumni", value: 13, suffixKey: "people", hasSub: true, section: "alumni" },
   { key: "awards", value: 23, suffixKey: "count", section: "awards" },
 ];

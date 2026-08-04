@@ -1,5 +1,7 @@
 {
-  "meta": { "htmlLang": "ja" },
+  "meta": {
+    "htmlLang": "ja"
+  },
   "nav": {
     "brand": "Jeonghye Choi Lab",
     "profile": "プロフィール",
@@ -12,7 +14,6 @@
     "kicker": "Yonsei School of Business · Marketing",
     "name": "Jeonghye Choi",
     "subtitle": "マーケティング教授",
-    "tagline": "デジタルマーケティングとデータで市場の次の一手を読む研究室",
     "photoAlt": "Jeonghye Choi 教授",
     "officeLabel": "研究室",
     "office": "Business Hall 537",
@@ -26,7 +27,11 @@
       "alumniSub": "博士 2 · 修士 11",
       "awards": "受賞"
     },
-    "suffix": { "plus": "+", "people": "名", "count": "件" },
+    "suffix": {
+      "people": "名",
+      "count": "件",
+      "papers": "本"
+    },
     "cards": {
       "education": "Education · 学歴",
       "positions": "Positions · 主な経歴",
@@ -43,25 +48,64 @@
   },
   "profile": {
     "education": [
-      { "degree": "Ph.D.", "detail": "Wharton School, University of Pennsylvania" },
-      { "degree": "M.S. · B.S.", "detail": "KAIST" }
+      {
+        "degree": "Ph.D.",
+        "detail": "Wharton School, University of Pennsylvania"
+      },
+      {
+        "degree": "M.S. · B.S.",
+        "detail": "KAIST"
+      }
     ],
     "careerMain": [
-      { "period": "2020 – 現在", "role": "Yonsei School of Business 教授" },
-      { "period": "2015 – 2020", "role": "Yonsei School of Business 准教授" },
-      { "period": "2010 – 2015", "role": "Yonsei School of Business 助教授" }
+      {
+        "period": "2020 – 現在",
+        "role": "Yonsei School of Business 教授"
+      },
+      {
+        "period": "2015 – 2020",
+        "role": "Yonsei School of Business 准教授"
+      },
+      {
+        "period": "2010 – 2015",
+        "role": "Yonsei School of Business 助教授"
+      }
     ],
     "careerAdjunct": [
-      { "period": "2021 – 現在", "role": "Yonsei University Underwood 特別任用教授" },
-      { "period": "2020 – 現在", "role": "Yonsei School of Business 優秀研究業績教授" },
-      { "period": "2016 – 2017", "role": "KAIST 産業工学科 客員教授" },
-      { "period": "2014 – 2020", "role": "Yonsei School of Business 研究業績教授" }
+      {
+        "period": "2021 – 現在",
+        "role": "Yonsei University Underwood 特別任用教授"
+      },
+      {
+        "period": "2020 – 現在",
+        "role": "Yonsei School of Business 優秀研究業績教授"
+      },
+      {
+        "period": "2016 – 2017",
+        "role": "KAIST 産業工学科 客員教授"
+      },
+      {
+        "period": "2014 – 2020",
+        "role": "Yonsei School of Business 研究業績教授"
+      }
     ],
     "board": [
-      { "period": "現在", "org": "T3 Entertainment" },
-      { "period": "2023 – 2024", "org": "SK Happynarae" },
-      { "period": "2020 – 2023", "org": "KB Insurance" },
-      { "period": "2020 – 2022", "org": "ABL Bio" }
+      {
+        "period": "現在",
+        "org": "T3 Entertainment"
+      },
+      {
+        "period": "2023 – 2024",
+        "org": "SK Happynarae"
+      },
+      {
+        "period": "2020 – 2023",
+        "org": "KB Insurance"
+      },
+      {
+        "period": "2020 – 2022",
+        "org": "ABL Bio"
+      }
     ],
     "academic": [
       "Korea Distribution Association 副会長",
@@ -141,8 +185,18 @@
           "マーケティング原論"
         ]
       },
-      { "level": "修士・博士", "courses": ["デジタルマーケティングセミナー"] },
-      { "level": "EMBA", "courses": ["デジタルマーケティング"] }
+      {
+        "level": "修士・博士",
+        "courses": [
+          "デジタルマーケティングセミナー"
+        ]
+      },
+      {
+        "level": "EMBA",
+        "courses": [
+          "デジタルマーケティング"
+        ]
+      }
     ],
     "domains": [
       "デジタルマーケティング",
@@ -171,25 +225,38 @@
     "legendFaculty": "教授就任",
     "legendOther": "博士課程・企業",
     "close": "閉じる",
-    "statLine": "当研究室 SSCI 40+ 本 · KCI 50+ 本",
+    "statLine": "当研究室 SSCI 37 本 · KCI 42 本",
     "badges": [
-      { "value": "4名", "label": "海外大学の教授就任" },
-      { "value": "8名", "label": "海外博士課程への進学" },
-      { "value": "4大陸", "label": "修了生の活躍の舞台" },
-      { "value": "5名", "label": "在籍メンバー" }
+      {
+        "value": "4名",
+        "label": "海外大学の教授就任"
+      },
+      {
+        "value": "8名",
+        "label": "海外博士課程への進学"
+      },
+      {
+        "value": "4大陸",
+        "label": "修了生の活躍の舞台"
+      },
+      {
+        "value": "5名",
+        "label": "在籍メンバー"
+      }
     ],
     "note": "ピンにマウスを乗せるかタップすると進路の詳細が表示されます。氏名が確認できていない修了生は匿名にしています。"
   },
   "students": {
     "facultyHeading": "Faculty Placements · 教授就任",
-    "othersHeading": "Ph.D. & Industry · 博士課程進学・企業就職",
     "membersTitle": "Active Members",
     "membersSub": "現在の研究室メンバー",
     "membersDesc": "現在 {{n}} 名の大学院生が研究室で共に研究しています。在学中にすでに国際学術誌（SSCI）の共著実績を持つメンバーもいます。",
     "worksShow": "共著実績 {{n}} 本を表示",
     "worksHide": "共著実績 {{n}} 本を閉じる",
     "book": "著書",
-    "topJournal": "トップジャーナル"
+    "topJournal": "トップジャーナル",
+    "phdHeading": "Ph.D. · 博士課程進学",
+    "industryHeading": "Industry · 企業就職"
   },
   "pubsUI": {
     "viewKeyword": "キーワード別に見る",
@@ -198,9 +265,8 @@
     "filterKeyword": "キーワード",
     "filterYear": "年度",
     "none": "この条件に該当する論文はありません。",
-    "partial": "一部の論文は整理中です。",
     "kciTitle": "KCI 韓国語論文",
-    "kciDesc": "ソーシャルメディア、ライブコマース、OTT、ヘルスケア、クリエイター、ブランド、コロナ禍の消費行動など、韓国市場の最前線を扱った韓国語論文約 50 本。確認済みの論文は上のリストで KCI タグから検索できます。一部の論文は整理中です。",
+    "kciDesc": "ソーシャルメディア、ライブコマース、OTT、ヘルスケア、クリエイター、ブランド、コロナ禍の消費行動など、韓国市場の最前線を扱った韓国語論文 42 本。すべて上のリストで KCI タグから検索できます。",
     "booksTitle": "Books · 著書/訳書",
     "badgeStudentCoauthor": "教え子との共著",
     "topJournalBadge": "★ Top Journal",
@@ -302,6 +368,15 @@
     "kci-2015-02": "スマートフォンで映像を「購入」させるものは何か。モバイル VOD コンテンツ購買を導く要因を実データで検証した研究。",
     "kci-2014-01": "ソーシャルメディア研究はどこまで来たのか。社会科学分野のソーシャルメディア研究を集め、流れと空白を整理した研究動向分析。",
     "kci-2014-02": "ポータルに頼るショッピングモールはどこまで成長できるのか。インターネットポータルへの資源依存がオンラインショッピングモール企業の成長に与える影響を分析した研究。",
-    "kci-2013-01": "クリエイターが活発に動くプラットフォームは何が違うのか。ユーザー生成コンテンツ（UGC）プラットフォームで生産者の参加が消費者の選択と没入に異なる影響を与えることを示した研究。"
+    "kci-2013-01": "クリエイターが活発に動くプラットフォームは何が違うのか。ユーザー生成コンテンツ（UGC）プラットフォームで生産者の参加が消費者の選択と没入に異なる影響を与えることを示した研究。",
+    "kci-2026-04": "リサイクル素材のスニーカーはリセール市場でより高く売れるのか。Asics の事例からエコ素材製品のプレミアム価格形成を分析した研究。",
+    "kci-2023-07": "職場のストレスが溜まるとき、スマホアプリは薬か毒か。職場のストレッサーとポジティブ感情の間でモバイルアプリ利用が果たす調整効果を分析した研究。",
+    "kci-2016-03": "ゲーム規制を当の青少年たちはどう見ているのか。規制対象者の反発心とピア文化に注目し、オンラインゲーム規制を当事者の視点から検討した研究。",
+    "kci-2016-04": "同じブランドでも地域によってオン・オフラインの成績は異なる。地域の特殊性がオフラインとオンラインチャネルの成果にどんな違いを生むかを分析した研究。",
+    "kci-2016-05": "繁盛する店は何が違うのか。店舗内外の環境とその店舗が属する地域市場環境が店舗成果に与える影響を分析した研究。",
+    "kci-2016-06": "ゲーム内通貨と現金課金、プレイヤーはいつ何を使うのか。ゲームマネーとキャッシュマネーの消費を経験・達成・地域格差の観点から実証分析した研究。",
+    "kci-2015-03": "引っ越すとオンラインで買うブランドも変わるのか。消費者の地域移住がオンラインブランド選好の変化に与える影響を分析した研究。",
+    "kci-2015-04": "新製品と既存製品は売る場所（オンライン/オフライン）によって成績が変わる。経験財の時系列データを分析し、チャネル別販売成果の違いを検討した研究。",
+    "kci-2014-03": "ゲームを去る理由は新規ユーザーと古参ユーザーで異なる。オンラインゲームにおける顧客タイプ別の離脱要因を分析した研究。"
   }
 }
