@@ -1,6 +1,6 @@
 import { Suspense, lazy } from "react";
 import { Reveal, SectionHeading } from "./common.jsx";
-import { CITY_PINS } from "../data/alumni.js";
+import { CITY_PINS, CURRENT_MEMBERS } from "../data/alumni.js";
 
 // 지도는 무겁기 때문에 lazy 로딩
 const WorldMap = lazy(() => import("./WorldMap.jsx"));
@@ -84,6 +84,39 @@ function AlumniList() {
   );
 }
 
+// 현재 연구실 구성원 — 이름만 칩으로, 링크·클릭 없음
+function CurrentMembers() {
+  return (
+    <Reveal className="mt-12">
+      <div className="rounded-2xl border border-line bg-base-900/70 p-6 md:p-7">
+        <div className="flex items-baseline gap-3 mb-1.5">
+          <h3 className="font-display text-xs tracking-[0.25em] uppercase text-mint-400">
+            Active Members
+          </h3>
+          <span className="text-sm font-semibold text-ink-100">현재 연구실 구성원</span>
+        </div>
+        <p className="text-[13px] text-ink-500 mb-4">
+          현재 {CURRENT_MEMBERS.length}명의 대학원생이 연구실에서 함께 연구하고 있습니다.
+        </p>
+        <div className="flex flex-wrap gap-2.5">
+          {CURRENT_MEMBERS.map((m) => (
+            <span
+              key={m.nameKo}
+              className="inline-flex items-center gap-2 rounded-full border border-line bg-base-850/80 px-3.5 py-1.5 text-[13px] text-ink-300 transition-colors hover:border-mint-400/40"
+            >
+              <span className="relative flex h-1.5 w-1.5" aria-hidden="true">
+                <span className="member-dot-pulse absolute inline-flex h-full w-full rounded-full bg-mint-400" />
+                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-mint-400/80" />
+              </span>
+              {m.nameKo}
+            </span>
+          ))}
+        </div>
+      </div>
+    </Reveal>
+  );
+}
+
 export default function StudentsSection() {
   return (
     <section id="alumni" className="relative mx-auto max-w-6xl px-5 md:px-8 py-20 md:py-28">
@@ -103,6 +136,7 @@ export default function StudentsSection() {
         <WorldMap />
       </Suspense>
       <AlumniList />
+      <CurrentMembers />
     </section>
   );
 }

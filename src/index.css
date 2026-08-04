@@ -82,6 +82,32 @@ body {
   animation: pin-pulse 2.4s ease-out infinite;
 }
 
+/* ---- 재학생 칩의 은은한 dot pulse (지도 핀보다 훨씬 약하게) ---- */
+@keyframes member-dot-pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  70% {
+    transform: scale(2);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+.member-dot-pulse {
+  animation: member-dot-pulse 2.8s ease-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pin-pulse,
+  .member-dot-pulse {
+    animation: none;
+  }
+}
+
 /* ---- subtle grid backdrop for hero (game-HUD feel, kept faint) ---- */
 .hud-grid {
   background-image:
