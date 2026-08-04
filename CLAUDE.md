@@ -29,11 +29,46 @@ npm run preview  # 빌드 결과 확인
 src/
   data/          # 모든 콘텐츠 데이터. 컴포넌트와 반드시 분리 유지
     publications.js   # { id, title, journal, year, keywords[], summary, tier }
-    alumni.js         # { nameKo, nameEn, institution, city, lat, lng, year, track, link, linkLabel, isFaculty }
-    profile.js        # 약력·경력·수상 등
+    alumni.js         # 아래 "alumni.js 실제 스키마" 참고
+    profile.js        # 기본정보·학력·경력·관심분야 등
+    awards.js         # 수상·연구비
   components/
   App.jsx
 ```
+
+### alumni.js 실제 스키마
+
+도시 단위 핀(`CITY_PINS`) 안에 인원(`entries`)이 묶이는 2단 구조. 같은 도시에 여러 명이면 핀 하나에 목록으로 표시된다.
+
+```js
+// 핀(도시) 단위
+{
+  id: "columbus",              // 고유 슬러그
+  city: "콜럼버스",
+  country: "미국",
+  coordinates: [-83.0007, 39.9612],  // [경도, 위도] 순서 주의 (lat/lng 아님)
+  label: "김민경",             // 지도 위 상시 노출 라벨 (데스크톱만)
+  labelDx: 10, labelDy: 4,     // 라벨 오프셋(px)
+  entries: [ /* 아래 인원 스키마 */ ],
+}
+
+// 인원(entry) 단위
+{
+  nameKo: "김민경",
+  nameEn: "Mingyung Kim",      // 없으면 null
+  grad: "2015 학사",           // 본 연구실 학위·연도
+  affiliation: "Ohio State University · Fisher College of Business",
+  title: "Assistant Professor of Marketing",
+  path: "2015 학사 → 2017 Wharton School 마케팅 박사 → 2024 Ohio State 임용",
+  isFaculty: true,             // true면 골드 핀 + 이중 pulse 링 + 교수 임용 카드
+  link: "https://...",         // 공식 프로필 (기본 링크). 없으면 생략/null
+  linkLabel: "교수 홈페이지 →",
+  subLink: "https://...",      // 개인 사이트 (보조 링크). 없으면 null
+  subLinkLabel: "개인 사이트 →",
+}
+```
+
+지도 하단 요약 배지는 같은 파일의 `MAP_BADGES`, 툴팁 하단 연구실 실적 문구는 `LAB_STAT_LINE`에서 수정한다.
 
 콘텐츠 추가·수정은 **항상 `src/data/` 안에서**. 컴포넌트에 데이터를 하드코딩하지 말 것.
 
