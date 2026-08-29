@@ -46,6 +46,7 @@ const _SSCI = [
     id: "ssci-2026-03",
     authors: ["Yiling Li", "Jeonghye Choi", "J. Kim"],
     studentIds: ["li-yiling"],
+    authorSource: "출판사 원문 (14차 확정표)",
     doi: "10.1108/JRIM-04-2025-0234",
     title:
       "Weathering the Digital Shift: How Interaction Spaces and Weather Conditions Shape Mobile App Engagement",
@@ -60,6 +61,7 @@ const _SSCI = [
     id: "ssci-2026-04",
     authors: ["Jeeyeon Kim", "Wookyoung Kim", "Jeonghye Choi"],
     studentIds: ["kim-jeeyeon", "kim-wookyoung"],
+    authorSource: "출판사 원문 (14차 확정표)",
     doi: "10.1177/14413582251356702",
     title:
       "Push the Paw: A Field Experiment on Personalised Push Notifications and User Engagement",
@@ -74,6 +76,7 @@ const _SSCI = [
     id: "ssci-2026-05",
     authors: ["Yiling Li", "Inseo Hwang", "Jeonghye Choi"],
     studentIds: ["li-yiling", "hwang-inseo"],
+    authorSource: "출판사 원문 (14차 확정표)",
     doi: "10.1108/JRIM-10-2024-0488",
     title:
       "Emotional Anthropomorphism of Notifications and App Engagement: Does the Usage Frequency Matter?",
@@ -90,6 +93,7 @@ const _SSCI = [
     id: "ssci-2025-01",
     authors: ["Wooyong Jo", "Sarang Sunder", "Jeonghye Choi", "Minakshi Trivedi"],
     studentIds: ["jo-wooyong"],
+    authorSource: "출판사 원문 (14차 확정표)",
     doi: "10.1093/jcr/ucae075",
     title:
       "In the Company of Strangers: Social Influence from Anonymous Peers in Online Game Settings",
@@ -104,6 +108,7 @@ const _SSCI = [
     id: "ssci-2025-02",
     authors: ["Y. Yoon", "H. Kim", "Jeonghye Choi", "H. Cho"],
     studentIds: [],
+    authorSource: "출판사 원문 (14차 확정표)",
     doi: "10.1080/02650487.2024.2444857",
     title:
       "Click, Sign-up and Purchase: Consumer Responses to Real-Time Mobile Offers along the Consumer Decision Journey",
@@ -118,6 +123,7 @@ const _SSCI = [
     id: "ssci-2025-03",
     authors: ["Wooyong Jo", "Hyejeong Kim", "Jeonghye Choi"],
     studentIds: ["jo-wooyong", "kim-hyejeong"],
+    authorSource: "출판사 원문 (14차 확정표)",
     doi: "10.1007/s11002-024-09736-4",
     title:
       "A Picture's Worth a Thousand Shares: An Empirical Analysis of Logo Sizes in Social Media Posts and Their Impact on Content Virality",
@@ -132,6 +138,7 @@ const _SSCI = [
     id: "ssci-2025-04",
     authors: ["Hyoryung Nam", "Yiling Li", "P. K. Kannan", "Jeonghye Choi"],
     studentIds: ["li-yiling"],
+    authorSource: "출판사 원문 (14차 확정표)",
     title:
       "Liability of Foreignness in Immersive Technologies: Evidence from Extended Reality Innovations",
     journal: "Journal of International Business Studies",
@@ -145,6 +152,7 @@ const _SSCI = [
     id: "ssci-2024-01",
     authors: ["Jikyung (Jeanne) Kim", "Yeohong Yoon", "Jeonghye Choi", "Dilip Soman", "Hang Dong"],
     studentIds: ["yoon-yeohong"],
+    authorSource: "출판사 원문 (14차 확정표)",
     title:
       "Surprising Consequences of Innocuous Mobile Transaction Reminders of Credit Card Use on Consumer Spending",
     journal: "Journal of Interactive Marketing",
@@ -158,6 +166,7 @@ const _SSCI = [
     id: "ssci-2024-02",
     authors: ["Jeeyeon Kim", "Jeonghye Choi", "Sue Ryung Chang", "Minakshi Trivedi"],
     studentIds: ["kim-jeeyeon"],
+    authorSource: "출판사 원문 (14차 확정표)",
     title:
       "The Impact of Offline Store Presence on Digital Sales: The Moderating Role of Product Functionality",
     journal: "Journal of Retailing and Consumer Services",
@@ -171,6 +180,7 @@ const _SSCI = [
     id: "ssci-2024-03",
     authors: ["Jeeyeon Kim", "Wooyong Jo", "Alex Jiyoung Kim", "Jeonghye Choi"],
     studentIds: ["kim-jeeyeon", "jo-wooyong"],
+    authorSource: "출판사 원문 (14차 확정표)",
     title:
       "Older Adult Consumers and Local Competition in the Healthcare Service",
     journal: "International Journal of Consumer Studies",
@@ -184,6 +194,7 @@ const _SSCI = [
     id: "ssci-2023-01",
     authors: ["Yeolib Kim", "Seung Hyun Kim", "Robert A. Peterson", "Jeonghye Choi"],
     studentIds: [],
+    authorSource: "출판사 원문 (14차 확정표)",
     title: "Privacy Concern and Information Technology: A Meta-analysis",
     journal: "Technological Forecasting and Social Change",
     year: 2023,
@@ -194,6 +205,9 @@ const _SSCI = [
   },
   {
     id: "ssci-2023-02",
+    authors: ["Joonho Bae", "Jinkyoo Park", "Seung Bum Soh", "Jeonghye Choi"],
+    studentIds: [],
+    authorSource: "출판사 원문 (14차 확정표)",
     title:
       "A Recommendation System with Dynamic Preferences: Its Application in the Mobile Game Industry",
     journal: "Journal of Business Research",
@@ -205,6 +219,9 @@ const _SSCI = [
   },
   {
     id: "ssci-2022-01",
+    authors: ["Sanghwa Kim", "Jeonghye Choi", "Seung Hyun Kim"],
+    studentIds: ["kim-sanghwa"],
+    authorSource: "출판사 원문 (14차 확정표)",
     title:
       "Do Handwritten Notes Benefit Online Retailers? A Field Experiment",
     journal: "Journal of Interactive Marketing",
@@ -216,6 +233,9 @@ const _SSCI = [
   },
   {
     id: "ssci-2022-02",
+    authors: ["Yiling Li", "Hye-jin Kim", "Boram Do", "Jeonghye Choi"],
+    studentIds: ["li-yiling"],
+    authorSource: "출판사 원문 (14차 확정표)",
     title:
       "The Effect of Emotion in Thumbnails and Titles of Video Clips on Pre-roll Advertising Effectiveness",
     journal: "Journal of Business Research",
@@ -227,8 +247,9 @@ const _SSCI = [
   },
   {
     id: "ssci-2022-03",
-    authors: ["Jae Yeon Yoon", "Chaehyeon Lee", "Jeonghye Choi", "Sue Ryung Chang", "Jikyung Kim"],
+    authors: ["Jae Yeon Yoon", "Chaehyeon Lee", "Jeonghye Choi", "Sue Ryung Chang", "Jikyung (Jeanne) Kim"],
     studentIds: [],
+    authorSource: "출판사 원문 (14차 확정표)",
     title: "The Effect of Social Media Apps on Shopping Apps",
     journal: "Journal of Business Research",
     year: 2022,
@@ -239,8 +260,9 @@ const _SSCI = [
   },
   {
     id: "ssci-2022-04",
-    authors: ["Jikyung Kim", "Hang Dong", "Jeonghye Choi", "Sue Ryung Chang"],
+    authors: ["Jikyung (Jeanne) Kim", "Hang Dong", "Jeonghye Choi", "Sue Ryung Chang"],
     studentIds: [],
+    authorSource: "출판사 원문 (14차 확정표)",
     title:
       "Sentiment Change and Negative Herding: Evidence from Microblogging and News",
     journal: "Journal of Business Research",
@@ -276,6 +298,7 @@ const _SSCI = [
     id: "ssci-2021-02",
     authors: ["Jikyung (Jeanne) Kim", "Hyeasinn Song", "Jeonghye Choi", "Yongsup Kim", "Junghan Hong"],
     studentIds: ["song-hyeasinn"],
+    authorSource: "출판사 원문 (14차 확정표)",
     title:
       "Channel Stickiness in the Shopping Journey for Electronic Goods: Evidence from China and South Korea",
     journal: "Journal of Business Research",
@@ -289,6 +312,7 @@ const _SSCI = [
     id: "ssci-2021-03",
     authors: ["Yeo Lim Yoon", "Yeohong Yoon", "Hyoryung Nam", "Jeonghye Choi"],
     studentIds: ["yoon-yeolim", "yoon-yeohong"],
+    authorSource: "출판사 원문 (14차 확정표)",
     title:
       "Buyer-Supplier Matching in Online B2B Marketplace: An Empirical Study of Small- and Medium-Sized Enterprises (SMEs)",
     journal: "Industrial Marketing Management",
@@ -302,6 +326,7 @@ const _SSCI = [
     id: "ssci-2021-04",
     authors: ["Wooyong Jo", "Jikyung (Jeanne) Kim", "Jeonghye Choi"],
     studentIds: ["jo-wooyong"],
+    authorSource: "출판사 원문 (14차 확정표)",
     title:
       "Who Are the Multichannel Shoppers and How Can Retailers Use Them? Evidence from the French Apparel Industry",
     journal: "Asia Pacific Journal of Marketing and Logistics",
@@ -317,6 +342,7 @@ const _SSCI = [
     id: "ssci-2020-01",
     authors: ["Jikyung (Jeanne) Kim", "Sanghwa Kim", "Jeonghye Choi"],
     studentIds: ["kim-sanghwa"],
+    authorSource: "출판사 원문 (14차 확정표)",
     title:
       "Purchase Now and Consume Later: Do Online and Offline Environments Drive Online Social Interactions and Sales?",
     journal: "Journal of Business Research",
@@ -330,6 +356,7 @@ const _SSCI = [
     id: "ssci-2020-02",
     authors: ["Yan Jiang", "J. Kim", "Jeonghye Choi", "M. Y. Kang"],
     studentIds: ["jiang-yan"],
+    authorSource: "출판사 원문 (14차 확정표)",
     title:
       "From Clicks to Bricks: The Impact of Product Launches in Offline Stores for Digital Retailers",
     journal: "Journal of Business Research",
@@ -343,6 +370,7 @@ const _SSCI = [
     id: "ssci-2020-03",
     authors: ["Wooyong Jo", "Sarang Sunder", "Jeonghye Choi", "et al."],
     studentIds: ["jo-wooyong"],
+    authorSource: "출판사 원문 (14차 확정표)",
     title:
       "Protecting Consumers from Themselves: Assessing Consequences of Usage Restriction Laws on Online Game Usage and Spending",
     journal: "Marketing Science",
@@ -356,6 +384,7 @@ const _SSCI = [
     id: "ssci-2019-01",
     authors: ["Yeohong Yoon", "Alex Jiyoung Kim", "Jeeyeon Kim", "Jeonghye Choi"],
     studentIds: ["yoon-yeohong", "kim-jeeyeon"],
+    authorSource: "출판사 원문 (14차 확정표)",
     doi: "10.1080/02650487.2018.1541391",
     title:
       "The Effects of eWOM Characteristics on Consumer Ratings: Evidence from TripAdvisor.com",
@@ -390,6 +419,9 @@ const _SSCI = [
   },
   {
     id: "ssci-2019-04",
+    authors: ["Sang Jin Kim", "Kyung Hoon Kim", "Jeonghye Choi"],
+    studentIds: [],
+    authorSource: "출판사 원문 (14차 확정표)",
     title:
       "The Role of Design Innovation in Understanding Purchase Behavior of Augmented Products",
     journal: "Journal of Business Research",
@@ -403,6 +435,7 @@ const _SSCI = [
     id: "ssci-2017-01",
     authors: ["Kamer Toker-Yildiz", "Minakshi Trivedi", "Jeonghye Choi", "Sue Ryung Chang"],
     studentIds: [],
+    authorSource: "출판사 원문 (14차 확정표)",
     doi: "10.1509/jmr.13.0482",
     title:
       "Social Interactions and Monetary Incentives in Driving Consumer Repeat Behavior",
@@ -417,6 +450,7 @@ const _SSCI = [
     id: "ssci-2017-02",
     authors: ["Mingyung Kim", "Jeeyeon Kim", "Jeonghye Choi", "Minakshi Trivedi"],
     studentIds: ["kim-mingyung", "kim-jeeyeon"],
+    authorSource: "출판사 원문 (14차 확정표)",
     doi: "10.1016/j.intmar.2017.02.001",
     title:
       "Mobile Shopping through Applications: Understanding Application Possession and Mobile Purchase",
@@ -429,6 +463,9 @@ const _SSCI = [
   },
   {
     id: "ssci-2017-03",
+    authors: ["Jungmin Son", "Jikyung (Jeanne) Kim", "Jeonghye Choi", "Mingyung Kim"],
+    studentIds: ["kim-mingyung"],
+    authorSource: "출판사 원문 (14차 확정표)",
     title: "Linking Online Niche Sales to Offline Brand Conditions",
     journal: "Journal of Business Research",
     year: 2017,
@@ -463,6 +500,7 @@ const _SSCI = [
     id: "ssci-2011-01",
     authors: ["Jeonghye Choi", "David R. Bell"],
     studentIds: [],
+    authorSource: "출판사 원문 (14차 확정표)",
     doi: "10.1509/jmkr.48.4.670",
     title: "Preference Minorities and the Internet",
     journal: "Journal of Marketing Research",
@@ -497,8 +535,10 @@ const _KCI = [
   // ---------- 2026 ----------
   {
     id: "kci-2026-01",
-    authors: ["김우경", "정현우", "최정혜"],
-    studentIds: ["kim-wookyoung", "jung-hyunwoo"],
+    authors: ["이예령", "오가령", "최정혜"],
+    studentIds: ["li-yiling", "wu-jialing"],
+    authorSource: "KCI 포털 원문 (14차 확정표)",
+    doi: "10.14329/isr.2026.28.1.417",
     title:
       "인플루언서 커뮤니케이션이 소비자의 구매 전환에 미치는 영향: 제품 유형과 지역 특성의 조절효과",
     journal: "경영정보학연구",
@@ -555,6 +595,9 @@ const _KCI = [
   // ---------- 2024 ----------
   {
     id: "kci-2024-01",
+    authors: ["김혜정", "최정혜", "박창희", "김지연"],
+    studentIds: ["kim-hyejeong", "kim-jeeyeon"],
+    authorSource: "KCI 포털 원문 (14차 확정표)",
     title: "가상 인플루언서의 얼굴 특성이 소셜 미디어 이용자 반응에 미치는 영향",
     journal: "한국콘텐츠학회논문지",
     year: 2024,
@@ -565,6 +608,9 @@ const _KCI = [
   },
   {
     id: "kci-2024-02",
+    authors: ["김혜정", "황인서", "최정혜"],
+    studentIds: ["kim-hyejeong", "hwang-inseo"],
+    authorSource: "KCI 포털 원문 (14차 확정표)",
     title:
       "감염병 확산 상황에서 지역별 헬스장 폐업: 위험요인노출과 보상소비지출의 차별적 영향",
     journal: "마케팅관리연구",
@@ -580,6 +626,7 @@ const _KCI = [
     id: "kci-2023-01",
     authors: ["김우경", "Li Yiling", "최정혜"],
     studentIds: ["kim-wookyoung", "li-yiling"],
+    authorSource: "KCI 포털 원문 (14차 확정표)",
     title:
       "스포츠 구단의 경기 실적 및 소셜미디어 운영이 팬덤의 인게이지먼트에 미치는 영향: 팬 토큰의 조절 효과를 중심으로",
     journal: "지식경영연구",
@@ -593,6 +640,7 @@ const _KCI = [
     id: "kci-2023-02",
     authors: ["정현우", "최정혜"],
     studentIds: ["jung-hyunwoo"],
+    authorSource: "KCI 포털 원문 (14차 확정표)",
     title:
       "Does Proximity Really Matters? Unveiling the Role of Industrial Similarity with Machine Learning",
     journal: "마케팅관리연구",
@@ -606,6 +654,7 @@ const _KCI = [
     id: "kci-2023-03",
     authors: ["황인서", "Li Yiling", "최정혜"],
     studentIds: ["hwang-inseo", "li-yiling"],
+    authorSource: "KCI 포털 원문 (14차 확정표)",
     title:
       "소비자의 신뢰도 향상을 위한 제품 전략의 구전 효과: 온라인 식품 유통 플랫폼을 중심으로",
     journal: "유통연구",
@@ -619,6 +668,7 @@ const _KCI = [
     id: "kci-2023-04",
     authors: ["김지연", "Li Yiling", "최정혜"],
     studentIds: ["kim-jeeyeon", "li-yiling"],
+    authorSource: "KCI 포털 원문 (14차 확정표)",
     title: "Understanding of the Continuance Intention to Use Chatbot Services",
     journal: "Asia Marketing Journal",
     year: 2023,
@@ -631,6 +681,7 @@ const _KCI = [
     id: "kci-2023-05",
     authors: ["Li Yiling", "김우경", "최정혜"],
     studentIds: ["li-yiling", "kim-wookyoung"],
+    authorSource: "KCI 포털 원문 (14차 확정표)",
     title:
       "신규 애플리케이션 출시가 기존 시장 생태계에 미치는 영향: 디지털 헬스케어 사례를 중심으로",
     journal: "한국경영과학회지",
@@ -644,6 +695,7 @@ const _KCI = [
     id: "kci-2023-06",
     authors: ["Li Yiling", "최정혜"],
     studentIds: ["li-yiling"],
+    authorSource: "KCI 포털 원문 (14차 확정표)",
     title:
       "동영상 콘텐츠의 장르, 시청자의 디지털 네이티브 특성 및 디지털 미디어의 속성이 사전광고 회피에 미치는 영향",
     journal: "광고학연구",
@@ -659,6 +711,7 @@ const _KCI = [
     id: "kci-2022-01",
     authors: ["김규리", "최정혜", "박경민"],
     studentIds: [],
+    authorSource: "KCI 포털 원문 (14차 확정표)",
     title:
       "숏폼 브랜디드 콘텐츠 노출 유형이 소비자 반응에 미치는 영향: 인지된 소속감의 매개 효과를 중심으로",
     journal: "한국콘텐츠학회논문지",
@@ -672,6 +725,7 @@ const _KCI = [
     id: "kci-2022-02",
     authors: ["김혜정", "Li Yiling", "최정혜"],
     studentIds: ["kim-hyejeong", "li-yiling"],
+    authorSource: "KCI 포털 원문 (14차 확정표)",
     title: "뉴스 홍보가 시청자 온라인 구전에 미치는 영향: 웹툰의 드라마화를 중심으로",
     journal: "한국콘텐츠학회논문지",
     year: 2022,
@@ -684,6 +738,7 @@ const _KCI = [
     id: "kci-2022-03",
     authors: ["정현우", "Li Yiling", "최정혜"],
     studentIds: ["jung-hyunwoo", "li-yiling"],
+    authorSource: "KCI 포털 원문 (14차 확정표)",
     title:
       "The Effect of Lockdown Repeal on Socialization: Bayesian Multilevel Difference-in-Differences Approach",
     journal: "Asia Marketing Journal",
@@ -697,6 +752,7 @@ const _KCI = [
     id: "kci-2022-04",
     authors: ["정현우", "곽유신", "최정혜"],
     studentIds: ["jung-hyunwoo", "kwak-yushin"],
+    authorSource: "KCI 포털 원문 (14차 확정표)",
     title:
       "간편결제 수용이 사용자의 쇼핑앱 사용에 미치는 영향: 카카오페이와 카카오선물하기의 사례를 중심으로",
     journal: "한국경영과학회지",
@@ -710,6 +766,7 @@ const _KCI = [
     id: "kci-2022-05",
     authors: ["김혜정", "황승엽", "곽유신", "최정혜"],
     studentIds: ["kim-hyejeong", "kwak-yushin"],
+    authorSource: "KCI 포털 원문 (14차 확정표)",
     title:
       "온라인 커뮤니티 이용자 참여 증진을 위한 관리자의 운영 전략: 대학별 대나무숲 분석을 중심으로",
     journal: "지식경영연구",
@@ -723,6 +780,7 @@ const _KCI = [
     id: "kci-2022-06",
     authors: ["Li Yiling", "도보람", "장수령", "최정혜"],
     studentIds: ["li-yiling"],
+    authorSource: "KCI 포털 원문 (14차 확정표)",
     title: "동영상 플랫폼상의 식품 광고 타겟팅의 효과: PC와 모바일 비교를 중심으로",
     journal: "유통연구",
     year: 2022,
@@ -748,6 +806,7 @@ const _KCI = [
     id: "kci-2021-01",
     authors: ["한수현", "장정화", "장수령", "최정혜"],
     studentIds: [],
+    authorSource: "KCI 포털 원문 (14차 확정표)",
     title:
       "소셜미디어와 소비자 구매 결정과의 관계: 서울 공유 자전거에 대한 시계열 분석을 중심으로",
     journal: "지식경영연구",
@@ -761,6 +820,7 @@ const _KCI = [
     id: "kci-2021-02",
     authors: ["도보람", "윤여림", "김태년", "최정혜"],
     studentIds: ["yoon-yeolim"],
+    authorSource: "KCI 포털 원문 (14차 확정표)",
     title: "코로나19 상황에서 직무만족도와 모바일 생산활동: 결정요인 연구",
     journal: "지식경영연구",
     year: 2021,
@@ -775,6 +835,7 @@ const _KCI = [
     id: "kci-2020-01",
     authors: ["장성현", "임수빈", "최정혜"],
     studentIds: [],
+    authorSource: "KCI 포털 원문 (14차 확정표)",
     title: "크래프트 브루어리의 스타트업 전략: 어메이징 브루잉 컴퍼니의 사례를 중심으로",
     journal: "연세경영연구",
     year: 2020,
@@ -787,6 +848,7 @@ const _KCI = [
     id: "kci-2020-02",
     authors: ["Li Yiling", "김상화", "김무전", "최정혜"],
     studentIds: ["li-yiling", "kim-sanghwa"],
+    authorSource: "KCI 포털 원문 (14차 확정표)",
     title: "건강식품 구매에 제품 네이밍과 고객의 제품 경험, 기업의 제품 판촉이 미치는 영향",
     journal: "유통연구",
     year: 2020,
@@ -811,6 +873,7 @@ const _KCI = [
     id: "kci-2018-01",
     authors: ["Jiang Yan", "김상화", "조우용", "최정혜"],
     studentIds: ["jiang-yan", "kim-sanghwa", "jo-wooyong"],
+    authorSource: "KCI 포털 원문 (14차 확정표)",
     title:
       "럭셔리 브랜드의 판매 성과와 제품, 고객, 구색의 영향: 매장 유형의 조절 효과를 중심으로",
     journal: "유통연구",
@@ -826,6 +889,7 @@ const _KCI = [
     id: "kci-2016-01",
     authors: ["김지연", "조우용", "최정혜", "정예림"],
     studentIds: ["kim-jeeyeon", "jo-wooyong"],
+    authorSource: "KCI 포털 원문 (14차 확정표)",
     title: "온라인상의 기업 및 소비자 텍스트 분석과 이를 활용한 온라인 매출 증진 전략",
     journal: "한국경영과학회지",
     year: 2016,
@@ -838,6 +902,7 @@ const _KCI = [
     id: "kci-2016-02",
     authors: ["김상화", "김지연", "최정혜", "정예림"],
     studentIds: ["kim-sanghwa", "kim-jeeyeon"],
+    authorSource: "KCI 포털 원문 (14차 확정표)",
     title: "B2B 기업의 마케팅 활동과 고객의 시장 환경이 매출 성과에 미치는 영향",
     journal: "한국경영과학회지",
     year: 2016,
@@ -852,6 +917,7 @@ const _KCI = [
     id: "kci-2015-01",
     authors: ["손정민", "김민경", "최정혜"],
     studentIds: ["kim-mingyung"],
+    authorSource: "KCI 포털 원문 (14차 확정표)",
     title: "오프라인 환경 변화가 틈새 제품의 온라인 수요에 미치는 영향",
     journal: "마케팅연구",
     year: 2015,
@@ -864,6 +930,7 @@ const _KCI = [
     id: "kci-2015-02",
     authors: ["최정혜", "정예림", "김민경", "조우용"],
     studentIds: ["kim-mingyung", "jo-wooyong"],
+    authorSource: "KCI 포털 원문 (14차 확정표)",
     title: "모바일 VOD 콘텐츠 구매 요인에 관한 실증 연구",
     journal: "지식경영연구",
     year: 2015,
@@ -898,9 +965,13 @@ const _KCI = [
   // ---------- 10차 추가분 (연도별) ----------
   {
     id: "kci-2026-04",
+    authors: ["황인서", "김정현", "최정혜"],
+    studentIds: ["hwang-inseo", "kim-junghyun"],
+    authorSource: "KCI 포털 원문 (14차 확정표)",
+    doi: "10.37202/KMMR.2026.31.2.75",
     title:
       "리셀 시장 내 재활용 소재 활용 제품의 가격 프리미엄 형성: 아식스(Asics) 브랜드를 중심으로",
-    journal: "마케팅관리학회",
+    journal: "마케팅관리연구",
     year: 2026,
     keywords: ["온라인 리테일·이커머스", "소비자 행동"],
     summary:
@@ -909,8 +980,12 @@ const _KCI = [
   },
   {
     id: "kci-2023-07",
+    authors: ["김태년", "윤여림", "최정혜", "도보람"],
+    studentIds: ["yoon-yeolim"],
+    authorSource: "공저자 공식 프로필(도보람 교수 페이지) (14차 확정표)",
     title: "직장 내 스트레스원과 긍정 정서에 대한 모바일 앱 사용의 조절 효과 연구",
     journal: "한국콘텐츠학회논문지",
+    // TODO: 발행연도 확인(2022 vs 2023) — 학교 페이지는 2023, 공저자(도보람 교수) 공식 페이지는 2022 22(1)
     year: 2023,
     keywords: ["모바일·앱", "소비자 행동"],
     summary:
@@ -1065,6 +1140,7 @@ export const BOOKS = [
     id: "book-2015",
     authors: ["최정혜", "김지연", "김민경"],
     studentIds: ["kim-jeeyeon", "kim-mingyung"],
+    authorSource: "출판사 서지 (14차 확정표)",
     title: "기술혁신에 따른 지역간 정보격차",
     role: "최정혜·김지연·김민경 공저",
     publisher: "집문당",

@@ -11,7 +11,8 @@
 // [불확실 항목 — 어느 학생에게도 배정하지 않음]
 // 1. Click, Sign-up and Purchase (2025, IJA) — 저자 'Yoon, Y.'가 윤여홍/윤여림 불명
 // 2. Weathering the Digital Shift (2026, JRIM) — 저자 'Kim, J.'가 김지연/김정현 불명 (이예령에게만 배정)
-// 3. 가상 인플루언서 얼굴 특성 (2024) / 감염병 확산 헬스장 폐업 (2024) — 저자 미확인
+// (해소됨) 가상 인플루언서 얼굴 특성 (2024) / 감염병 확산 헬스장 폐업 (2024)
+//   → 14차에서 저자 확정, 김혜정·김지연 / 김혜정·황인서에 배정 완료
 //
 // works 스키마: { year, type: "SSCI"|"KCI"|"BOOK", title, journal, top?: true }
 
@@ -169,17 +170,18 @@ export const CITY_PINS = [
     labelDy: -8,
     entries: [
       {
-        // TODO: 이예령 교수 소속 확정 필요 (고려대 디지털경영 / 화성의과학대 의료경영 - 학교 페이지 간 불일치)
-        // 소속 확정 전까지 isFaculty: false (일반 핀) 유지
+        // 소속 확정(14차): 학교 공식 페이지 전 미러가 "고려대학교 디지털경영 교수"로 통일됨
+        // TODO: 고려대 공식 프로필 URL 확인 후 link 추가 (URL 추측 금지)
         nameKo: "이예령",
         personId: "li-yiling",
-        lang: {"en": {"grad": "Ph.D. 2025", "affiliation": "TODO: Affiliation to be confirmed", "title": "Professor", "path": "Ph.D. 2025 → Appointed as professor"}, "zh": {"grad": "2025 博士", "affiliation": "TODO: 所属待确认", "title": "教授", "path": "2025 博士毕业 → 任职教授"}, "ja": {"grad": "2025 博士", "affiliation": "TODO: 所属確認中", "title": "教授", "path": "2025 博士修了 → 教授就任"}},
+        lang: {"en": {"grad": "Ph.D. 2025", "affiliation": "Korea University · Digital Management", "title": "Professor", "path": "Ph.D. in Marketing, Yonsei (2025) → Appointed at Korea University"}, "zh": {"grad": "2025 博士", "affiliation": "高丽大学 · 数字经营", "title": "教授", "path": "2025 延世大学市场营销博士 → 任职高丽大学数字经营"}, "ja": {"grad": "2025 博士", "affiliation": "高麗大学校 · デジタル経営", "title": "教授", "path": "2025 延世大学マーケティング博士 → 高麗大学校デジタル経営 就任"}},
         nameEn: "Yiling Li",
         grad: "2025 박사",
-        affiliation: "TODO: 소속 확인 필요",
+        affiliation: "고려대학교 · 디지털경영",
         title: "교수",
-        path: "2025 박사 졸업 → 교수 임용",
-        isFaculty: false,
+        path: "2025 연세대학교 마케팅 박사 → 고려대학교 디지털경영 교수 임용",
+        isFaculty: true,
+        link: null,
       },
       {
         nameKo: "이지연",
@@ -239,7 +241,6 @@ export const CITY_PINS = [
         title: "마케팅 박사과정",
         path: "2024 진학",
         isFaculty: false,
-        // TODO: 2024 KCI 1건 확인 필요 (가상 인플루언서/헬스장 폐업 논문 — 저자 미확인으로 미배정)
       },
       {
         nameKo: "곽유신",
@@ -304,7 +305,7 @@ export const CITY_PINS = [
 
 // 지도 하단 요약 배지
 export const MAP_BADGES = [
-  { value: "4명", label: "해외 대학 교수 임용" },
+  { value: "5명", label: "교수 임용" },
   { value: "8명", label: "해외 박사과정 진학" },
   { value: "4개 대륙", label: "제자 진출 무대" },
   { value: "5명", label: "재학생" },
