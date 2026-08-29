@@ -225,6 +225,9 @@ export default function StudentsSection() {
                 </span>
                 <span className="text-sm text-ink-500">{b.label}</span>
               </span>
+              {b.sub ? (
+                <span className="mt-0.5 block text-[11px] text-ink-600">{b.sub}</span>
+              ) : null}
               <span
                 aria-hidden="true"
                 className="absolute bottom-3 right-4 font-display text-sm text-ink-600 transition-all duration-200 group-hover:text-accent-300 group-hover:translate-x-0.5"

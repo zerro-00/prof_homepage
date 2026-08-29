@@ -151,7 +151,7 @@ src/
 
 | 이름 | 졸업 | 진출 | isFaculty |
 |---|---|---|---|
-| 이예령 (Li Yiling) | 2025 박사 | 교수 임용 — **소속 미확정** (고려대 디지털경영 / 화성의과학대 의료경영, 페이지 간 불일치. 임의 확정 금지, 확정 전까지 일반 핀) | 잠정 false |
+| 이예령 (Li Yiling / Yiling Li) | 2025 박사 | **고려대학교 디지털경영 — 교수** (14차 확정: 학교 공식 페이지 전 미러 통일) | true |
 | 정현우 | 2025 석사 | Wharton School, Univ. of Pennsylvania 마케팅 박사 진학 (2025) | false |
 | 김혜정 | 2024 석사 | Georgia Institute of Technology 마케팅 박사 진학 (2024) | false |
 | 윤여림 | 2023 통합과정 | University of Minnesota 마케팅 박사 진학 (2023) | false |
@@ -165,9 +165,11 @@ src/
 | 김민경 (Mingyung Kim) | 2015 학사 | Wharton 박사(2017 진학) → **Ohio State University, Fisher — Asst. Prof. of Marketing** | true |
 | 김지연 (Jeeyeon Kim) | 2014 석사, 2018 박사 | 대만 국립중산대 → **La Trobe University, LBS — Lecturer of Marketing** | true |
 
-교수 임용 4명은 지도에서 골드 핀으로 강조. 애틀랜타 4명(김혜정·곽유신·윤여홍·송혜신)은 핀 하나로 묶어 툴팁에 목록 표시. 서울 핀 2명(이예령·이지연).
+교수 임용 **5명**(해외 4 · 국내 1)은 지도에서 골드 핀으로 강조. 애틀랜타 4명(김혜정·곽유신·윤여홍·송혜신)은 핀 하나로 묶어 툴팁에 목록 표시.
+서울 핀 2명(이예령·이지연) — 이예령이 골드이므로 핀 색은 **골드 우선**, 툴팁에 두 명 모두 표시.
+화면 그룹 인원: 교수 임용 5 · 박사과정 7 · 기업 1 (합계 13).
 
-재학생 (현재 연구실 구성원) 5명 — 학교 페이지 기준(2026.08):
+재학생 (현재 연구실 구성원) 5명 — 학교 페이지 기준(2026.08). ⚠️ 14차 대조 시 학교 페이지는 4명 표기 — 교수님 확인 대기:
 **김우경, 황인서, 나규원, 김정현, 오가령**
 링크·사진·과정·이메일 등 상세정보 금지 (이름 + 확인된 공저 실적만). 지도 핀·배출 카운트에 포함하지 않음.
 
@@ -189,8 +191,41 @@ src/
 
 **학생 실적은 `publications.js`의 논문별 `authors` 배열 + `studentIds`(id 매칭)로만 연결한다. 이름 문자열 추론 절대 금지.**
 - `authors`/`studentIds`가 없는 논문은 저자 미확인 → 어떤 학생에게도 연결하지 않음
+- **`studentIds`가 있으면 `authorSource`(저자 표기를 확인한 출처)가 반드시 있어야 한다.** 근거 없는 배정은 빌드 실패.
 - 화면의 실적은 `worksForStudent(personId)`로 계산 (수기 works 배열 없음)
-- `scripts/check-authorship.mjs`가 학생별 편수를 검증하며 `npm run build`에 포함됨
+- `scripts/check-authorship.mjs`가 `npm run build`에서 다음 6가지를 강제한다:
+  1. 전체 편수 SSCI 37 · KCI 42 · 저서 4
+  2. 학생별 SSCI/KCI/저서 편수 = 아래 확정 편수표
+  3. `studentIds`가 있는데 `authorSource`가 없으면 실패
+  4. 미등록 `studentId` 사용 시 실패
+  5. `studentIds`의 인물이 스크립트 내 `PERSON_NAMES`의 **확정 표기 그대로** `authors`에 있어야 함
+     (→ `Jikyung (Jeanne) Kim`을 김지연으로 배정하는 등 동명이인 오배정이 기계적으로 차단됨)
+  6. `wu-jialing`(오가령) 배정 논문에는 반드시 `오가령`/`Wu Jialing` 표기가 있을 것
+
+#### 학생별 확정 편수 (14차 §3-6 — 임의 변경 금지)
+
+| 학생 | id | SSCI | KCI | 저서 | 합계 |
+|---|---|---|---|---|---|
+| 이예령 | `li-yiling` | 4 | 10 | 0 | 14 |
+| 김지연 | `kim-jeeyeon` | 5 | 4 | 1 | 10 |
+| 조우용 | `jo-wooyong` | 5 | 3 | 0 | 8 |
+| 김상화 | `kim-sanghwa` | 2 | 3 | 0 | 5 |
+| 김민경 | `kim-mingyung` | 2 | 2 | 1 | 5 |
+| 김혜정 | `kim-hyejeong` | 1 | 4 | 0 | 5 |
+| 황인서 (재학생) | `hwang-inseo` | 1 | 3 | 0 | 4 |
+| 김우경 (재학생) | `kim-wookyoung` | 1 | 2 | 0 | 3 |
+| 정현우 | `jung-hyunwoo` | 0 | 3 | 0 | 3 |
+| 윤여홍 | `yoon-yeohong` | 3 | 0 | 0 | 3 |
+| 윤여림 | `yoon-yeolim` | 1 | 2 | 0 | 3 |
+| 곽유신 | `kwak-yushin` | 0 | 2 | 0 | 2 |
+| 장연 | `jiang-yan` | 1 | 1 | 0 | 2 |
+| 송혜신 | `song-hyeasinn` | 1 | 0 | 0 | 1 |
+| 오가령 (재학생) | `wu-jialing` | 0 | 1 | 0 | 1 |
+| 김정현 (재학생) | `kim-junghyun` | 0 | 1 | 0 | 1 |
+| 이지연 | `lee-jiyeon` | 0 | 0 | 0 | 0 |
+| 나규원 | `na-gyuwon` | 0 | 0 | 0 | 0 |
+
+저자 확정 논문은 총 55건(SSCI 28 · KCI 26 · 저서 1). 나머지는 저자 미확인 → 배정 금지.
 
 ### 수상·연구비 (확정)
 
@@ -206,6 +241,9 @@ src/
   Surprising Consequences 2024 등)을 김지연 실적에 배정하지 말 것.
 - 저자 표기가 이니셜뿐인 논문(예: 'Y. Yoon' — 윤여홍/윤여림 불명, 'J. Kim' — 김지연/김정현 불명)은
   어느 학생에게도 배정하지 않는다.
+- 그 외 배정 금지 표기: `Hye-jin Kim`(김혜정과 다를 수 있음) · `Jae Yeon Yoon`(윤여홍·윤여림 아님) ·
+  `Sang Jin Kim`(김상화 아님) · `H. Kim`.
+- 2026 인플루언서 논문(경영정보학연구)의 저자는 **이예령·오가령·최정혜**다. 김우경·정현우가 아니다.
 
 ## 확정 편수 (임의 변경 금지)
 
@@ -214,12 +252,25 @@ src/
 
 ## 현재 미완 항목 (TODO)
 
-- 저자 미확인 논문(SSCI 14편·KCI 다수 — `authors` 필드 없는 항목): 저자 확인 후 `authors`/`studentIds` 추가.
-- 이예령 KCI 편수 불일치: 10차 지령 1-3 확정표 기준 9편, 1-4 검증표 기준 7편. 현재 1-3표를 우선 적용(9편). 교수님 확인 필요.
-- 김혜정 2024 KCI 1건 등 배정 불확실 건: 교수님 확인 필요 (`alumni.js` 상단 주석 참고).
+- **저자 미확인 논문 25편** — `authorSource` 없는 항목. 확인 시 `authors`/`studentIds`/`authorSource`를 함께 추가하고
+  `check-authorship.mjs`의 EXPECTED를 그만큼 올릴 것.
+  - SSCI 9편: Free Versus Paid OTT(2026), The Price of Prestige(2026), Opening up OTC(2022),
+    Digital Consumers' Well-being(2021), Celebrity Endorsement(2019), Offline Social Interactions(2019),
+    Traditional and IS-Enabled(2012), What Matters Most(2012), Spatiotemporal Analysis(2010)
+  - KCI 16편: 상권 내 유통 채널 경쟁 PB(2026), 프랜차이즈 가맹 본부 위기(2026), 음식 배달 앱(2025),
+    메타버스 마케팅(2025), Who Considers Leaving a Job(2022), 날씨불쾌감(2020), 온라인 게임 규제(2016),
+    지역 특수성(2016), 매장 내·외부 환경(2016), 게임 머니와 캐시 머니(2016), 소비자의 지역 이주(2015),
+    오프라인과 온라인 채널상의 기존제품(2015), 소셜미디어 연구동향(2014), 인터넷 포탈(2014),
+    온라인 게임 고객 유형별 이탈(2014), 이용자 생산 콘텐츠 플랫폼(2013)
+  - 참고: `Click, Sign-up and Purchase`(2025)는 저자가 이니셜 표기라 `authors`는 있으나 학생 배정 없음.
+- **`직장 내 스트레스원과 긍정 정서…` 발행연도**: 학교 페이지 2023 / 공저자(도보람 교수) 공식 페이지 2022 22(1).
+  현재 2023 유지 + 코드에 TODO. KCI 포털 권호 확인 필요.
+- **고려대 공식 프로필 URL**: 이예령 `link: null`. 확인 후 추가 (URL 추측 금지).
 - 김지연(Jeeyeon Kim) 링크: 현재 ORCID. La Trobe Scholars 공식 프로필 URL로 교체 필요.
-- 이예령 교수 소속 확정 필요 (고려대 디지털경영 / 화성의과학대 의료경영 — 학교 페이지 간 불일치). 확정 시 골드 핀 + 교수 카드로 승격.
-- 재학생 명단 교수님 확인 후 갱신.
+- **재학생 명단**: 사이트는 5명(김우경·황인서·나규원·김정현·오가령), 학교 페이지(2026.08)는 4명으로 표기가 다르다.
+  크롤링 인코딩 문제로 학교 페이지 4명 중 황인서 외 이름 미확인 → **교수님 확인 전까지 현행 5명 유지**.
+- **지도 배지 `해외 박사과정 진학 8명`**: 이예령이 교수로 승격되면서 실제 박사과정 그룹은 7명이 됐다.
+  14차 지령이 8을 명시해 그대로 뒀으나 배지 ↔ 목록 불일치. 교수님 확인 후 7로 조정 검토.
 
 ## 작업 방식
 

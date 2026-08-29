@@ -228,20 +228,24 @@
     "statLine": "This lab: 37 SSCI · 42 KCI publications",
     "badges": [
       {
-        "value": "4",
-        "label": "Faculty placements abroad"
+        "value": "5",
+        "label": "Faculty appointments",
+        "sub": "4 overseas · 1 domestic"
       },
       {
         "value": "8",
-        "label": "Ph.D. placements abroad"
+        "label": "Ph.D. placements abroad",
+        "sub": ""
       },
       {
         "value": "4",
-        "label": "Continents reached"
+        "label": "Continents reached",
+        "sub": ""
       },
       {
         "value": "5",
-        "label": "Current members"
+        "label": "Current members",
+        "sub": ""
       }
     ],
     "note": "Hover or tap a pin to see placement details. Alumni whose names could not be confirmed remain anonymous."
