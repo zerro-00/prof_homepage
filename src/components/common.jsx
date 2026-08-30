@@ -72,11 +72,11 @@ export function SectionHeading({ index, label, title, desc }) {
   return (
     <Reveal className="mb-10 md:mb-14">
       <div className="flex items-center gap-3 mb-4">
-        <span className="font-display text-xs tracking-[0.3em] text-accent-400 uppercase">
+        <span className="font-display text-xs uppercase tracking-[0.18em] text-accent-400">
           {index}
         </span>
         <span className="h-px w-10 bg-accent-500/40" />
-        <span className="font-display text-xs tracking-[0.3em] text-ink-500 uppercase">
+        <span className="font-display text-xs uppercase tracking-[0.18em] text-ink-500">
           {label}
         </span>
       </div>

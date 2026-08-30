@@ -13,6 +13,7 @@ export const BASIC_INFO = {
 export const HERO_STATS = [
   { key: "ssci", value: 37, suffixKey: "papers", section: "publications", focus: "ssci" },
   { key: "kci", value: 42, suffixKey: "papers", section: "publications", focus: "kci" },
-  { key: "alumni", value: 13, suffixKey: "people", hasSub: true, section: "alumni" },
+  // 부제(`박사 2 · 석사 11`)는 §3-2에서 카드 일관성을 위해 제거 — i18n 키는 남겨 둔다
+  { key: "alumni", value: 13, suffixKey: "people", section: "alumni" },
   { key: "awards", value: 23, suffixKey: "count", section: "awards" },
 ];

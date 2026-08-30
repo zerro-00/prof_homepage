@@ -11,61 +11,73 @@
     system-ui, "Segoe UI", sans-serif;
   --font-display: "Space Grotesk", "Pretendard Variable", sans-serif;
 
-  /* Deep navy / charcoal base + electric blue & gold points */
-  --color-base-950: #070b14;
-  --color-base-900: #0a101d;
-  --color-base-850: #0d1526;
-  --color-base-800: #111b30;
-  --color-base-700: #1a2740;
-  --color-base-600: #263a55;
-  --color-line: #1e2a44;
-  --color-ink-100: #eef2f9;
-  --color-ink-300: #c3cddd;
-  --color-ink-500: #9aa6bd;
-  --color-ink-600: #7e8aa6;
-  --color-accent-300: #7cc5ff;
-  --color-accent-400: #4da3ff;
-  --color-accent-500: #2f7ff2;
-  --color-accent-600: #1f5fd0;
-  --color-yonsei: #0b4da2;
-  --color-mint-400: #4fd8c4;
-  --color-gold-300: #e8c877;
-  --color-gold-400: #d9b25c;
-  --color-gold-500: #c49a3f;
+  /* 세련된 네이비 — 형광 파랑을 걷어내고 채도를 낮춘 슬레이트 블루로 (§2)
+     대비 실측값은 CLAUDE.md 참조 */
+  --color-base-950: #080e1a;
+  --color-base-900: #0e1729;
+  --color-base-850: #131e36;
+  --color-base-800: #182545;
+  --color-base-700: #21315a;
+  --color-base-600: #2e4370;
+  --color-line: rgba(148, 173, 208, 0.14);
+
+  --color-ink-100: #eef1f7;
+  --color-ink-300: #afbacd;
+  --color-ink-500: #7e8aa0;
+  --color-ink-600: #7a86a3;
+
+  /* 포인트 — 형광 제거 */
+  --color-accent-300: #a9c0e0;
+  --color-accent-400: #8fadd6;
+  --color-accent-500: #5b7cae;
+  --color-accent-600: #2e4a7a;
+  --color-yonsei: #003876;
+
+  /* 골드 — 교수 임용·수상 ★ 전용 */
+  --color-gold-300: #dcc28c;
+  --color-gold-400: #c9a96e;
+  --color-gold-500: #a8874d;
+
+  --color-mint-400: #7fb3a8;
 }
 
 /* Tailwind 유틸리티가 아니라 var()로만 참조하는 색 — SVG 지도, 그라디언트, 선택 영역.
    §1-7: SSCI/KCI는 "3px 바"와 "12px 텍스트"가 요구 대비가 달라 토큰을 분리한다.
    바는 비텍스트 3:1, 텍스트는 4.5:1 이상. (v1 실측값은 CLAUDE.md 참조) */
 :root {
-  --ssci-bar: #2f7ff2;
-  --ssci-text: #7cc5ff;
-  --kci-bar: #2fb8a6;
-  --kci-text: #4fd8c4;
+  /* SSCI/KCI — 3px 바와 12px 텍스트는 요구 대비가 달라 토큰을 나눈다 (바 3:1, 텍스트 4.5:1) */
+  --ssci-bar: #5b7cae;
+  --ssci-text: #8fadd6;
+  --kci-bar: #5f9a8e;
+  --kci-text: #7fb3a8;
 
-  /* 발광(글로우) — v3는 transparent로 꺼서 인쇄물 톤을 만든다 */
-  --glow-strong: rgba(47, 127, 242, 0.25);
-  --glow-soft: rgba(47, 127, 242, 0.15);
+  /* 발광(글로우) — v3는 transparent로 끈다 */
+  --glow-strong: rgba(46, 74, 122, 0.3);
+  --glow-soft: rgba(46, 74, 122, 0.18);
+
+  --grid-line: rgba(169, 192, 224, 0.04);
+  --selection: rgba(46, 74, 122, 0.45);
+  --hero-glow: rgba(46, 74, 122, 0.42);
 
   /* 명단 패널에서 지도 핀과 연동돼 강조되는 행 */
-  --roster-hot: rgba(47, 127, 242, 0.14);
-  --roster-hover: rgba(47, 127, 242, 0.07);
-
-  --grid-line: rgba(124, 197, 255, 0.045);
-  --selection: rgba(47, 127, 242, 0.35);
+  --roster-hot: rgba(143, 173, 214, 0.13);
+  --roster-hover: rgba(143, 173, 214, 0.06);
 
   /* 세계지도 */
-  --map-land: #131e33;
-  --map-land-hover: #182642;
-  --map-stroke: #1e2a44;
-  --map-glow: rgba(47, 127, 242, 0.08);
-  --map-label: #667191;
-  --pin-stroke: #0a101d;
-  --pin: #2f7ff2;
-  --pin-active: #7cc5ff;
-  --pin-ring: #4da3ff;
-  --pin-faculty: #d9b25c;
-  --pin-faculty-active: #e8c877;
+  --map-land: #16213a;
+  --map-land-hover: #1d2b48;
+  --map-stroke: rgba(148, 173, 208, 0.14);
+  --map-glow: rgba(46, 74, 122, 0.16);
+  --map-label: #7a86a3;
+  --pin-stroke: #0e1729;
+  --pin: #8fadd6;
+  --pin-active: #cfdcf0;
+  --pin-ring: #8fadd6;
+  --pin-faculty: #c9a96e;
+  --pin-faculty-active: #dcc28c;
+  /* 서울에서 뻗어나가는 호 (§4-1) */
+  --arc: #5b7cae;
+  --arc-faculty: #a8874d;
 }
 
 /* ---- 스크롤 ---- */

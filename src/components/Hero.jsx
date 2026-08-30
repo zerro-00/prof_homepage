@@ -3,33 +3,37 @@ import { useTranslation } from "react-i18next";
 import { Reveal, CountUp } from "./common.jsx";
 import { BASIC_INFO, HERO_STATS } from "../data/profile.js";
 
+/* 스탯 카드 — 4개가 폭·높이·내부 구조 완전히 동일 (§3-2).
+   부제(`해외 4 · 국내 1`)는 다른 카드에 없어 일관성을 위해 뺐다. */
 function StatCard({ stat, delay, navigate }) {
   const { t } = useTranslation();
   return (
-    <Reveal delay={delay}>
+    <Reveal delay={delay} className="h-full">
       <button
         type="button"
         onClick={() => navigate(stat.section, stat.focus ? { focus: stat.focus } : null)}
-        className="group relative w-full cursor-pointer rounded-xl border border-line bg-base-850/80 px-5 py-4 text-left backdrop-blur transition-all duration-200 hover:-translate-y-1 hover:border-accent-400/60 hover:shadow-[0_0_24px_var(--glow-strong)] focus-visible:outline-2 focus-visible:outline-accent-400"
+        className="group relative flex h-full w-full cursor-pointer flex-col justify-between rounded-xl border border-line bg-base-850/80 px-5 pb-9 pt-4 text-left backdrop-blur transition-all duration-200 hover:-translate-y-1 hover:border-accent-400/60 hover:shadow-[0_0_24px_var(--glow-strong)] focus-visible:outline-2 focus-visible:outline-accent-400"
         aria-label={`${t(`hero.stats.${stat.key}`)} — ${t("hero.statAria")}`}
       >
-        <span className="absolute left-0 top-3 bottom-3 w-[2px] rounded bg-gradient-to-b from-accent-400 to-accent-600/20" />
+        <span
+          aria-hidden="true"
+          className="absolute bottom-3 left-0 top-3 w-[2px] rounded bg-gradient-to-b from-accent-400 to-accent-600/20"
+        />
         <span className="flex items-baseline gap-0.5 leading-none">
           <CountUp
             value={stat.value}
-            className="font-display text-3xl md:text-4xl font-bold text-ink-100 tabular-nums leading-none"
+            className="font-display text-3xl font-bold leading-none tabular-nums text-ink-100 md:text-4xl"
           />
-          <span className="text-xl md:text-2xl font-bold text-ink-100 leading-none">
+          <span className="text-xl font-bold leading-none text-ink-100 md:text-2xl">
             {t(`hero.suffix.${stat.suffixKey}`)}
           </span>
         </span>
-        <span className="mt-2 block text-[13px] text-ink-500">{t(`hero.stats.${stat.key}`)}</span>
-        {stat.hasSub && (
-          <span className="block text-[11px] text-ink-600 mt-0.5">{t("hero.stats.alumniSub")}</span>
-        )}
+        <span className="mt-2 block text-[13px] leading-snug text-ink-500">
+          {t(`hero.stats.${stat.key}`)}
+        </span>
         <span
           aria-hidden="true"
-          className="absolute bottom-3 right-4 font-display text-sm text-ink-600 transition-all duration-200 group-hover:text-accent-300 group-hover:translate-x-0.5"
+          className="absolute bottom-3 right-4 font-display text-sm text-ink-600 transition-all duration-200 group-hover:translate-x-0.5 group-hover:text-accent-300"
         >
           →
         </span>
@@ -132,7 +136,7 @@ export default function Hero({ navigate }) {
           {/* 이름/직함/소개/연락처 */}
           <div>
             <Reveal>
-              <p className="font-display text-xs md:text-sm tracking-[0.35em] uppercase text-accent-300/90">
+              <p className="font-display text-xs uppercase tracking-[0.18em] text-accent-400 md:text-sm">
                 {t("hero.kicker")}
               </p>
             </Reveal>
@@ -179,7 +183,7 @@ export default function Hero({ navigate }) {
         </div>
 
         {/* 스탯 카운터 */}
-        <div className="mt-14 grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+        <div className="mt-14 grid grid-cols-2 items-stretch gap-3 md:gap-4 lg:grid-cols-4">
           {HERO_STATS.map((s, i) => (
             <StatCard key={s.key} stat={s} delay={i * 90} navigate={navigate} />
           ))}
