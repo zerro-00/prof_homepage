@@ -14,6 +14,7 @@
     "kicker": "Yonsei School of Business · Marketing",
     "name": "Jeonghye Choi",
     "subtitle": "市场营销教授",
+    "tagline": "在线上与线下的交汇处，用消费者留下的数据揭示市场的真实运作方式。",
     "photoAlt": "Jeonghye Choi 教授",
     "officeLabel": "办公室",
     "office": "School of Business（212 号楼）537 室",
@@ -233,7 +234,7 @@
         "sub": "海外 4 · 国内 1"
       },
       {
-        "value": "8名",
+        "value": "7名",
         "label": "海外博士课程升学",
         "sub": ""
       },
@@ -251,6 +252,12 @@
     "note": "将鼠标悬停或点按图钉即可查看去向详情。姓名未确认的毕业生以匿名处理。"
   },
   "students": {
+    "tabFaculty": "教授任职",
+    "tabPhd": "博士升学",
+    "tabIndustry": "企业",
+    "tabMembers": "在读学生",
+    "rosterTitle": "毕业生名单",
+    "rosterHint": "将鼠标移到姓名上即可在地图上高亮对应位置。",
     "facultyHeading": "Faculty Placements · 教授任职",
     "membersTitle": "Active Members",
     "membersSub": "在读学生",
@@ -267,6 +274,11 @@
   "pubsUI": {
     "viewKeyword": "按关键词浏览",
     "viewJournal": "按期刊浏览",
+    "allPapers": "全部论文",
+    "keywordListLabel": "关键词列表",
+    "backToKeywords": "← 关键词列表",
+    "moreJournalsAll": "其他 {{count}} 种期刊",
+    "pickKeyword": "选择关键词",
     "groupSsci": "SSCI · 国际期刊",
     "groupKci": "KCI · 韩国国内期刊",
     "moreJournals_one": "其他 {{count}} 种期刊",

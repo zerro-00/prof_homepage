@@ -10,7 +10,7 @@ function StatCard({ stat, delay, navigate }) {
       <button
         type="button"
         onClick={() => navigate(stat.section, stat.focus ? { focus: stat.focus } : null)}
-        className="group relative w-full cursor-pointer rounded-xl border border-line bg-base-850/80 px-5 py-4 text-left backdrop-blur transition-all duration-200 hover:-translate-y-1 hover:border-accent-400/60 hover:shadow-[0_0_24px_rgba(47,127,242,0.25)] focus-visible:outline-2 focus-visible:outline-accent-400"
+        className="group relative w-full cursor-pointer rounded-xl border border-line bg-base-850/80 px-5 py-4 text-left backdrop-blur transition-all duration-200 hover:-translate-y-1 hover:border-accent-400/60 hover:shadow-[0_0_24px_var(--glow-strong)] focus-visible:outline-2 focus-visible:outline-accent-400"
         aria-label={`${t(`hero.stats.${stat.key}`)} — ${t("hero.statAria")}`}
       >
         <span className="absolute left-0 top-3 bottom-3 w-[2px] rounded bg-gradient-to-b from-accent-400 to-accent-600/20" />
@@ -139,6 +139,12 @@ export default function Hero({ navigate }) {
                   {t("hero.subtitle")}
                 </span>
               </h1>
+            </Reveal>
+            {/* 한 줄 소개 — 영문 직함 줄과 연락처 사이 (통합 핸드오프 §1-6, 문장 변경 금지) */}
+            <Reveal delay={160}>
+              <p className="mt-6 max-w-[52ch] text-[16px] leading-[1.6] text-ink-500 md:text-[17px]">
+                {t("hero.tagline")}
+              </p>
             </Reveal>
             <Reveal delay={220}>
               <ul className="mt-8 space-y-1.5 text-sm text-ink-500">

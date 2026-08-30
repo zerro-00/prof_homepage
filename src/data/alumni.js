@@ -133,6 +133,39 @@ export const CITY_PINS = [
     ],
   },
 
+  {
+    // 이예령 — 고려대 세종캠퍼스 융합경영학부 디지털경영전공 교수 (2026.08.31 학교 공식 교수소개 확인)
+    // 서울이 아니라 세종캠퍼스다. 14차의 "고려대학교 · 디지털경영"(서울) 표기는 폐기됨.
+    id: "sejong",
+    region: "SEJONG, KOREA",
+    lang: {"en": {"city": "Sejong", "country": "South Korea", "label": "SEJONG, KOREA"}, "zh": {"city": "世宗", "country": "韩国", "label": "SEJONG, KOREA"}, "ja": {"city": "世宗", "country": "韓国", "label": "SEJONG, KOREA"}},
+    city: "세종",
+    country: "대한민국",
+    coordinates: [127.289, 36.48],
+    label: "SEJONG, KOREA",
+    labelDx: 10,
+    labelDy: 12,
+    entries: [
+      {
+        nameKo: "이예령",
+        personId: "li-yiling",
+        lang: {"en": {"grad": "Ph.D. 2025", "affiliation": "Korea University Sejong Campus · Division of Convergence Business, Digital Management", "title": "Professor", "path": "Ph.D. in Marketing, Yonsei University (2025) → Professor, Korea University Sejong Campus", "linkLabel": "Faculty Profile →"}, "zh": {"grad": "2025 博士", "affiliation": "高丽大学世宗校区 · 融合经营学部 数字经营专业", "title": "教授", "path": "2025 延世大学市场营销博士 → 任职高丽大学世宗校区", "linkLabel": "教授主页 →"}, "ja": {"grad": "2025年 博士", "affiliation": "高麗大学世宗キャンパス · 融合経営学部 デジタル経営専攻", "title": "教授", "path": "2025年 延世大学マーケティング博士 → 高麗大学世宗キャンパス 就任", "linkLabel": "教授ホームページ →"}},
+        nameEn: "Yiling Li",
+        grad: "2025 박사",
+        affiliation: "고려대학교 세종캠퍼스 · 융합경영학부 디지털경영전공",
+        title: "교수",
+        path: "2025 연세대학교 마케팅 박사 → 고려대학교 세종캠퍼스 교수 임용",
+        isFaculty: true,
+        // 출처: 고려대 세종캠퍼스 디지털경영전공 교수소개 (2026.08.31 확인)
+        // 개별 상세는 JS로 열려 고정 URL이 없어 학과 목록 페이지를 링크한다
+        link: "https://sejong.korea.ac.kr/faculty/13978/subview.do",
+        linkLabel: "교수 홈페이지 →",
+        subLink: null,
+        subLinkLabel: null,
+      },
+    ],
+  },
+
   // ---------- 박사과정 진학 / 기업 진출 ----------
   {
     id: "houston",
@@ -161,28 +194,14 @@ export const CITY_PINS = [
   {
     id: "seoul",
     region: "SEOUL, KOREA",
-    lang: {"en": {"city": "Seoul", "country": "South Korea", "label": "Seoul ×2"}, "zh": {"city": "首尔", "country": "韩国", "label": "Seoul ×2"}, "ja": {"city": "ソウル", "country": "韓国", "label": "Seoul ×2"}},
+    lang: {"en": {"city": "Seoul", "country": "South Korea", "label": "SEOUL, KOREA"}, "zh": {"city": "首尔", "country": "韩国", "label": "SEOUL, KOREA"}, "ja": {"city": "ソウル", "country": "韓国", "label": "SEOUL, KOREA"}},
     city: "서울",
     country: "대한민국",
     coordinates: [126.978, 37.5665],
-    label: "서울 ×2",
+    label: "SEOUL, KOREA",
     labelDx: 10,
     labelDy: -8,
     entries: [
-      {
-        // 소속 확정(14차): 학교 공식 페이지 전 미러가 "고려대학교 디지털경영 교수"로 통일됨
-        // TODO: 고려대 공식 프로필 URL 확인 후 link 추가 (URL 추측 금지)
-        nameKo: "이예령",
-        personId: "li-yiling",
-        lang: {"en": {"grad": "Ph.D. 2025", "affiliation": "Korea University · Digital Management", "title": "Professor", "path": "Ph.D. in Marketing, Yonsei University (2025) → Professor, Korea University"}, "zh": {"grad": "2025 博士", "affiliation": "高丽大学 · 数字经营", "title": "教授", "path": "2025 延世大学市场营销博士 → 任职高丽大学数字经营"}, "ja": {"grad": "2025年 博士", "affiliation": "高麗大学校 · デジタル経営", "title": "教授", "path": "2025年 延世大学マーケティング博士 → 高麗大学校デジタル経営 就任"}},
-        nameEn: "Yiling Li",
-        grad: "2025 박사",
-        affiliation: "고려대학교 · 디지털경영",
-        title: "교수",
-        path: "2025 연세대학교 마케팅 박사 → 고려대학교 디지털경영 교수 임용",
-        isFaculty: true,
-        link: null,
-      },
       {
         nameKo: "이지연",
         personId: "lee-jiyeon",
@@ -306,7 +325,7 @@ export const CITY_PINS = [
 // 지도 하단 요약 배지
 export const MAP_BADGES = [
   { value: "5명", label: "교수 임용" },
-  { value: "8명", label: "해외 박사과정 진학" },
+  { value: "7명", label: "해외 박사과정 진학" },
   { value: "4개 대륙", label: "제자 진출 무대" },
   { value: "4명", label: "재학생" },
 ];

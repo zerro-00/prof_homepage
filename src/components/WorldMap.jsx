@@ -88,7 +88,11 @@ export default function WorldMap() {
         onMouseLeave={() => setActive(null)}
       >
         <div
-          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_50%_40%,rgba(47,127,242,0.08),transparent)]"
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(ellipse 60% 50% at 50% 40%, var(--map-glow), transparent)",
+          }}
           aria-hidden="true"
         />
         <ComposableMap
@@ -107,13 +111,19 @@ export default function WorldMap() {
                   <Geography
                     key={geo.rsmKey}
                     geography={geo}
-                    fill="#131e33"
-                    stroke="#1e2a44"
                     strokeWidth={0.6}
                     style={{
-                      default: { outline: "none" },
-                      hover: { outline: "none", fill: "#182642" },
-                      pressed: { outline: "none" },
+                      default: {
+                        outline: "none",
+                        fill: "var(--map-land)",
+                        stroke: "var(--map-stroke)",
+                      },
+                      hover: {
+                        outline: "none",
+                        fill: "var(--map-land-hover)",
+                        stroke: "var(--map-stroke)",
+                      },
+                      pressed: { outline: "none", fill: "var(--map-land-hover)" },
                     }}
                   />
                 ))
@@ -123,9 +133,9 @@ export default function WorldMap() {
           {CITY_PINS.map((pin) => {
             const isActive = active === pin.id;
             const isFaculty = pin.entries.some((e) => e.isFaculty);
-            const core = isFaculty ? "#d9b25c" : "#2f7ff2";
-            const coreActive = isFaculty ? "#e8c877" : "#7cc5ff";
-            const ring = isFaculty ? "#e8c877" : "#4da3ff";
+            const core = isFaculty ? "var(--pin-faculty)" : "var(--pin)";
+            const coreActive = isFaculty ? "var(--pin-faculty-active)" : "var(--pin-active)";
+            const ring = isFaculty ? "var(--pin-faculty-active)" : "var(--pin-ring)";
             return (
               <Marker
                 key={pin.id}
@@ -134,23 +144,24 @@ export default function WorldMap() {
                 onClick={() => toggle(pin.id)}
               >
                 <g className="cursor-pointer">
-                  <circle r={6} fill="none" stroke={ring} strokeWidth={1.2} className="pin-pulse" />
+                  <circle r={6} fill="none" strokeWidth={1.2} className="pin-pulse" style={{ stroke: ring }} />
                   {isFaculty && (
                     <circle
                       r={6}
                       fill="none"
-                      stroke={ring}
                       strokeWidth={1.4}
                       className="pin-pulse"
-                      style={{ animationDelay: "0.8s" }}
+                      style={{ stroke: ring, animationDelay: "0.8s" }}
                     />
                   )}
                   <circle
                     r={isActive ? 6 : isFaculty ? 5.2 : 4.5}
-                    fill={isActive ? coreActive : core}
-                    stroke="#0a101d"
                     strokeWidth={1.5}
-                    style={{ transition: "all .2s" }}
+                    style={{
+                      fill: isActive ? coreActive : core,
+                      stroke: "var(--pin-stroke)",
+                      transition: "all .2s",
+                    }}
                   />
                   {/* 인원수 표시 (핀 위) — 사람 이름 라벨은 넣지 않는다 */}
                   {pin.entries.length > 1 && (
@@ -162,9 +173,9 @@ export default function WorldMap() {
                         fontFamily: "'Space Grotesk', sans-serif",
                         fontSize: 9.5,
                         fontWeight: 700,
-                        fill: isFaculty ? "#e8c877" : "#7cc5ff",
+                        fill: isFaculty ? "var(--pin-faculty-active)" : "var(--pin-active)",
                         paintOrder: "stroke",
-                        stroke: "#0a101d",
+                        stroke: "var(--pin-stroke)",
                         strokeWidth: 3,
                       }}
                     >
@@ -182,9 +193,9 @@ export default function WorldMap() {
                       fontSize: 8.5,
                       fontWeight: 600,
                       letterSpacing: "0.08em",
-                      fill: "#667191",
+                      fill: "var(--map-label)",
                       paintOrder: "stroke",
-                      stroke: "#0a101d",
+                      stroke: "var(--pin-stroke)",
                       strokeWidth: 3,
                     }}
                   >

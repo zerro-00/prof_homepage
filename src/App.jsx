@@ -208,7 +208,7 @@ export default function App() {
                   {isActive && (
                     <motion.span
                       layoutId="nav-active"
-                      className="absolute left-2 right-2 -bottom-[3px] h-[2px] rounded-full bg-accent-400 shadow-[0_0_10px_rgba(77,163,255,0.9)]"
+                      className="absolute left-2 right-2 -bottom-[3px] h-[2px] rounded-full bg-accent-400"
                       transition={
                         reduced ? { duration: 0 } : { type: "spring", stiffness: 500, damping: 40 }
                       }
@@ -251,7 +251,7 @@ export default function App() {
               <motion.div
                 key={`scan-${section}`}
                 aria-hidden="true"
-                className="pointer-events-none absolute inset-x-0 top-0 z-10 h-px bg-gradient-to-r from-transparent via-accent-400/70 to-transparent shadow-[0_0_18px_2px_rgba(77,163,255,0.35)]"
+                className="pointer-events-none absolute inset-x-0 top-0 z-10 h-px bg-gradient-to-r from-transparent via-accent-400/70 to-transparent"
                 initial={{ top: "0%", opacity: 0.7 }}
                 animate={{ top: "100%", opacity: 0 }}
                 transition={{ duration: 0.3, ease: "easeOut" }}

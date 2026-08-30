@@ -9,7 +9,10 @@
 //  5. studentIds의 인물 이름이 authors에 실제 표기로 들어 있지 않으면 실패
 //  6. wu-jialing(오가령)이 배정된 논문의 authors에 반드시 오가령/Wu Jialing이 있을 것
 //     (이예령 Li Yiling과 혼동 방지 — 두 사람은 완전히 다른 인물)
+//  7. 그룹 합계 = 졸업생 총원 (교수 임용 5 + 박사과정 7 + 기업 1 = 13)
+//     지도 배지 숫자와 실제 명단이 어긋나는 것을 기계적으로 차단한다
 
+import { CITY_PINS, CURRENT_MEMBERS } from "../src/data/alumni.js";
 import {
   ALL_PUBLICATIONS,
   SSCI_PUBLICATIONS,
@@ -118,10 +121,27 @@ for (const [sid, exp] of Object.entries(EXPECTED)) {
   }
 }
 
+// 7. 그룹 합계 = 졸업생 총원
+const alumni = CITY_PINS.flatMap((p) => p.entries);
+const facultyN = alumni.filter((e) => e.isFaculty).length;
+const industryN = alumni.filter((e) => e.personId === "lee-jiyeon").length;
+const phdN = alumni.length - facultyN - industryN;
+const GROUPS = { total: 13, faculty: 5, phd: 7, industry: 1, members: 4 };
+if (alumni.length !== GROUPS.total)
+  fail(`졸업생 총원: ${alumni.length} (기대 ${GROUPS.total})`);
+if (facultyN !== GROUPS.faculty) fail(`교수 임용: ${facultyN} (기대 ${GROUPS.faculty})`);
+if (phdN !== GROUPS.phd) fail(`박사과정 진학: ${phdN} (기대 ${GROUPS.phd})`);
+if (industryN !== GROUPS.industry) fail(`기업 진출: ${industryN} (기대 ${GROUPS.industry})`);
+if (CURRENT_MEMBERS.length !== GROUPS.members)
+  fail(`재학생: ${CURRENT_MEMBERS.length} (기대 ${GROUPS.members})`);
+if (facultyN + phdN + industryN !== alumni.length)
+  fail(`그룹 합계(${facultyN + phdN + industryN}) ≠ 졸업생 총원(${alumni.length})`);
+
 if (failed) process.exit(1);
 
 const sourced = EVERYTHING.filter((p) => p.authorSource).length;
 console.log(
   `✓ authorship OK — SSCI ${SSCI_PUBLICATIONS.length} · KCI ${KCI_PUBLICATIONS.length} · 저서 ${BOOKS.length}, ` +
-    `저자 확정 ${sourced}건, ${Object.keys(EXPECTED).length}명 편수 검증 통과`
+    `저자 확정 ${sourced}건, ${Object.keys(EXPECTED).length}명 편수 검증 통과, ` +
+    `그룹 ${facultyN}+${phdN}+${industryN}=${alumni.length} · 재학생 ${CURRENT_MEMBERS.length}`
 );

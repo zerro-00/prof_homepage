@@ -35,7 +35,7 @@ function PaperCard({ paper }) {
       target="_blank"
       rel="noopener noreferrer"
       aria-label={`${paper.title} — ${t("pubsUI.openLink")}`}
-      className="group relative block rounded-2xl border border-line bg-base-900/70 p-5 md:p-6 transition-all hover:border-accent-500/50 hover:shadow-[0_0_20px_rgba(47,127,242,0.15)] focus-visible:outline-2 focus-visible:outline-accent-400"
+      className="group relative block rounded-2xl border border-line bg-base-900/70 p-5 md:p-6 transition-all hover:border-accent-500/50 hover:shadow-[0_0_20px_var(--glow-soft)] focus-visible:outline-2 focus-visible:outline-accent-400"
     >
       {/* 우상단 외부링크 아이콘 */}
       <span

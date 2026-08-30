@@ -14,6 +14,7 @@
     "kicker": "Yonsei School of Business · Marketing",
     "name": "Jeonghye Choi",
     "subtitle": "Professor of Marketing",
+    "tagline": "Studying how markets actually work at the intersection of online and offline, through the data consumers leave behind.",
     "photoAlt": "Professor Jeonghye Choi",
     "officeLabel": "Office",
     "office": "School of Business (Bldg. 212), Rm. 537",
@@ -233,7 +234,7 @@
         "sub": "4 overseas · 1 domestic"
       },
       {
-        "value": "8",
+        "value": "7",
         "label": "Ph.D. placements abroad",
         "sub": ""
       },
@@ -251,6 +252,12 @@
     "note": "Hover or tap a pin to see placement details. Alumni whose names could not be confirmed remain anonymous."
   },
   "students": {
+    "tabFaculty": "Faculty",
+    "tabPhd": "Ph.D.",
+    "tabIndustry": "Industry",
+    "tabMembers": "Students",
+    "rosterTitle": "Roster",
+    "rosterHint": "Hover a name to highlight its pin on the map.",
     "facultyHeading": "Faculty Placements",
     "membersTitle": "Active Members",
     "membersSub": "Current Students",
@@ -267,6 +274,11 @@
   "pubsUI": {
     "viewKeyword": "By Keyword",
     "viewJournal": "By Journal",
+    "allPapers": "All publications",
+    "keywordListLabel": "Keyword list",
+    "backToKeywords": "← All keywords",
+    "moreJournalsAll": "{{count}} more journals",
+    "pickKeyword": "Choose a keyword",
     "groupSsci": "SSCI · International Journals",
     "groupKci": "KCI · Korean Journals",
     "moreJournals_one": "{{count}} more journal",

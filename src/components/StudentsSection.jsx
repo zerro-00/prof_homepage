@@ -212,7 +212,7 @@ export default function StudentsSection() {
             <button
               type="button"
               onClick={() => scrollTo(badgeTargets[i])}
-              className="group relative w-full cursor-pointer rounded-xl border border-line bg-base-900/70 px-5 py-4 text-left transition-all duration-200 hover:-translate-y-1 hover:border-accent-400/60 hover:shadow-[0_0_24px_rgba(47,127,242,0.25)] focus-visible:outline-2 focus-visible:outline-accent-400"
+              className="group relative w-full cursor-pointer rounded-xl border border-line bg-base-900/70 px-5 py-4 text-left transition-all duration-200 hover:-translate-y-1 hover:border-accent-400/60 hover:shadow-[0_0_24px_var(--glow-strong)] focus-visible:outline-2 focus-visible:outline-accent-400"
             >
               <span className="flex items-baseline gap-3">
                 <span className="font-display text-2xl font-bold text-accent-300 tabular-nums">
