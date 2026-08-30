@@ -965,8 +965,10 @@ const _KCI = [
   // ---------- 10차 추가분 (연도별) ----------
   {
     id: "kci-2026-04",
+    // 실제 공저자는 황인서·김정현·최정혜(사실 그대로 유지). 다만 김정현은 진출처 미확인으로
+    // 15차에서 인물 id 자체를 삭제했으므로 studentIds에는 황인서만 남긴다.
     authors: ["황인서", "김정현", "최정혜"],
-    studentIds: ["hwang-inseo", "kim-junghyun"],
+    studentIds: ["hwang-inseo"],
     authorSource: "KCI 포털 원문 (14차 확정표)",
     doi: "10.37202/KMMR.2026.31.2.75",
     title:

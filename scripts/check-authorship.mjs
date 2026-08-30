@@ -18,6 +18,9 @@ import {
 } from "../src/data/publications.js";
 
 // 인물별 "허용되는 저자 표기" — 이 목록과 정확히 일치하는 표기만 본인으로 인정한다.
+// ⚠️ 15차: 김정현·나규원은 진출처 미확인으로 인물 id 삭제 (명단·지도·실적 어디에도 넣지 않음).
+//    2026 아식스 논문의 authors에 "김정현"은 사실 그대로 남아 있으나 studentIds에는 없다.
+// ⚠️ 김연정(kim-yeonjeong)은 확인된 공저 논문이 없어 표기를 등록하지 않는다.
 // ⚠️ 'Jikyung (Jeanne) Kim'(IE Univ.) · 'Hye-jin Kim' · 'Jae Yeon Yoon' · 'Sang Jin Kim'
 //    그리고 이니셜 표기('J. Kim', 'Y. Yoon', 'H. Kim')는 어느 인물에게도 인정하지 않는다.
 const PERSON_NAMES = {
@@ -25,8 +28,6 @@ const PERSON_NAMES = {
   "wu-jialing": ["오가령", "Wu Jialing"],
   "kim-wookyoung": ["김우경", "Wookyoung Kim"],
   "hwang-inseo": ["황인서", "Inseo Hwang"],
-  "kim-junghyun": ["김정현"],
-  "na-gyuwon": ["나규원"],
   "jung-hyunwoo": ["정현우", "Hyunwoo Jung"],
   "kim-hyejeong": ["김혜정", "Hyejeong Kim"],
   "yoon-yeolim": ["윤여림", "Yeo Lim Yoon"],
@@ -58,9 +59,11 @@ const EXPECTED = {
   "jiang-yan": { ssci: 1, kci: 1, book: 0 },
   "song-hyeasinn": { ssci: 1, kci: 0, book: 0 },
   "wu-jialing": { ssci: 0, kci: 1, book: 0 },
-  "kim-junghyun": { ssci: 0, kci: 1, book: 0 },
   "lee-jiyeon": { ssci: 0, kci: 0, book: 0 },
-  "na-gyuwon": { ssci: 0, kci: 0, book: 0 },
+  // 김연정(재학생) — 교수님과의 공저 논문이 확인되지 않아 현재 0편.
+  // PERSON_NAMES에 표기를 등록하지 않았으므로 어떤 논문을 배정해도 규칙 5에서 실패한다(의도된 잠금).
+  // TODO: 본인 KCI 연구자번호(KRI) 또는 CV로 공저 논문이 확인되면 PERSON_NAMES/EXPECTED를 함께 갱신할 것.
+  "kim-yeonjeong": { ssci: 0, kci: 0, book: 0 },
 };
 
 let failed = false;
