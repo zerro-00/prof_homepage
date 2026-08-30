@@ -336,7 +336,7 @@ export default function StudentsSection({ focus = null, navigate }) {
   const badgeTabs = ["faculty", "phd", null, "members"];
 
   return (
-    <section id="alumni" className="relative mx-auto max-w-6xl px-5 py-20 md:px-8 md:py-28">
+    <section id="alumni" data-surface="field" className="relative mx-auto max-w-6xl px-5 py-20 md:px-8 md:py-28">
       <SectionHeading
         index="03"
         label={t("sections.alumni.label")}

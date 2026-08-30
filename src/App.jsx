@@ -295,7 +295,7 @@ export default function App() {
         </div>
       </main>
 
-      <footer className="border-t border-line/60 py-10">
+      <footer data-surface="deep" className="border-t border-line/60 py-10">
         <div className="mx-auto max-w-6xl px-5 md:px-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-3 text-[13px] text-ink-600">
           <p>
             © {new Date().getFullYear()} {t("footer.copyright")}

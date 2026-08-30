@@ -33,7 +33,7 @@ export default function Interests() {
   const methods = t("interests.methods", { returnObjects: true });
 
   return (
-    <section id="interests" className="relative mx-auto max-w-6xl px-5 py-20 md:px-8 md:py-28">
+    <section id="interests" data-surface="paper" className="relative mx-auto max-w-6xl px-5 py-20 md:px-8 md:py-28">
       <SectionHeading
         index="02"
         label={t("sections.interests.label")}

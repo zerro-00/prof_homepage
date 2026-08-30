@@ -34,7 +34,7 @@ export default function Awards() {
   const hidden = AWARDS.slice(VISIBLE_COUNT);
 
   return (
-    <section id="awards" className="relative mx-auto max-w-6xl px-5 md:px-8 py-20 md:py-28">
+    <section id="awards" data-surface="field" className="relative mx-auto max-w-6xl px-5 md:px-8 py-20 md:py-28">
       <SectionHeading
         index="05"
         label={t("sections.awards.label")}

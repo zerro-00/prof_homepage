@@ -86,7 +86,7 @@ export default function Hero({ navigate }) {
   const industryPast = t("profile.industryPast", { returnObjects: true });
 
   return (
-    <header id="profile" className="relative overflow-hidden">
+    <header id="profile" data-surface="field" className="relative overflow-hidden">
       <div className="absolute inset-0 hud-grid" aria-hidden="true" />
       <div
         className="absolute -top-40 left-1/2 -translate-x-1/2 h-[480px] w-[900px] rounded-full bg-accent-600/15 blur-[140px]"
@@ -190,7 +190,7 @@ export default function Hero({ navigate }) {
         </div>
 
         {/* 프로필 상세 그리드 */}
-        <div className="mt-14 grid md:grid-cols-2 gap-4 md:gap-5">
+        <div data-surface="paper" className="mt-14 grid md:grid-cols-2 gap-4 md:gap-5">
           <InfoCard title={t("hero.cards.education")}>
             <ul className="space-y-3">
               {education.map((e) => (

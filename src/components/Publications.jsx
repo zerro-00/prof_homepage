@@ -640,7 +640,7 @@ export default function Publications({ focus = null, studentFilter = null, onCle
   }, [typeFilter, studentFilter]);
 
   return (
-    <section id="publications" className="relative mx-auto max-w-6xl px-5 py-20 md:px-8 md:py-28">
+    <section id="publications" data-surface="paper" className="relative mx-auto max-w-6xl px-5 py-20 md:px-8 md:py-28">
       <SectionHeading
         index="04"
         label={t("sections.publications.label")}
