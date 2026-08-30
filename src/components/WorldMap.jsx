@@ -214,6 +214,7 @@ export default function WorldMap({
             const coreActive = isFaculty ? "var(--pin-faculty-active)" : "var(--pin-active)";
             const ring = isFaculty ? "var(--pin-faculty-active)" : "var(--pin-ring)";
             const r = isHot ? 6.3 : isFaculty ? 5.2 : 4.5;
+            const spread = dx !== 0 || dy !== 0;
             return (
               <Marker
                 key={pin.id}
@@ -277,11 +278,15 @@ export default function WorldMap({
                       </text>
                     )}
                   </g>
-                  {/* 지역명 라벨 — 사람 이름은 상시 노출하지 않는다 */}
+                  {/* 지역명 라벨 — 사람 이름은 상시 노출하지 않는다.
+                      겹침 완화로 옮긴 핀은 라벨도 이동 방향 바깥쪽으로 밀어야
+                      두 라벨이 서로 교차하지 않는다 (서울 ↔ 세종). */}
                   <text
-                    x={(pin.labelDx ?? 10) + dx}
-                    y={(pin.labelDy ?? 4) + dy}
-                    textAnchor={(pin.labelDx ?? 10) < 0 ? "end" : "start"}
+                    x={spread ? dx * 1.8 + (dx >= 0 ? 10 : -10) : (pin.labelDx ?? 10)}
+                    y={spread ? dy * 1.8 + (dy < 0 ? -3 : 11) : (pin.labelDy ?? 4)}
+                    textAnchor={
+                      spread ? (dx >= 0 ? "start" : "end") : (pin.labelDx ?? 10) < 0 ? "end" : "start"
+                    }
                     className="pointer-events-none hidden select-none md:block"
                     style={{
                       fontFamily: "'Space Grotesk', sans-serif",
