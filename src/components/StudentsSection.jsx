@@ -1,33 +1,38 @@
-import { Suspense, lazy, useRef, useState } from "react";
+import { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Collapse, Reveal, SectionHeading, TopStar, useAnchorScroll } from "./common.jsx";
 import { CITY_PINS, CURRENT_MEMBERS } from "../data/alumni.js";
 import { worksForStudent } from "../data/publications.js";
 import { localizeField } from "../i18n/index.js";
 
-// 지도는 무겁기 때문에 lazy 로딩
 const WorldMap = lazy(() => import("./WorldMap.jsx"));
+const PinCard = lazy(() =>
+  import("./WorldMap.jsx").then((m) => ({ default: m.PinCard }))
+);
 
 function displayName(entry, lng) {
   if (lng === "ko") return { main: entry.nameKo, sub: entry.nameEn };
   return { main: entry.nameEn ?? entry.nameKo, sub: null };
 }
 
-// 실적 배지 — "SSCI 3 · KCI 7 · 저서 1" (publications.js의 studentIds 매핑에서 계산)
+// 소속 축약 — "Ohio State University · Fisher College of Business" → "Ohio State University"
+const shortAffiliation = (s) => (s ? s.split("·")[0].trim() : "");
+
+/* 실적 배지 — publications.js의 studentIds 매핑에서 계산 */
 function WorksBadge({ works }) {
   const { t } = useTranslation();
   if (!works || works.length === 0) return null;
   const count = (tp) => works.filter((w) => w.type === tp).length;
   const parts = [
-    { label: "SSCI", n: count("SSCI"), cls: "text-accent-300" },
-    { label: "KCI", n: count("KCI"), cls: "text-mint-400" },
-    { label: t("students.book"), n: count("BOOK"), cls: "text-gold-300" },
+    { label: "SSCI", n: count("SSCI"), style: { color: "var(--ssci-text)" } },
+    { label: "KCI", n: count("KCI"), style: { color: "var(--kci-text)" } },
+    { label: t("students.book"), n: count("BOOK"), style: { color: "var(--color-gold-300)" } },
   ].filter((p) => p.n > 0);
   return (
-    <span className="inline-flex items-center gap-1.5 rounded-md border border-line bg-base-850/80 px-2 py-0.5 font-display text-[11px] font-semibold">
+    <span className="inline-flex shrink-0 items-center gap-1.5 font-display text-[11px] font-semibold tabular-nums">
       {parts.map((p, i) => (
-        <span key={p.label} className={p.cls}>
-          {i > 0 && <span className="text-ink-600 mr-1.5">·</span>}
+        <span key={p.label} style={p.style}>
+          {i > 0 && <span className="mr-1.5 text-ink-600">·</span>}
           {p.label} {p.n}
         </span>
       ))}
@@ -35,7 +40,6 @@ function WorksBadge({ works }) {
   );
 }
 
-// 실적 아코디언 — 논문 제목은 원문 유지, ★는 최상위 저널
 function WorksAccordion({ works }) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
@@ -45,10 +49,12 @@ function WorksAccordion({ works }) {
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="text-xs text-ink-500 hover:text-accent-300 transition-colors inline-flex items-center gap-1.5"
+        className="inline-flex items-center gap-1.5 text-xs text-ink-500 transition-colors hover:text-accent-300"
         aria-expanded={open}
       >
-        <span className={`inline-block transition-transform ${open ? "rotate-90" : ""}`}>▸</span>
+        <span aria-hidden="true" className={`inline-block transition-transform ${open ? "rotate-90" : ""}`}>
+          ▸
+        </span>
         {open
           ? t("students.worksHide", { count: works.length })
           : t("students.worksShow", { count: works.length })}
@@ -61,15 +67,16 @@ function WorksAccordion({ works }) {
                 {w.top && <TopStar className="mr-1" title={t("students.topJournal")} />}
                 {w.title}
               </p>
-              <p className="text-ink-600 mt-0.5">
+              <p className="mt-0.5 text-ink-600">
                 <span
-                  className={
-                    w.type === "SSCI"
-                      ? "text-accent-300"
-                      : w.type === "KCI"
-                        ? "text-mint-400"
-                        : "text-gold-300"
-                  }
+                  style={{
+                    color:
+                      w.type === "SSCI"
+                        ? "var(--ssci-text)"
+                        : w.type === "KCI"
+                          ? "var(--kci-text)"
+                          : "var(--color-gold-300)",
+                  }}
                 >
                   {w.type === "BOOK" ? t("students.book") : w.type}
                 </span>
@@ -84,10 +91,42 @@ function WorksAccordion({ works }) {
   );
 }
 
-function GroupHeading({ tone = "accent", children }) {
-  const cls = tone === "gold" ? "text-gold-300" : tone === "mint" ? "text-mint-400" : "text-accent-400";
+/* 명단 패널의 한 줄 — 지도 핀과 양방향으로 이어진다 */
+function RosterRow({ person, lng, hot, onHover, onSelect, rowRef }) {
+  const name = displayName(person, lng);
+  const works = worksForStudent(person.personId);
+  const isFaculty = !!person.isFaculty;
   return (
-    <h3 className={`font-display text-xs tracking-[0.25em] uppercase mb-4 ${cls}`}>{children}</h3>
+    <li ref={rowRef}>
+      <button
+        type="button"
+        onMouseEnter={onHover ? () => onHover(person) : undefined}
+        onFocus={onHover ? () => onHover(person) : undefined}
+        onClick={onSelect ? () => onSelect(person) : undefined}
+        aria-current={hot ? "true" : undefined}
+        className={`flex w-full items-start gap-2.5 rounded-lg px-2.5 py-2 text-left transition-colors focus-visible:outline-2 focus-visible:outline-accent-400 ${
+          hot ? "bg-base-800/80" : "hover:bg-base-800/50"
+        }`}
+      >
+        <span
+          aria-hidden="true"
+          className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full"
+          style={{ background: isFaculty ? "var(--pin-faculty)" : "var(--pin)" }}
+        />
+        <span className="min-w-0 flex-1">
+          <span className="flex flex-wrap items-baseline gap-x-1.5">
+            <span className={`text-[13px] font-medium ${hot ? "text-ink-100" : "text-ink-300"}`}>
+              {name.main}
+            </span>
+            {name.sub && <span className="text-[11px] text-ink-600">({name.sub})</span>}
+          </span>
+          <span className="mt-0.5 block truncate text-[12px] text-ink-500">
+            {shortAffiliation(localizeField(person, "affiliation", lng)) || person._city || ""}
+          </span>
+        </span>
+        <WorksBadge works={works} />
+      </button>
+    </li>
   );
 }
 
@@ -97,29 +136,25 @@ function AlumniCard({ entry, lng, faculty = false }) {
   return (
     <div
       className={`h-full rounded-2xl border bg-base-900/70 transition-colors ${
-        faculty
-          ? "border-gold-500/25 hover:border-gold-500/50 p-5"
-          : "border-line hover:border-base-600 p-4"
+        faculty ? "border-gold-500/25 p-5 hover:border-gold-500/50" : "border-line p-4 hover:border-base-600"
       }`}
     >
       <div className="flex items-start justify-between gap-3">
         <p className={faculty ? "font-semibold text-ink-100" : "text-sm"}>
-          <span className={faculty ? "text-gold-300" : "text-accent-300 font-medium"}>
+          <span className={faculty ? "text-gold-300" : "font-medium text-accent-300"}>
             {name.main}
           </span>
-          {name.sub && (
-            <span className="text-ink-500 font-normal text-sm"> ({name.sub})</span>
-          )}
+          {name.sub && <span className="text-sm font-normal text-ink-500"> ({name.sub})</span>}
           {!faculty && (
             <>
-              <span className="text-ink-600 mx-1.5">·</span>
-              <span className="text-ink-500 text-[13px]">{localizeField(entry, "grad", lng)}</span>
+              <span className="mx-1.5 text-ink-600">·</span>
+              <span className="text-[13px] text-ink-500">{localizeField(entry, "grad", lng)}</span>
             </>
           )}
         </p>
         <WorksBadge works={works} />
       </div>
-      <p className={`text-ink-100 ${faculty ? "text-sm mt-1.5" : "text-[13px] mt-1"}`}>
+      <p className={`text-ink-100 ${faculty ? "mt-1.5 text-sm" : "mt-1 text-[13px]"}`}>
         {localizeField(entry, "affiliation", lng)}
       </p>
       <p className={faculty ? "text-[13px] text-ink-300" : "text-[12px] text-ink-500"}>
@@ -128,17 +163,17 @@ function AlumniCard({ entry, lng, faculty = false }) {
       </p>
       {faculty && (
         <>
-          <p className="text-[12px] text-ink-500 mt-1.5">{localizeField(entry, "path", lng)}</p>
-          <p className="text-[12px] text-ink-600 mt-0.5">
+          <p className="mt-1.5 text-[12px] text-ink-500">{localizeField(entry, "path", lng)}</p>
+          <p className="mt-0.5 text-[12px] text-ink-600">
             {entry._city} · {entry._country}
           </p>
-          <div className="flex flex-wrap gap-2 mt-3">
+          <div className="mt-3 flex flex-wrap gap-2">
             {entry.link && (
               <a
                 href={entry.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-[13px] px-3 py-1.5 rounded-lg border border-gold-500/40 bg-gold-500/10 text-gold-300 hover:bg-gold-500/20 transition-colors font-medium"
+                className="inline-flex min-h-11 items-center rounded-lg border border-gold-500/40 bg-gold-500/10 px-3 text-[13px] font-medium text-gold-300 transition-colors hover:bg-gold-500/20"
               >
                 {localizeField(entry, "linkLabel", lng) ?? "Link →"}
               </a>
@@ -148,7 +183,7 @@ function AlumniCard({ entry, lng, faculty = false }) {
                 href={entry.subLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-[13px] px-3 py-1.5 rounded-lg border border-line bg-base-800/60 text-ink-300 hover:text-ink-100 hover:border-base-600 transition-colors"
+                className="inline-flex min-h-11 items-center rounded-lg border border-line bg-base-800/60 px-3 text-[13px] text-ink-300 transition-colors hover:border-base-600 hover:text-ink-100"
               >
                 {localizeField(entry, "subLinkLabel", lng) ?? "Link →"}
               </a>
@@ -161,31 +196,89 @@ function AlumniCard({ entry, lng, faculty = false }) {
   );
 }
 
-export default function StudentsSection() {
+const TAB_KEYS = ["faculty", "phd", "industry", "members"];
+
+export default function StudentsSection({ focus = null }) {
   const { t, i18n } = useTranslation();
   const lng = i18n.language;
+  const scrollTo = useAnchorScroll();
   const mapRef = useRef(null);
-  const facultyRef = useRef(null);
-  const phdRef = useRef(null);
-  const membersRef = useRef(null);
+  const rowRefs = useRef({});
 
-  const all = CITY_PINS.flatMap((pin) =>
-    pin.entries.map((e) => ({
-      ...e,
-      _city: localizeField(pin, "city", lng),
-      _country: localizeField(pin, "country", lng),
-    }))
+  const [tab, setTab] = useState(() => (TAB_KEYS.includes(focus) ? focus : "faculty"));
+  const [hoverPin, setHoverPin] = useState(null);
+  const [pinnedPin, setPinnedPin] = useState(null);
+
+  // 히어로 스탯 카드에서 넘어올 때 해당 탭 활성
+  useEffect(() => {
+    if (TAB_KEYS.includes(focus)) setTab(focus);
+  }, [focus]);
+
+  const all = useMemo(
+    () =>
+      CITY_PINS.flatMap((pin) =>
+        pin.entries.map((e) => ({
+          ...e,
+          _pinId: pin.id,
+          _city: localizeField(pin, "city", lng),
+          _country: localizeField(pin, "country", lng),
+        }))
+      ),
+    [lng]
   );
-  const faculty = all.filter((e) => e.isFaculty);
-  const phd = all.filter((e) => !e.isFaculty && e.personId !== "lee-jiyeon");
-  const industry = all.filter((e) => e.personId === "lee-jiyeon");
+
+  const groups = useMemo(
+    () => ({
+      faculty: all.filter((e) => e.isFaculty),
+      phd: all.filter((e) => !e.isFaculty && e.personId !== "lee-jiyeon"),
+      industry: all.filter((e) => e.personId === "lee-jiyeon"),
+      members: CURRENT_MEMBERS.map((m) => ({ ...m, _pinId: null })),
+    }),
+    [all]
+  );
+
+  const current = groups[tab];
+  // 현재 탭에 해당하는 핀 — 지도와 명단에 같은 필터가 걸린다
+  const activePinIds = useMemo(
+    () => new Set(current.map((p) => p._pinId).filter(Boolean)),
+    [current]
+  );
+
+  const highlightPinId = pinnedPin ?? hoverPin;
+  const shownPin = useMemo(
+    () => CITY_PINS.find((p) => p.id === (pinnedPin ?? hoverPin)) ?? null,
+    [pinnedPin, hoverPin]
+  );
+
+  // ESC로 고정 해제
+  useEffect(() => {
+    if (!pinnedPin) return;
+    const onKey = (e) => e.key === "Escape" && setPinnedPin(null);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [pinnedPin]);
+
+  const onHoverPin = useCallback((id) => {
+    setHoverPin(id);
+    if (!id) return;
+    // 핀 → 명단 방향: 필요하면 해당 행으로 스크롤
+    const row = rowRefs.current[id];
+    row?.scrollIntoView?.({ block: "nearest" });
+  }, []);
+
+  const onSelectPin = useCallback((id) => setPinnedPin((cur) => (cur === id ? null : id)), []);
+
+  const tabItems = TAB_KEYS.map((k) => ({
+    key: k,
+    label: t(`students.tab${k[0].toUpperCase()}${k.slice(1)}`),
+    count: groups[k].length,
+  }));
 
   const badges = t("map.badges", { returnObjects: true });
-  const badgeTargets = [facultyRef, phdRef, mapRef, membersRef];
-  const scrollTo = useAnchorScroll();
+  const badgeTabs = ["faculty", "phd", null, "members"];
 
   return (
-    <section id="alumni" className="relative mx-auto max-w-6xl px-5 md:px-8 py-20 md:py-28">
+    <section id="alumni" className="relative mx-auto max-w-6xl px-5 py-20 md:px-8 md:py-28">
       <SectionHeading
         index="03"
         label={t("sections.alumni.label")}
@@ -193,39 +286,135 @@ export default function StudentsSection() {
         desc={t("sections.alumni.desc")}
       />
 
-      <div ref={mapRef} className="scroll-mt-20">
-        <Suspense
-          fallback={
-            <div className="h-72 rounded-2xl border border-line bg-base-900/70 flex items-center justify-center text-ink-600 text-sm">
-              …
-            </div>
-          }
-        >
-          <WorldMap />
-        </Suspense>
+      {/* 탭 — 지도와 명단에 동시에 적용 */}
+      <div
+        role="tablist"
+        aria-label={t("sections.alumni.title")}
+        className="nav-scroll mb-5 flex gap-1 border-b border-line py-1"
+      >
+        {tabItems.map((it) => {
+          const active = it.key === tab;
+          return (
+            <button
+              key={it.key}
+              type="button"
+              role="tab"
+              aria-selected={active}
+              onClick={() => setTab(it.key)}
+              className={`relative shrink-0 px-3 py-2.5 text-sm transition-colors focus-visible:outline-2 focus-visible:outline-accent-400 ${
+                active ? "text-ink-100" : "text-ink-500 hover:text-ink-300"
+              }`}
+            >
+              {it.label}
+              <span
+                className={`ml-1.5 font-display text-xs tabular-nums ${
+                  active ? "text-accent-300" : "text-ink-600"
+                }`}
+              >
+                {it.count}
+              </span>
+              {active && (
+                <span
+                  aria-hidden="true"
+                  className="absolute inset-x-2 -bottom-px h-[2px] rounded-full bg-accent-400"
+                />
+              )}
+            </button>
+          );
+        })}
       </div>
 
-      {/* 요약 배지 — 클릭 시 해당 그룹으로 이동 (히어로 스탯 카드와 동일한 인터랙션 언어) */}
-      <div className="mt-5 grid grid-cols-2 sm:grid-cols-4 gap-3">
+      {/* 좌: 상시 명단 패널 / 우: 지도 (모바일은 지도 축약 후 명단) */}
+      <div ref={mapRef} className="scroll-mt-20 lg:grid lg:grid-cols-[320px_minmax(0,1fr)] lg:gap-6">
+        <div className="order-2 mt-6 lg:order-1 lg:mt-0">
+          <div className="rounded-2xl border border-line bg-base-900/70 p-4">
+            <div className="mb-2 flex items-baseline justify-between gap-2">
+              <h3 className="font-display text-[11px] uppercase tracking-[0.2em] text-ink-500">
+                {t("students.rosterTitle")}
+              </h3>
+              <span className="font-display text-[12px] tabular-nums text-ink-600">
+                {current.length}
+              </span>
+            </div>
+            <ul
+              data-lenis-prevent
+              className="thin-scroll -mx-1 max-h-[380px] overflow-y-auto px-1 lg:max-h-[420px]"
+            >
+              {current.map((p) => (
+                <RosterRow
+                  key={p.personId}
+                  person={p}
+                  lng={lng}
+                  hot={!!p._pinId && highlightPinId === p._pinId}
+                  onHover={p._pinId ? (x) => setHoverPin(x._pinId) : undefined}
+                  onSelect={p._pinId ? (x) => onSelectPin(x._pinId) : undefined}
+                  rowRef={(el) => {
+                    if (p._pinId) rowRefs.current[p._pinId] = el;
+                  }}
+                />
+              ))}
+            </ul>
+            <p className="mt-2 hidden px-2.5 text-[11px] leading-relaxed text-ink-600 lg:block">
+              {t("students.rosterHint")}
+            </p>
+          </div>
+        </div>
+
+        <div className="order-1 lg:order-2">
+          <Suspense
+            fallback={
+              <div className="flex h-64 items-center justify-center rounded-2xl border border-line bg-base-900/70 text-sm text-ink-600">
+                …
+              </div>
+            }
+          >
+            <div className="relative">
+              <WorldMap
+                activePinIds={activePinIds}
+                highlightPinId={highlightPinId}
+                onHoverPin={onHoverPin}
+                onSelectPin={onSelectPin}
+              />
+              {/* 데스크톱: 지도 위에 카드 오버레이 */}
+              {shownPin && (
+                <div className="pointer-events-none absolute inset-0 hidden lg:block">
+                  <div className="pointer-events-auto absolute bottom-14 right-4 max-h-[70%] w-[26rem]">
+                    <PinCard pin={shownPin} lng={lng} onClose={() => setPinnedPin(null)} />
+                  </div>
+                </div>
+              )}
+            </div>
+          </Suspense>
+          {/* 모바일: 카드가 지도 아래에 열림 */}
+          {shownPin && (
+            <div className="mt-3 lg:hidden">
+              <Suspense fallback={null}>
+                <PinCard pin={shownPin} lng={lng} onClose={() => setPinnedPin(null)} />
+              </Suspense>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* 요약 배지 — 클릭 시 해당 탭으로 */}
+      <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
         {badges.map((b, i) => (
           <Reveal key={b.label} delay={i * 70}>
             <button
               type="button"
-              onClick={() => scrollTo(badgeTargets[i])}
+              onClick={() => (badgeTabs[i] ? setTab(badgeTabs[i]) : scrollTo(mapRef))}
               className="group relative w-full cursor-pointer rounded-xl border border-line bg-base-900/70 px-5 py-4 text-left transition-all duration-200 hover:-translate-y-1 hover:border-accent-400/60 hover:shadow-[0_0_24px_var(--glow-strong)] focus-visible:outline-2 focus-visible:outline-accent-400"
             >
               <span className="flex items-baseline gap-3">
-                <span className="font-display text-2xl font-bold text-accent-300 tabular-nums">
+                <span className="font-display text-2xl font-bold tabular-nums text-accent-300">
                   {b.value}
                 </span>
                 <span className="text-sm text-ink-500">{b.label}</span>
               </span>
-              {b.sub ? (
-                <span className="mt-0.5 block text-[11px] text-ink-600">{b.sub}</span>
-              ) : null}
+              {b.sub ? <span className="mt-0.5 block text-[11px] text-ink-600">{b.sub}</span> : null}
               <span
                 aria-hidden="true"
-                className="absolute bottom-3 right-4 font-display text-sm text-ink-600 transition-all duration-200 group-hover:text-accent-300 group-hover:translate-x-0.5"
+                className="absolute bottom-3 right-4 font-display text-sm text-ink-600 transition-all duration-200 group-hover:translate-x-0.5 group-hover:text-accent-300"
               >
                 →
               </span>
@@ -234,83 +423,45 @@ export default function StudentsSection() {
         ))}
       </div>
 
-      {/* 교수 임용 */}
-      <div ref={facultyRef} className="mt-10 scroll-mt-20">
-        <GroupHeading tone="gold">{t("students.facultyHeading")}</GroupHeading>
-        <div className="grid md:grid-cols-2 gap-4">
-          {faculty.map((e) => (
-            <Reveal key={e.personId}>
-              <AlumniCard entry={e} lng={lng} faculty />
-            </Reveal>
-          ))}
-        </div>
-      </div>
-
-      {/* 박사과정 진학 */}
-      <div ref={phdRef} className="mt-10 scroll-mt-20">
-        <GroupHeading>{t("students.phdHeading")}</GroupHeading>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
-          {phd.map((e, i) => (
-            <Reveal key={e.personId} delay={(i % 3) * 60}>
-              <AlumniCard entry={e} lng={lng} />
-            </Reveal>
-          ))}
-        </div>
-      </div>
-
-      {/* 기업 진출 */}
+      {/* 선택 탭의 상세 카드 목록 */}
       <div className="mt-10">
-        <GroupHeading>{t("students.industryHeading")}</GroupHeading>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
-          {industry.map((e) => (
-            <Reveal key={e.personId}>
-              <AlumniCard entry={e} lng={lng} />
+        {tab === "members" && (
+          <p className="mb-4 text-[13px] text-ink-500">
+            {t("students.membersDesc", { n: CURRENT_MEMBERS.length })}
+          </p>
+        )}
+        <div
+          className={`grid gap-4 ${
+            tab === "faculty" ? "md:grid-cols-2" : "sm:grid-cols-2 lg:grid-cols-3"
+          }`}
+        >
+          {current.map((e, i) => (
+            <Reveal key={e.personId} delay={(i % 3) * 60} className="h-full">
+              {tab === "members" ? (
+                <div className="h-full rounded-2xl border border-line bg-base-850/80 p-4">
+                  <div className="flex items-start justify-between gap-2">
+                    <span className="inline-flex items-center gap-2 text-sm font-medium text-ink-100">
+                      <span className="relative flex h-1.5 w-1.5" aria-hidden="true">
+                        <span className="member-dot-pulse absolute inline-flex h-full w-full rounded-full bg-mint-400" />
+                        <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-mint-400/80" />
+                      </span>
+                      {displayName(e, lng).main}
+                      {displayName(e, lng).sub && (
+                        <span className="text-[12px] font-normal text-ink-500">
+                          ({displayName(e, lng).sub})
+                        </span>
+                      )}
+                    </span>
+                    <WorksBadge works={worksForStudent(e.personId)} />
+                  </div>
+                  <WorksAccordion works={worksForStudent(e.personId)} />
+                </div>
+              ) : (
+                <AlumniCard entry={e} lng={lng} faculty={tab === "faculty"} />
+              )}
             </Reveal>
           ))}
         </div>
-      </div>
-
-      {/* 재학생 */}
-      <div ref={membersRef} className="mt-12 scroll-mt-20">
-        <Reveal>
-          <div className="rounded-2xl border border-line bg-base-900/70 p-6 md:p-7">
-            <div className="flex items-baseline gap-3 mb-1.5">
-              <h3 className="font-display text-xs tracking-[0.25em] uppercase text-mint-400">
-                {t("students.membersTitle")}
-              </h3>
-              <span className="text-sm font-semibold text-ink-100">
-                {t("students.membersSub")}
-              </span>
-            </div>
-            <p className="text-[13px] text-ink-500 mb-4">
-              {t("students.membersDesc", { n: CURRENT_MEMBERS.length })}
-            </p>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
-              {CURRENT_MEMBERS.map((m) => {
-                const name = displayName(m, lng);
-                const works = worksForStudent(m.personId);
-                return (
-                  <div key={m.personId} className="rounded-xl border border-line bg-base-850/80 p-4">
-                    <div className="flex items-start justify-between gap-2">
-                      <span className="inline-flex items-center gap-2 text-sm text-ink-100 font-medium">
-                        <span className="relative flex h-1.5 w-1.5" aria-hidden="true">
-                          <span className="member-dot-pulse absolute inline-flex h-full w-full rounded-full bg-mint-400" />
-                          <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-mint-400/80" />
-                        </span>
-                        {name.main}
-                        {name.sub && (
-                          <span className="text-ink-500 font-normal text-[12px]">({name.sub})</span>
-                        )}
-                      </span>
-                      <WorksBadge works={works} />
-                    </div>
-                    <WorksAccordion works={works} />
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </Reveal>
       </div>
     </section>
   );

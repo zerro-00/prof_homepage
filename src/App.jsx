@@ -172,7 +172,7 @@ export default function App() {
   const content = {
     profile: <Hero navigate={navigate} />,
     interests: <Interests />,
-    alumni: <StudentsSection />,
+    alumni: <StudentsSection focus={payload?.focus} />,
     publications: <Publications focus={payload?.focus} />,
     awards: <Awards />,
   }[section];

@@ -1,13 +1,28 @@
 import { useTranslation } from "react-i18next";
 import { Reveal, SectionHeading } from "./common.jsx";
 
-// 프로필·수상과 동일한 2단 나열 행 — 좌측 라벨 + 가운뎃점으로 이어진 문단 (칩 금지, 클릭 불가)
+/* 2단 리스트 행 — 라벨 컬럼 120px 고정 + 내용(가운뎃점 구분, max 68ch) */
 function Row({ label, items }) {
   return (
-    <li className="flex gap-3 text-sm">
-      <span className="font-display text-ink-600 shrink-0 w-24 md:w-28">{label}</span>
-      <span className="text-ink-300 leading-relaxed min-w-0">{items.join(" · ")}</span>
+    <li className="flex flex-col gap-1 sm:flex-row sm:gap-6">
+      <span className="w-[120px] shrink-0 font-display text-[13px] text-ink-600">{label}</span>
+      <span className="min-w-0 max-w-[68ch] text-[15px] leading-relaxed text-ink-300">
+        {items.join(" · ")}
+      </span>
     </li>
+  );
+}
+
+function Block({ title, children, delay = 0 }) {
+  return (
+    <Reveal delay={delay}>
+      <div>
+        <h3 className="mb-5 font-display text-xs uppercase tracking-[0.25em] text-accent-400">
+          {title}
+        </h3>
+        <ul className="space-y-4">{children}</ul>
+      </div>
+    </Reveal>
   );
 }
 
@@ -18,7 +33,7 @@ export default function Interests() {
   const methods = t("interests.methods", { returnObjects: true });
 
   return (
-    <section id="interests" className="relative mx-auto max-w-6xl px-5 md:px-8 py-20 md:py-28">
+    <section id="interests" className="relative mx-auto max-w-6xl px-5 py-20 md:px-8 md:py-28">
       <SectionHeading
         index="02"
         label={t("sections.interests.label")}
@@ -26,31 +41,20 @@ export default function Interests() {
         desc={t("sections.interests.desc")}
       />
 
-      <div className="grid lg:grid-cols-2 gap-5 items-start">
-        <Reveal>
-          <div className="h-full rounded-2xl border border-line bg-base-900/70 p-6 md:p-7">
-            <h3 className="font-display text-xs tracking-[0.25em] uppercase text-accent-400 mb-5">
-              {t("interests.teachingTitle")}
-            </h3>
-            <ul className="space-y-4">
-              {teaching.map((tc) => (
-                <Row key={tc.level} label={tc.level} items={tc.courses} />
-              ))}
-            </ul>
-          </div>
-        </Reveal>
+      {/* 세로 스택 — 블록 사이 48px, 1px 구분선 (§2-4) */}
+      <div className="rounded-2xl border border-line bg-base-900/70 p-6 md:p-8">
+        <Block title={t("interests.teachingTitle")}>
+          {teaching.map((tc) => (
+            <Row key={tc.level} label={tc.level} items={tc.courses} />
+          ))}
+        </Block>
 
-        <Reveal delay={80}>
-          <div className="h-full rounded-2xl border border-line bg-base-900/70 p-6 md:p-7">
-            <h3 className="font-display text-xs tracking-[0.25em] uppercase text-accent-400 mb-5">
-              {t("interests.researchTitle")}
-            </h3>
-            <ul className="space-y-4">
-              <Row label={t("interests.domain")} items={domains} />
-              <Row label={t("interests.method")} items={methods} />
-            </ul>
-          </div>
-        </Reveal>
+        <div className="my-12 h-px bg-line" aria-hidden="true" />
+
+        <Block title={t("interests.researchTitle")} delay={80}>
+          <Row label={t("interests.domain")} items={domains} />
+          <Row label={t("interests.method")} items={methods} />
+        </Block>
       </div>
     </section>
   );

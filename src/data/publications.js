@@ -1159,11 +1159,71 @@ export const BOOKS = [
 ];
 
 // ---------------------------------------------------------------
-// 저널별 보기 — SSCI / KCI 2개 그룹으로 나눈 저널 목록 (15차 §2)
-//  · 3편 이상 저널(primary)은 편수 내림차순으로 상시 노출
-//  · 2편 이하 저널(rest)은 "그 외 N개" 접힘 항목으로 묶고 펼치면 알파벳/가나다순
-//  · hasTop: tier "top" 논문이 실린 저널 → 목록에 골드 ★
-export const PRIMARY_MIN_COUNT = 3;
+// 저널별 보기 — 위상(rank) 순 정렬 (통합 핸드오프 §2-2)
+// 저널명 옆 ★는 쓰지 않는다. "위에 있다"는 순서 자체가 위상 표현이다.
+// 정렬: rank 오름차순 → 같은 rank 안에서 편수 내림차순 → 가나다/알파벳순
+// 논문의 tier 필드는 카드 배지에서 계속 쓰므로 건드리지 않는다.
+export const JOURNAL_RANK = {
+  // SSCI rank 1
+  "Journal of Marketing Research": 1,
+  "Marketing Science": 1,
+  "Journal of Consumer Research": 1,
+  "Management Science": 1,
+  "International Journal of Research in Marketing": 1,
+  "Journal of International Business Studies": 1,
+  // SSCI rank 2
+  "Journal of Interactive Marketing": 2,
+  "Journal of Business Research": 2,
+  "International Journal of Advertising": 2,
+  "Marketing Letters": 2,
+  "Industrial Marketing Management": 2,
+  "Journal of Retailing and Consumer Services": 2,
+  "Technological Forecasting and Social Change": 2,
+  "Journal of Consumer Affairs": 2,
+  "International Journal of Consumer Studies": 2,
+  "Journal of Research in Interactive Marketing": 2,
+  // SSCI rank 3
+  "Asia Pacific Journal of Marketing and Logistics": 3,
+  "Australasian Marketing Journal": 3,
+  "MIT Sloan Management Review": 3,
+  // KCI rank 1
+  마케팅연구: 1,
+  경영학연구: 1,
+  유통연구: 1,
+  광고학연구: 1,
+  한국경영과학회지: 1,
+  경영정보학연구: 1,
+  // KCI rank 2
+  마케팅관리연구: 2,
+  지식경영연구: 2,
+  "Asia Marketing Journal": 2,
+  정보통신정책연구: 2,
+  서비스마케팅저널: 2,
+  한국콘텐츠학회논문지: 2,
+  // KCI rank 3
+  프랜차이징저널: 3,
+  전문경영인연구: 3,
+  연세경영연구: 3,
+};
+
+const RANK_FALLBACK = 3;
+const warnedJournals = new Set();
+
+export function journalRank(journal) {
+  const r = JOURNAL_RANK[journal];
+  if (r === undefined) {
+    // 목록 누락 감지 — 새 저널이 추가되면 rank를 지정해 줘야 한다
+    if (!warnedJournals.has(journal)) {
+      warnedJournals.add(journal);
+      console.warn(`[JOURNAL_RANK] 등록되지 않은 저널: "${journal}" — rank ${RANK_FALLBACK}로 처리`);
+    }
+    return RANK_FALLBACK;
+  }
+  return r;
+}
+
+// 그룹별로 상위 PRIMARY_COUNT개만 노출하고 나머지는 "그 외 N개"로 접는다
+export const PRIMARY_COUNT = 6;
 
 export function groupJournalsByType(pubs) {
   return ["SSCI", "KCI"]
@@ -1174,23 +1234,40 @@ export function groupJournalsByType(pubs) {
         if (!map.has(p.journal)) map.set(p.journal, []);
         map.get(p.journal).push(p);
       }
-      const journals = [...map.entries()].map(([journal, ps]) => ({
-        journal,
-        papers: [...ps].sort((a, b) => b.year - a.year),
-        count: ps.length,
-        hasTop: ps.some((p) => p.tier === "top"),
-      }));
-      const byCount = (a, b) => b.count - a.count || a.journal.localeCompare(b.journal, "ko");
-      const byName = (a, b) => a.journal.localeCompare(b.journal, "ko");
+      const journals = [...map.entries()]
+        .map(([journal, ps]) => ({
+          journal,
+          rank: journalRank(journal),
+          papers: [...ps].sort((a, b) => b.year - a.year),
+          count: ps.length,
+        }))
+        .sort(
+          (a, b) =>
+            a.rank - b.rank ||
+            b.count - a.count ||
+            a.journal.localeCompare(b.journal, "ko")
+        );
       return {
         type,
         total: papers.length,
         max: journals.reduce((m, j) => Math.max(m, j.count), 0),
-        primary: journals.filter((j) => j.count >= PRIMARY_MIN_COUNT).sort(byCount),
-        rest: journals.filter((j) => j.count < PRIMARY_MIN_COUNT).sort(byName),
+        primary: journals.slice(0, PRIMARY_COUNT),
+        rest: journals.slice(PRIMARY_COUNT),
       };
     })
     .filter((g) => g.total > 0);
+}
+
+// ---------------------------------------------------------------
+// 키워드별 보기 — 칩이 아니라 저널 목록과 같은 행 목록 (§2-1)
+// 편수 내림차순 → 동수면 가나다순. 맨 위 "전체 논문" 행은 컴포넌트에서 붙인다.
+export function keywordRows(pubs) {
+  return KEYWORDS.map((k) => ({
+    key: k,
+    count: pubs.filter((p) => p.keywords.includes(k)).length,
+  }))
+    .filter((r) => r.count > 0)
+    .sort((a, b) => b.count - a.count || a.key.localeCompare(b.key, "ko"));
 }
 
 // 저널별 그룹핑 유틸 (키워드별 보기 등 단일 목록용)
