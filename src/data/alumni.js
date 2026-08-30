@@ -32,7 +32,7 @@ export const CITY_PINS = [
       {
         nameKo: "김민경",
         personId: "kim-mingyung",
-        lang: {"en": {"grad": "B.S. 2015", "path": "B.S. 2015 → Ph.D. in Marketing, Wharton School (2017) → Appointed at Ohio State (2024)", "linkLabel": "Faculty Profile →", "subLinkLabel": "Personal Site →"}, "zh": {"grad": "2015 学士", "title": "市场营销助理教授", "path": "2015 学士 → 2017 Wharton School 市场营销博士 → 2024 任职 Ohio State", "linkLabel": "教授主页 →", "subLinkLabel": "个人网站 →"}, "ja": {"grad": "2015 学士", "path": "2015 学士 → 2017 Wharton School マーケティング博士 → 2024 Ohio State 就任", "linkLabel": "教授ホームページ →", "subLinkLabel": "個人サイト →"}},
+        lang: {"en": {"grad": "B.S. 2015", "path": "B.S. 2015 → Ph.D. in Marketing, Wharton School (2017) → Assistant Professor, Ohio State University (2024–)", "linkLabel": "Faculty Profile →", "subLinkLabel": "Personal Site →"}, "zh": {"grad": "2015 学士", "title": "市场营销助理教授", "path": "2015 学士 → 2017 Wharton School 市场营销博士 → 2024 任职 Ohio State", "linkLabel": "教授主页 →", "subLinkLabel": "个人网站 →"}, "ja": {"grad": "2015年 学士", "path": "2015年 学士 → 2017年 Wharton School マーケティング博士 → 2024年 Ohio State 就任", "linkLabel": "教授ホームページ →", "subLinkLabel": "個人サイト →"}},
         nameEn: "Mingyung Kim",
         grad: "2015 학사",
         affiliation: "Ohio State University · Fisher College of Business",
@@ -60,7 +60,7 @@ export const CITY_PINS = [
       {
         nameKo: "조우용",
         personId: "jo-wooyong",
-        lang: {"en": {"grad": "M.S. 2017", "path": "M.S. 2017 → Ph.D. in Marketing, Emory University (2022) → Appointed at Purdue", "linkLabel": "Faculty Profile →", "subLinkLabel": "Personal Site →"}, "zh": {"grad": "2017 硕士", "title": "市场营销助理教授", "path": "2017 硕士 → 2022 Emory University 市场营销博士 → 任职 Purdue", "linkLabel": "教授主页 →", "subLinkLabel": "个人网站 →"}, "ja": {"grad": "2017 修士", "path": "2017 修士 → 2022 Emory University マーケティング博士 → Purdue 就任", "linkLabel": "教授ホームページ →", "subLinkLabel": "個人サイト →"}},
+        lang: {"en": {"grad": "M.S. 2017", "path": "M.S. 2017 → Ph.D. in Marketing, Emory University (2022) → Assistant Professor, Purdue University", "linkLabel": "Faculty Profile →", "subLinkLabel": "Personal Site →"}, "zh": {"grad": "2017 硕士", "title": "市场营销助理教授", "path": "2017 硕士 → 2022 Emory University 市场营销博士 → 任职 Purdue", "linkLabel": "教授主页 →", "subLinkLabel": "个人网站 →"}, "ja": {"grad": "2017年 修士", "path": "2017年 修士 → 2022年 Emory University マーケティング博士 → Purdue 就任", "linkLabel": "教授ホームページ →", "subLinkLabel": "個人サイト →"}},
         nameEn: "Wooyong Jo",
         grad: "2017 석사",
         affiliation: "Purdue University · Mitchell E. Daniels Jr. School of Business",
@@ -77,7 +77,7 @@ export const CITY_PINS = [
   {
     id: "hamilton",
     region: "ONTARIO",
-    lang: {"en": {"city": "Hamilton", "country": "Canada", "label": "Sanghwa Kim"}, "zh": {"city": "哈密尔顿", "country": "加拿大", "label": "Sanghwa Kim"}, "ja": {"city": "ハミルトン", "country": "カナダ", "label": "Sanghwa Kim"}},
+    lang: {"en": {"city": "Hamilton", "country": "Canada", "label": "Sanghwa Kim"}, "zh": {"city": "汉密尔顿", "country": "加拿大", "label": "Sanghwa Kim"}, "ja": {"city": "ハミルトン", "country": "カナダ", "label": "Sanghwa Kim"}},
     city: "해밀턴",
     country: "캐나다",
     coordinates: [-79.8711, 43.2557],
@@ -88,7 +88,7 @@ export const CITY_PINS = [
       {
         nameKo: "김상화",
         personId: "kim-sanghwa",
-        lang: {"en": {"grad": "M.S. 2019", "path": "M.S. 2019 → Ph.D. in Marketing, University of Maryland (2024) → Appointed at McMaster", "linkLabel": "Faculty Profile →", "subLinkLabel": "Personal Site →"}, "zh": {"grad": "2019 硕士", "title": "市场营销助理教授", "path": "2019 硕士 → 2024 University of Maryland 市场营销博士 → 任职 McMaster", "linkLabel": "教授主页 →", "subLinkLabel": "个人网站 →"}, "ja": {"grad": "2019 修士", "path": "2019 修士 → 2024 University of Maryland マーケティング博士 → McMaster 就任", "linkLabel": "教授ホームページ →", "subLinkLabel": "個人サイト →"}},
+        lang: {"en": {"grad": "M.S. 2019", "path": "M.S. 2019 → Ph.D. in Marketing, University of Maryland (2024) → Assistant Professor, McMaster University", "linkLabel": "Faculty Profile →", "subLinkLabel": "Personal Site →"}, "zh": {"grad": "2019 硕士", "title": "市场营销助理教授", "path": "2019 硕士 → 2024 University of Maryland 市场营销博士 → 任职 McMaster", "linkLabel": "教授主页 →", "subLinkLabel": "个人网站 →"}, "ja": {"grad": "2019年 修士", "path": "2019年 修士 → 2024年 University of Maryland マーケティング博士 → McMaster 就任", "linkLabel": "教授ホームページ →", "subLinkLabel": "個人サイト →"}},
         nameEn: "Sanghwa Kim",
         grad: "2019 석사",
         affiliation: "McMaster University · DeGroote School of Business",
@@ -116,7 +116,7 @@ export const CITY_PINS = [
       {
         nameKo: "김지연",
         personId: "kim-jeeyeon",
-        lang: {"en": {"grad": "M.S. 2014 · Ph.D. 2018", "path": "M.S. 2014 → Ph.D., Yonsei University (2018) → Assistant Professor, National Sun Yat-sen University (Taiwan) → Appointed at La Trobe", "linkLabel": "ORCID Profile →"}, "zh": {"grad": "2014 硕士 · 2018 博士", "title": "市场营销讲师/助理教授", "path": "2014 硕士 → 2018 延世大学博士 → National Sun Yat-sen University（台湾）助理教授 → 任职 La Trobe", "linkLabel": "ORCID 主页 →"}, "ja": {"grad": "2014 修士 · 2018 博士", "path": "2014 修士 → 2018 延世大学博士 → National Sun Yat-sen University（台湾）Assistant Professor → La Trobe 就任", "linkLabel": "ORCID プロフィール →"}},
+        lang: {"en": {"grad": "M.S. 2014 · Ph.D. 2018", "path": "M.S. 2014 → Ph.D., Yonsei University (2018) → Assistant Professor, National Sun Yat-sen University (Taiwan) → Lecturer, La Trobe University", "linkLabel": "ORCID Profile →", "title": "Lecturer in Marketing"}, "zh": {"grad": "2014 硕士 · 2018 博士", "title": "市场营销讲师", "path": "2014 硕士 → 2018 延世大学博士 → National Sun Yat-sen University（台湾）助理教授 → 任职 La Trobe", "linkLabel": "ORCID 主页 →"}, "ja": {"grad": "2014年 修士 · 2018年 博士", "path": "2014年 修士 → 2018年 延世大学博士 → National Sun Yat-sen University（台湾）Assistant Professor → La Trobe 就任", "linkLabel": "ORCID プロフィール →", "title": "Lecturer in Marketing"}},
         nameEn: "Jeeyeon Kim",
         grad: "2014 석사 · 2018 박사",
         affiliation: "La Trobe University · La Trobe Business School",
@@ -148,7 +148,7 @@ export const CITY_PINS = [
       {
         nameKo: "장연",
         personId: "jiang-yan",
-        lang: {"en": {"grad": "M.S. 2018", "title": "Ph.D. Student in Marketing", "path": "M.S. 2018 → Entered Ph.D. program (2024)"}, "zh": {"grad": "2018 硕士", "title": "市场营销博士生", "path": "2018 硕士 → 2024 升学"}, "ja": {"grad": "2018 修士", "title": "マーケティング博士課程", "path": "2018 修士 → 2024 進学"}},
+        lang: {"en": {"grad": "M.S. 2018", "title": "Ph.D. Student in Marketing", "path": "M.S. 2018 → Entered Ph.D. program (2024)"}, "zh": {"grad": "2018 硕士", "title": "市场营销博士生", "path": "2018 硕士 → 2024 升学"}, "ja": {"grad": "2018年 修士", "title": "博士課程（マーケティング）", "path": "2018年 修士 → 2024年 進学"}},
         nameEn: "Yan Jiang",
         grad: "2018 석사",
         affiliation: "University of Houston · Bauer College",
@@ -174,7 +174,7 @@ export const CITY_PINS = [
         // TODO: 고려대 공식 프로필 URL 확인 후 link 추가 (URL 추측 금지)
         nameKo: "이예령",
         personId: "li-yiling",
-        lang: {"en": {"grad": "Ph.D. 2025", "affiliation": "Korea University · Digital Management", "title": "Professor", "path": "Ph.D. in Marketing, Yonsei (2025) → Appointed at Korea University"}, "zh": {"grad": "2025 博士", "affiliation": "高丽大学 · 数字经营", "title": "教授", "path": "2025 延世大学市场营销博士 → 任职高丽大学数字经营"}, "ja": {"grad": "2025 博士", "affiliation": "高麗大学校 · デジタル経営", "title": "教授", "path": "2025 延世大学マーケティング博士 → 高麗大学校デジタル経営 就任"}},
+        lang: {"en": {"grad": "Ph.D. 2025", "affiliation": "Korea University · Digital Management", "title": "Professor", "path": "Ph.D. in Marketing, Yonsei University (2025) → Professor, Korea University"}, "zh": {"grad": "2025 博士", "affiliation": "高丽大学 · 数字经营", "title": "教授", "path": "2025 延世大学市场营销博士 → 任职高丽大学数字经营"}, "ja": {"grad": "2025年 博士", "affiliation": "高麗大学校 · デジタル経営", "title": "教授", "path": "2025年 延世大学マーケティング博士 → 高麗大学校デジタル経営 就任"}},
         nameEn: "Yiling Li",
         grad: "2025 박사",
         affiliation: "고려대학교 · 디지털경영",
@@ -186,7 +186,7 @@ export const CITY_PINS = [
       {
         nameKo: "이지연",
         personId: "lee-jiyeon",
-        lang: {"en": {"grad": "M.S. 2021", "affiliation": "Lotte Duty Free", "title": "Joined", "path": "M.S. 2021"}, "zh": {"grad": "2021 硕士", "affiliation": "Lotte Duty Free", "title": "入职", "path": "2021 硕士毕业"}, "ja": {"grad": "2021 修士", "affiliation": "Lotte Duty Free", "title": "入社", "path": "2021 修士修了"}},
+        lang: {"en": {"grad": "M.S. 2021", "affiliation": "Lotte Duty Free", "title": "Joined 2021", "path": "M.S. 2021"}, "zh": {"grad": "2021 硕士", "affiliation": "Lotte Duty Free", "title": "入职", "path": "2021 硕士毕业"}, "ja": {"grad": "2021年 修士", "affiliation": "Lotte Duty Free", "title": "入社", "path": "2021年 修士修了"}},
         nameEn: null,
         grad: "2021 석사",
         affiliation: "롯데면세점",
@@ -210,7 +210,7 @@ export const CITY_PINS = [
       {
         nameKo: "정현우",
         personId: "jung-hyunwoo",
-        lang: {"en": {"grad": "M.S. 2025", "title": "Ph.D. Student in Marketing", "path": "Entered 2025"}, "zh": {"grad": "2025 硕士", "title": "市场营销博士生", "path": "2025 升学"}, "ja": {"grad": "2025 修士", "title": "マーケティング博士課程", "path": "2025 進学"}},
+        lang: {"en": {"grad": "M.S. 2025", "title": "Ph.D. Student in Marketing", "path": "Entered 2025"}, "zh": {"grad": "2025 硕士", "title": "市场营销博士生", "path": "2025 升学"}, "ja": {"grad": "2025年 修士", "title": "博士課程（マーケティング）", "path": "2025年 進学"}},
         nameEn: "Hyunwoo Jung",
         grad: "2025 석사",
         affiliation: "Wharton School, University of Pennsylvania",
@@ -234,7 +234,7 @@ export const CITY_PINS = [
       {
         nameKo: "김혜정",
         personId: "kim-hyejeong",
-        lang: {"en": {"grad": "M.S. 2024", "title": "Ph.D. Student in Marketing", "path": "Entered 2024"}, "zh": {"grad": "2024 硕士", "title": "市场营销博士生", "path": "2024 升学"}, "ja": {"grad": "2024 修士", "title": "マーケティング博士課程", "path": "2024 進学"}},
+        lang: {"en": {"grad": "M.S. 2024", "title": "Ph.D. Student in Marketing", "path": "Entered 2024"}, "zh": {"grad": "2024 硕士", "title": "市场营销博士生", "path": "2024 升学"}, "ja": {"grad": "2024年 修士", "title": "博士課程（マーケティング）", "path": "2024年 進学"}},
         nameEn: "Hyejeong Kim",
         grad: "2024 석사",
         affiliation: "Georgia Institute of Technology",
@@ -245,7 +245,7 @@ export const CITY_PINS = [
       {
         nameKo: "곽유신",
         personId: "kwak-yushin",
-        lang: {"en": {"grad": "M.S. 2022", "title": "Ph.D. Student in Marketing", "path": "Entered 2022"}, "zh": {"grad": "2022 硕士", "title": "市场营销博士生", "path": "2022 升学"}, "ja": {"grad": "2022 修士", "title": "マーケティング博士課程", "path": "2022 進学"}},
+        lang: {"en": {"grad": "M.S. 2022", "title": "Ph.D. Student in Marketing", "path": "Entered 2022"}, "zh": {"grad": "2022 硕士", "title": "市场营销博士生", "path": "2022 升学"}, "ja": {"grad": "2022年 修士", "title": "博士課程（マーケティング）", "path": "2022年 進学"}},
         nameEn: null,
         grad: "2022 석사",
         affiliation: "Emory University",
@@ -256,7 +256,7 @@ export const CITY_PINS = [
       {
         nameKo: "윤여홍",
         personId: "yoon-yeohong",
-        lang: {"en": {"grad": "M.S. 2021", "title": "Ph.D. Student in Marketing", "path": "Entered 2021"}, "zh": {"grad": "2021 硕士", "title": "市场营销博士生", "path": "2021 升学"}, "ja": {"grad": "2021 修士", "title": "マーケティング博士課程", "path": "2021 進学"}},
+        lang: {"en": {"grad": "M.S. 2021", "title": "Ph.D. Student in Marketing", "path": "Entered 2021"}, "zh": {"grad": "2021 硕士", "title": "市场营销博士生", "path": "2021 升学"}, "ja": {"grad": "2021年 修士", "title": "博士課程（マーケティング）", "path": "2021年 進学"}},
         nameEn: "Yeohong Yoon",
         grad: "2021 석사",
         affiliation: "Emory University",
@@ -267,7 +267,7 @@ export const CITY_PINS = [
       {
         nameKo: "송혜신",
         personId: "song-hyeasinn",
-        lang: {"en": {"grad": "M.S. 2020", "title": "Ph.D. Student in Marketing", "path": "Entered 2021"}, "zh": {"grad": "2020 硕士", "title": "市场营销博士生", "path": "2021 升学"}, "ja": {"grad": "2020 修士", "title": "マーケティング博士課程", "path": "2021 進学"}},
+        lang: {"en": {"grad": "M.S. 2020", "title": "Ph.D. Student in Marketing", "path": "Entered 2021"}, "zh": {"grad": "2020 硕士", "title": "市场营销博士生", "path": "2021 升学"}, "ja": {"grad": "2020年 修士", "title": "博士課程（マーケティング）", "path": "2021年 進学"}},
         nameEn: "Hyeasinn Song",
         grad: "2020 석사",
         affiliation: "Georgia State University",
@@ -291,7 +291,7 @@ export const CITY_PINS = [
       {
         nameKo: "윤여림",
         personId: "yoon-yeolim",
-        lang: {"en": {"grad": "Integrated M.S.–Ph.D. 2023", "title": "Ph.D. Student in Marketing", "path": "Entered 2023"}, "zh": {"grad": "2023 硕博连读", "title": "市场营销博士生", "path": "2023 升学"}, "ja": {"grad": "2023 修士・博士一貫課程", "title": "マーケティング博士課程", "path": "2023 進学"}},
+        lang: {"en": {"grad": "Integrated M.S.–Ph.D. 2023", "title": "Ph.D. Student in Marketing", "path": "Entered 2023"}, "zh": {"grad": "2023 硕博连读", "title": "市场营销博士生", "path": "2023 升学"}, "ja": {"grad": "2023年 修士・博士一貫課程", "title": "博士課程（マーケティング）", "path": "2023年 進学"}},
         nameEn: "Yeo Lim Yoon",
         grad: "2023 통합과정",
         affiliation: "University of Minnesota",

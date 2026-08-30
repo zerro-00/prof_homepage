@@ -1,7 +1,8 @@
 // 수상 & 연구비 — 전체 데이터 (수상 23건 · 연구비 7건, 연도 내림차순)
 // star: true → 국제 수상 골드 ★ 강조 (3~5건만)
 // lang: 언어별 표기 오버라이드. 영문 원제 수상은 모든 언어에서 원문 유지(오버라이드 불필요).
-// TODO: 수상·연구비의 공식 영문 명칭을 교수님/기관에 확인 후 교체 (src/i18n/glossary.md 참고)
+// 15차: 학회·기관·NRF 사업의 공식 영문명은 확인 완료(glossary.md "확인 완료" 표).
+// TODO: 대학·학회 내부 시상(우수교수상·연세학술상 등)의 공식 영문명은 공개 자료가 없어 잠정 표기 유지 — 교수님 확인 필요
 
 export const AWARDS = [
   {
@@ -205,7 +206,7 @@ export const GRANTS = [
     title: "중견연구자지원",
     org: "한국연구재단",
     lang: {
-      en: { title: "Mid-career Researcher Program", org: "National Research Foundation of Korea" },
+      en: { title: "Mid-Career Researcher Program", org: "National Research Foundation of Korea" },
       zh: { title: "中坚研究者支持项目", org: "National Research Foundation of Korea" },
       ja: { title: "中堅研究者支援事業", org: "National Research Foundation of Korea" },
     },

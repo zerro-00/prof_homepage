@@ -50,8 +50,8 @@ function WorksAccordion({ works }) {
       >
         <span className={`inline-block transition-transform ${open ? "rotate-90" : ""}`}>▸</span>
         {open
-          ? t("students.worksHide", { n: works.length })
-          : t("students.worksShow", { n: works.length })}
+          ? t("students.worksHide", { count: works.length })
+          : t("students.worksShow", { count: works.length })}
       </button>
       <Collapse open={open}>
         <ul className="mt-2.5 space-y-2 border-l border-line pl-3">
