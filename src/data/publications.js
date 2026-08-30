@@ -1126,6 +1126,8 @@ export function paperUrl(p) {
 export const BOOKS = [
   {
     id: "book-2020",
+    // 출처: 알라딘 (저자 13인 일치 확인, 2026.08.31). 발행처는 한국학술정보의 임프린트 이담북스로 표기됨
+    link: "https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=261794617",
     title: "비대면 시대 바르고 건강하게 살기: '빠른'을 넘어 '바른' ICT로",
     role: "김범수·김승현·김재엽·도보람·박경기·양희동·오주현·장대연·장재영·최강식·최정혜·한치훈·한영애 공저",
     publisher: "한국학술정보",
@@ -1133,6 +1135,8 @@ export const BOOKS = [
   },
   {
     id: "book-2016",
+    // 출처: 한국노동연구원 KLI Repository (저자 박경민·최정혜·김태완·김주만, ISBN 9791126001422 확인)
+    link: "https://repository.kli.re.kr/handle/2021.oak/9392",
     title: "자동차 자율주행 규제 완화 고용영향평가 연구",
     role: "박경민·최정혜·김태완·김주만, 고용영향평가 연구시리즈",
     publisher: "한국노동연구원",
@@ -1140,6 +1144,8 @@ export const BOOKS = [
   },
   {
     id: "book-2015",
+    // 출처: 알라딘 (집문당 2015, 저자 최정혜·김지연·김민경 확인)
+    link: "https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=55881815",
     authors: ["최정혜", "김지연", "김민경"],
     studentIds: ["kim-jeeyeon", "kim-mingyung"],
     authorSource: "출판사 서지 (14차 확정표)",
@@ -1151,6 +1157,8 @@ export const BOOKS = [
   },
   {
     id: "book-2013",
+    // 출처: 알라딘 (박영사 2013, ISBN 9788964543597 확인)
+    link: "https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=25048829",
     title: "고객네트워크전략",
     role: "David L. Rogers 저, 최정혜·오윤조 공역",
     publisher: "박영사",

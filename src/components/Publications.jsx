@@ -576,7 +576,21 @@ function KciAndBooks({ studentId = null }) {
             {books.map((b) => (
               <li key={b.id} className="text-sm">
                 <p className="font-medium leading-snug text-ink-100">
-                  『{b.title}』
+                  {b.link ? (
+                    <a
+                      href={b.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="underline-offset-2 transition-colors hover:text-accent-300 hover:underline"
+                    >
+                      『{b.title}』
+                      <span aria-hidden="true" className="ml-1 font-display text-[11px] text-ink-600">
+                        ↗
+                      </span>
+                    </a>
+                  ) : (
+                    <>『{b.title}』</>
+                  )}
                   {b.badge && (
                     <span className="ml-2 inline-flex items-center rounded-md border border-gold-500/40 bg-gold-500/10 px-1.5 py-0.5 align-middle font-display text-[10px] font-semibold tracking-wide text-gold-300">
                       {t("pubsUI.badgeStudentCoauthor")}
