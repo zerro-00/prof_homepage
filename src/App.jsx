@@ -16,6 +16,28 @@ const SECTION_IDS = ["profile", "interests", "alumni", "publications", "awards"]
 
 // 해시는 "#publications?journal=..." 형태를 가질 수 있다 (논문 섹션의 저널 선택 유지).
 // 섹션 판정은 "?" 앞부분만 본다.
+// 실적 배지 → 논문 필터 (§5). ?student=li-yiling&type=SSCI 형태로 URL에 남겨
+// 새로고침·공유해도 필터가 유지된다.
+const readStudentFilter = () => {
+  const q = new URLSearchParams(window.location.search);
+  const student = q.get("student");
+  const type = q.get("type");
+  return student ? { student, type: type === "SSCI" || type === "KCI" ? type : null } : null;
+};
+
+const writeStudentFilter = (filter) => {
+  const url = new URL(window.location.href);
+  if (filter?.student) {
+    url.searchParams.set("student", filter.student);
+    if (filter.type) url.searchParams.set("type", filter.type);
+    else url.searchParams.delete("type");
+  } else {
+    url.searchParams.delete("student");
+    url.searchParams.delete("type");
+  }
+  window.history.replaceState(null, "", url.toString());
+};
+
 const getSectionFromHash = () => {
   const h = window.location.hash.replace(/^#/, "").split("?")[0];
   return SECTION_IDS.includes(h) ? h : "profile";
@@ -139,6 +161,7 @@ export default function App() {
   const { t } = useTranslation();
   const [section, setSection] = useState(getSectionFromHash);
   const [payload, setPayload] = useState(null);
+  const [studentFilter, setStudentFilter] = useState(readStudentFilter);
   const payloadRef = useRef(null);
   const reduced = usePrefersReducedMotion();
   // 화면에 실제로 그려지는 섹션 — 나가는 애니메이션이 끝난 뒤 교체한다
@@ -161,6 +184,13 @@ export default function App() {
   useSmoothScroll(reduced);
 
   const navigate = useCallback((id, pl = null) => {
+    if (id === "publications") {
+      const next = pl?.student ? { student: pl.student, type: pl.type ?? null } : null;
+      if (pl?.student || pl?.clearStudent) {
+        setStudentFilter(next);
+        writeStudentFilter(next);
+      }
+    }
     payloadRef.current = pl;
     // 현재 해시에 ?journal= 같은 쿼리가 붙어 있어도 섹션이 같으면 해시를 다시 쓰지 않는다.
     if (window.location.hash.replace(/^#/, "").split("?")[0] !== id) {
@@ -181,6 +211,14 @@ export default function App() {
     return () => window.removeEventListener("hashchange", onHash);
   }, []);
 
+  // 첫 진입 URL에 ?student= 가 있으면 논문 섹션을 연다
+  useEffect(() => {
+    if (readStudentFilter() && getSectionFromHash() !== "publications") {
+      window.location.hash = "publications";
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // 섹션 전환 시 최상단 이동은 즉시(instant) — 전환 애니메이션과 겹치지 않게 한다.
   // 섹션 "내부" 앵커 이동만 smooth (common.jsx의 useAnchorScroll).
   useEffect(() => {
@@ -191,8 +229,17 @@ export default function App() {
   const content = {
     profile: <Hero navigate={navigate} />,
     interests: <Interests />,
-    alumni: <StudentsSection focus={payload?.focus} />,
-    publications: <Publications focus={payload?.focus} />,
+    alumni: <StudentsSection focus={payload?.focus} navigate={navigate} />,
+    publications: (
+      <Publications
+        focus={payload?.focus}
+        studentFilter={studentFilter}
+        onClearStudent={() => {
+          setStudentFilter(null);
+          writeStudentFilter(null);
+        }}
+      />
+    ),
     awards: <Awards />,
   }[shown];
 

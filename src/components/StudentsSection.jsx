@@ -18,22 +18,49 @@ function displayName(entry, lng) {
 // 소속 축약 — "Ohio State University · Fisher College of Business" → "Ohio State University"
 const shortAffiliation = (s) => (s ? s.split("·")[0].trim() : "");
 
-/* 실적 배지 — publications.js의 studentIds 매핑에서 계산 */
-function WorksBadge({ works }) {
+/* 실적 배지 — publications.js의 studentIds 매핑에서 계산.
+   클릭하면 논문 섹션으로 이동해 해당 제자의 공저 논문만 필터링한다 (§5).
+   외부 링크가 아니라 사이트 내 필터 이동이다. */
+function WorksBadge({ works, personId, name, navigate }) {
   const { t } = useTranslation();
   if (!works || works.length === 0) return null;
   const count = (tp) => works.filter((w) => w.type === tp).length;
   const parts = [
-    { label: "SSCI", n: count("SSCI"), style: { color: "var(--ssci-text)" } },
-    { label: "KCI", n: count("KCI"), style: { color: "var(--kci-text)" } },
-    { label: t("students.book"), n: count("BOOK"), style: { color: "var(--color-gold-300)" } },
+    { key: "SSCI", label: "SSCI", n: count("SSCI"), style: { color: "var(--ssci-text)" } },
+    { key: "KCI", label: "KCI", n: count("KCI"), style: { color: "var(--kci-text)" } },
+    { key: null, label: t("students.book"), n: count("BOOK"), style: { color: "var(--color-gold-300)" } },
   ].filter((p) => p.n > 0);
+
+  const go = (type) =>
+    navigate?.("publications", { student: personId, type: type ?? null });
+
   return (
     <span className="inline-flex shrink-0 items-center gap-1.5 font-display text-[11px] font-semibold tabular-nums">
       {parts.map((p, i) => (
-        <span key={p.label} style={p.style}>
-          {i > 0 && <span className="mr-1.5 text-ink-600">·</span>}
-          {p.label} {p.n}
+        <span key={p.label} className="inline-flex items-center">
+          {i > 0 && <span aria-hidden="true" className="mr-1.5 text-ink-600">·</span>}
+          {navigate ? (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                go(p.key);
+              }}
+              style={p.style}
+              className="rounded underline-offset-2 transition-opacity hover:underline focus-visible:outline-2 focus-visible:outline-accent-400"
+              aria-label={t("pubsUI.worksAria", {
+                name,
+                type: p.label,
+                count: p.n,
+              })}
+            >
+              {p.label} {p.n}
+            </button>
+          ) : (
+            <span style={p.style}>
+              {p.label} {p.n}
+            </span>
+          )}
         </span>
       ))}
     </span>
@@ -92,7 +119,7 @@ function WorksAccordion({ works }) {
 }
 
 /* 명단 패널의 한 줄 — 지도 핀과 양방향으로 이어진다 */
-function RosterRow({ person, lng, hot, onHover, onSelect, rowRef }) {
+function RosterRow({ person, lng, hot, onHover, onSelect, rowRef, navigate }) {
   const name = displayName(person, lng);
   const works = worksForStudent(person.personId);
   const isFaculty = !!person.isFaculty;
@@ -135,13 +162,18 @@ function RosterRow({ person, lng, hot, onHover, onSelect, rowRef }) {
             {shortAffiliation(localizeField(person, "affiliation", lng)) || person._city || ""}
           </span>
         </span>
-        <WorksBadge works={works} />
+        <WorksBadge
+          works={works}
+          personId={person.personId}
+          name={name.sub ? `${name.main} (${name.sub})` : name.main}
+          navigate={navigate}
+        />
       </button>
     </li>
   );
 }
 
-function AlumniCard({ entry, lng, faculty = false }) {
+function AlumniCard({ entry, lng, faculty = false, navigate }) {
   const name = displayName(entry, lng);
   const works = worksForStudent(entry.personId);
   return (
@@ -163,7 +195,12 @@ function AlumniCard({ entry, lng, faculty = false }) {
             </>
           )}
         </p>
-        <WorksBadge works={works} />
+        <WorksBadge
+          works={works}
+          personId={entry.personId}
+          name={name.sub ? `${name.main} (${name.sub})` : name.main}
+          navigate={navigate}
+        />
       </div>
       <p className={`text-ink-100 ${faculty ? "mt-1.5 text-sm" : "mt-1 text-[13px]"}`}>
         {localizeField(entry, "affiliation", lng)}
@@ -212,7 +249,7 @@ const MEMBER_IDS = new Set(CURRENT_MEMBERS.map((m) => m.personId));
 
 const TAB_KEYS = ["all", "faculty", "phd", "industry", "members"];
 
-export default function StudentsSection({ focus = null }) {
+export default function StudentsSection({ focus = null, navigate }) {
   const { t, i18n } = useTranslation();
   const lng = i18n.language;
   const scrollTo = useAnchorScroll();
@@ -377,6 +414,7 @@ export default function StudentsSection({ focus = null }) {
                         hot={!!p._pinId && highlightPinId === p._pinId}
                         onHover={p._pinId ? (x) => setHoverPin(x._pinId) : undefined}
                         onSelect={p._pinId ? (x) => onSelectPin(x._pinId) : undefined}
+                        navigate={navigate}
                         rowRef={(el) => {
                           if (p._pinId && !rowRefs.current[p._pinId]) rowRefs.current[p._pinId] = el;
                         }}
@@ -486,12 +524,17 @@ export default function StudentsSection({ focus = null }) {
                         </span>
                       )}
                     </span>
-                    <WorksBadge works={worksForStudent(e.personId)} />
+                    <WorksBadge
+                      works={worksForStudent(e.personId)}
+                      personId={e.personId}
+                      name={displayName(e, lng).main}
+                      navigate={navigate}
+                    />
                   </div>
                   <WorksAccordion works={worksForStudent(e.personId)} />
                 </div>
               ) : (
-                <AlumniCard entry={e} lng={lng} faculty={!!e.isFaculty} />
+                <AlumniCard entry={e} lng={lng} faculty={!!e.isFaculty} navigate={navigate} />
               )}
             </Reveal>
           ))}

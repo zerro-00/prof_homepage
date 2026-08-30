@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Collapse, Reveal, SectionHeading, useAnchorScroll, useIsMobile } from "./common.jsx";
+import { findPerson } from "../data/alumni.js";
 import {
   ALL_PUBLICATIONS,
   KCI_COUNT_LABEL,
@@ -550,8 +551,10 @@ function JournalView({ pool }) {
 }
 
 /* ---------- KCI 안내 + 저서 ---------- */
-function KciAndBooks() {
+function KciAndBooks({ studentId = null }) {
   const { t } = useTranslation();
+  const books = studentId ? BOOKS.filter((b) => b.studentIds?.includes(studentId)) : BOOKS;
+  if (studentId && books.length === 0) return null;
   return (
     <div className="mt-14 grid gap-4 md:grid-cols-2 md:gap-5">
       <Reveal>
@@ -570,7 +573,7 @@ function KciAndBooks() {
             {t("pubsUI.booksTitle")}
           </h3>
           <ul className="space-y-3.5">
-            {BOOKS.map((b) => (
+            {books.map((b) => (
               <li key={b.id} className="text-sm">
                 <p className="font-medium leading-snug text-ink-100">
                   『{b.title}』
@@ -594,20 +597,33 @@ function KciAndBooks() {
 }
 
 /* ---------- 메인 ---------- */
-export default function Publications({ focus = null }) {
-  const { t } = useTranslation();
+export default function Publications({ focus = null, studentFilter = null, onClearStudent }) {
+  const { t, i18n } = useTranslation();
+  const lng = i18n.language;
   const [mode, setMode] = useState("keyword");
   const [typeFilter, setTypeFilter] = useState(
     focus === "kci" ? "KCI" : focus === "ssci" ? "SSCI" : "ALL"
   );
 
-  const pool = useMemo(
-    () =>
-      typeFilter === "ALL"
-        ? ALL_PUBLICATIONS
-        : ALL_PUBLICATIONS.filter((p) => p.type === typeFilter),
-    [typeFilter]
-  );
+  // 실적 배지에서 유형까지 지정해 들어온 경우 (§5)
+  useEffect(() => {
+    if (studentFilter?.type) setTypeFilter(studentFilter.type);
+  }, [studentFilter]);
+
+  const person = studentFilter?.student ? findPerson(studentFilter.student) : null;
+  const personName = person
+    ? lng === "ko"
+      ? `${person.nameKo}${person.nameEn ? ` (${person.nameEn})` : ""}`
+      : (person.nameEn ?? person.nameKo)
+    : null;
+
+  const pool = useMemo(() => {
+    let list = ALL_PUBLICATIONS;
+    if (studentFilter?.student)
+      list = list.filter((p) => p.studentIds?.includes(studentFilter.student));
+    if (typeFilter !== "ALL") list = list.filter((p) => p.type === typeFilter);
+    return list;
+  }, [typeFilter, studentFilter]);
 
   return (
     <section id="publications" className="relative mx-auto max-w-6xl px-5 py-20 md:px-8 md:py-28">
@@ -617,6 +633,21 @@ export default function Publications({ focus = null }) {
         title={t("sections.publications.title")}
         desc={t("sections.publications.desc")}
       />
+
+      {person && (
+        <div className="mb-6 flex flex-wrap items-center gap-3 rounded-xl border border-accent-400/40 bg-base-850/70 px-4 py-3">
+          <span className="text-[14px] text-ink-100">
+            {t("pubsUI.studentFilter", { name: personName, count: pool.length })}
+          </span>
+          <button
+            type="button"
+            onClick={onClearStudent}
+            className="rounded-lg border border-line px-3 py-1.5 text-[13px] text-ink-500 transition-colors hover:border-base-600 hover:text-ink-100"
+          >
+            {t("pubsUI.clearFilter")}
+          </button>
+        </div>
+      )}
 
       <Reveal className="mb-8 flex flex-wrap items-center gap-3">
         <div className="inline-flex rounded-xl border border-line bg-base-850/80 p-1">
@@ -664,7 +695,7 @@ export default function Publications({ focus = null }) {
         <JournalView key={typeFilter} pool={pool} />
       )}
 
-      <KciAndBooks />
+      <KciAndBooks studentId={studentFilter?.student ?? null} />
     </section>
   );
 }

@@ -364,3 +364,12 @@ export const MEMBERS_PIN = {
   isMembers: true,
   entries: CURRENT_MEMBERS,
 };
+
+// personId → 표시 이름 (실적 필터 배너 등에서 사용)
+export function findPerson(personId) {
+  return (
+    CITY_PINS.flatMap((pin) => pin.entries).find((e) => e.personId === personId) ??
+    CURRENT_MEMBERS.find((m) => m.personId === personId) ??
+    null
+  );
+}
