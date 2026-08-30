@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 // 스크롤 진입 시 페이드업 — IntersectionObserver 기반 (외부 라이브러리 불필요)
 export function Reveal({ children, delay = 0, className = "", as: Tag = "div" }) {
@@ -102,4 +102,76 @@ export function Chip({ children, tone = "default" }) {
       {children}
     </span>
   );
+}
+
+// 최상위 저널(★) 표시 — 수상 섹션·제자 실적·저널 목록에서 공용으로 쓰는 단일 컴포넌트
+export function TopStar({ title, className = "" }) {
+  return (
+    <span
+      className={`text-gold-300 ${className}`}
+      title={title}
+      aria-hidden={title ? undefined : "true"}
+      role={title ? "img" : undefined}
+      aria-label={title}
+    >
+      ★
+    </span>
+  );
+}
+
+// 접힘 영역 — max-height 트랜지션(300ms)으로 펼칠 때 레이아웃 점프를 막는다.
+// 닫힌 동안에는 visibility:hidden(=탭 포커스 제외)이 300ms 뒤에 걸린다 (index.css .collapse-region).
+export function Collapse({ open, children, className = "" }) {
+  const innerRef = useRef(null);
+  const [height, setHeight] = useState(0);
+
+  useEffect(() => {
+    const el = innerRef.current;
+    if (!el) return;
+    const measure = () => setHeight(el.scrollHeight);
+    measure();
+    if (typeof ResizeObserver === "undefined") return;
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [children]);
+
+  return (
+    <div
+      className={`collapse-region ${open ? "is-open" : ""} ${className}`}
+      style={{ maxHeight: open ? height : 0 }}
+    >
+      <div ref={innerRef}>{children}</div>
+    </div>
+  );
+}
+
+// 모바일(<768px) 여부 — 저널별 보기의 아코디언 전환에 사용
+export function useIsMobile(query = "(max-width: 767px)") {
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia(query);
+    const onChange = (e) => setIsMobile(e.matches);
+    setIsMobile(mq.matches);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, [query]);
+  return isMobile;
+}
+
+// 섹션 내부 앵커 이동 — 상단 네비 높이는 대상의 scroll-mt-* 로 확보한다.
+// lenis가 켜져 있으면 lenis 경유(휠 스크롤과 같은 엔진), 아니면 기본 scrollIntoView.
+export function useAnchorScroll() {
+  return useCallback((target) => {
+    const el = target?.current ?? target;
+    if (!el) return;
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const behavior = reduced ? "auto" : "smooth";
+    if (window.__lenis && !reduced) {
+      const offset = parseFloat(getComputedStyle(el).scrollMarginTop) || 0;
+      window.__lenis.scrollTo(el, { offset: -offset });
+      return;
+    }
+    el.scrollIntoView({ behavior, block: "start" });
+  }, []);
 }

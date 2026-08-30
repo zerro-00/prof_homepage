@@ -1,6 +1,6 @@
 import { Suspense, lazy, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Reveal, SectionHeading } from "./common.jsx";
+import { Collapse, Reveal, SectionHeading, TopStar, useAnchorScroll } from "./common.jsx";
 import { CITY_PINS, CURRENT_MEMBERS } from "../data/alumni.js";
 import { worksForStudent } from "../data/publications.js";
 import { localizeField } from "../i18n/index.js";
@@ -53,16 +53,12 @@ function WorksAccordion({ works }) {
           ? t("students.worksHide", { n: works.length })
           : t("students.worksShow", { n: works.length })}
       </button>
-      {open && (
+      <Collapse open={open}>
         <ul className="mt-2.5 space-y-2 border-l border-line pl-3">
           {works.map((w, i) => (
             <li key={i} className="text-[12px] leading-snug">
               <p className="text-ink-300">
-                {w.top && (
-                  <span className="text-gold-300 mr-1" title={t("students.topJournal")}>
-                    ★
-                  </span>
-                )}
+                {w.top && <TopStar className="mr-1" title={t("students.topJournal")} />}
                 {w.title}
               </p>
               <p className="text-ink-600 mt-0.5">
@@ -83,7 +79,7 @@ function WorksAccordion({ works }) {
             </li>
           ))}
         </ul>
-      )}
+      </Collapse>
     </div>
   );
 }
@@ -186,8 +182,7 @@ export default function StudentsSection() {
 
   const badges = t("map.badges", { returnObjects: true });
   const badgeTargets = [facultyRef, phdRef, mapRef, membersRef];
-  const scrollTo = (ref) =>
-    ref.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  const scrollTo = useAnchorScroll();
 
   return (
     <section id="alumni" className="relative mx-auto max-w-6xl px-5 md:px-8 py-20 md:py-28">

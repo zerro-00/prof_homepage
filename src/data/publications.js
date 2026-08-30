@@ -1158,7 +1158,42 @@ export const BOOKS = [
   },
 ];
 
-// 저널별 그룹핑 유틸
+// ---------------------------------------------------------------
+// 저널별 보기 — SSCI / KCI 2개 그룹으로 나눈 저널 목록 (15차 §2)
+//  · 3편 이상 저널(primary)은 편수 내림차순으로 상시 노출
+//  · 2편 이하 저널(rest)은 "그 외 N개" 접힘 항목으로 묶고 펼치면 알파벳/가나다순
+//  · hasTop: tier "top" 논문이 실린 저널 → 목록에 골드 ★
+export const PRIMARY_MIN_COUNT = 3;
+
+export function groupJournalsByType(pubs) {
+  return ["SSCI", "KCI"]
+    .map((type) => {
+      const papers = pubs.filter((p) => p.type === type);
+      const map = new Map();
+      for (const p of papers) {
+        if (!map.has(p.journal)) map.set(p.journal, []);
+        map.get(p.journal).push(p);
+      }
+      const journals = [...map.entries()].map(([journal, ps]) => ({
+        journal,
+        papers: [...ps].sort((a, b) => b.year - a.year),
+        count: ps.length,
+        hasTop: ps.some((p) => p.tier === "top"),
+      }));
+      const byCount = (a, b) => b.count - a.count || a.journal.localeCompare(b.journal, "ko");
+      const byName = (a, b) => a.journal.localeCompare(b.journal, "ko");
+      return {
+        type,
+        total: papers.length,
+        max: journals.reduce((m, j) => Math.max(m, j.count), 0),
+        primary: journals.filter((j) => j.count >= PRIMARY_MIN_COUNT).sort(byCount),
+        rest: journals.filter((j) => j.count < PRIMARY_MIN_COUNT).sort(byName),
+      };
+    })
+    .filter((g) => g.total > 0);
+}
+
+// 저널별 그룹핑 유틸 (키워드별 보기 등 단일 목록용)
 export function groupByJournal(pubs) {
   const map = new Map();
   for (const p of pubs) {

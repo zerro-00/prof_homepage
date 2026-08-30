@@ -1,26 +1,22 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Reveal, SectionHeading } from "./common.jsx";
+import { Collapse, Reveal, SectionHeading, TopStar } from "./common.jsx";
 import { AWARDS, GRANTS } from "../data/awards.js";
 import { localizeField } from "../i18n/index.js";
 
 const VISIBLE_COUNT = 8;
 
 // 프로필 섹션과 동일한 2단 나열 행
-function Row({ item, lng, star = false }) {
+function Row({ item, lng, star = false, last = false }) {
   const title = localizeField(item, "title", lng);
   const org = localizeField(item, "org", lng);
   const period = localizeField(item, "period", lng) ?? item.year;
   return (
-    <li className="flex gap-3 text-sm py-2 border-b border-line/50 last:border-0">
+    <li className={`flex gap-3 text-sm py-2 border-line/50 ${last ? "" : "border-b"}`}>
       <span className="font-display text-ink-600 tabular-nums shrink-0 w-32">{period}</span>
       <span className="min-w-0">
         <span className={star ? "text-ink-100 font-semibold" : "text-ink-100"}>
-          {star && (
-            <span className="text-gold-300 mr-1.5" aria-hidden="true">
-              ★
-            </span>
-          )}
+          {star && <TopStar className="mr-1.5" />}
           {title}
         </span>
         {org && <span className="block text-[12px] text-ink-500 mt-0.5">{org}</span>}
@@ -33,7 +29,9 @@ export default function Awards() {
   const { t, i18n } = useTranslation();
   const lng = i18n.language;
   const [showAll, setShowAll] = useState(false);
-  const visible = showAll ? AWARDS : AWARDS.slice(0, VISIBLE_COUNT);
+  // 상시 노출분과 접힘분을 분리 — 접힘분은 Collapse로 펼쳐 레이아웃 점프를 막는다.
+  const visible = AWARDS.slice(0, VISIBLE_COUNT);
+  const hidden = AWARDS.slice(VISIBLE_COUNT);
 
   return (
     <section id="awards" className="relative mx-auto max-w-6xl px-5 md:px-8 py-20 md:py-28">
@@ -56,9 +54,28 @@ export default function Awards() {
             </h3>
             <ul>
               {visible.map((a, i) => (
-                <Row key={`${a.year}-${i}`} item={a} lng={lng} star={a.star} />
+                <Row
+                  key={`${a.year}-${i}`}
+                  item={a}
+                  lng={lng}
+                  star={a.star}
+                  last={!showAll && i === visible.length - 1}
+                />
               ))}
             </ul>
+            <Collapse open={showAll}>
+              <ul>
+                {hidden.map((a, i) => (
+                  <Row
+                    key={`${a.year}-${VISIBLE_COUNT + i}`}
+                    item={a}
+                    lng={lng}
+                    star={a.star}
+                    last={i === hidden.length - 1}
+                  />
+                ))}
+              </ul>
+            </Collapse>
             <button
               type="button"
               onClick={() => setShowAll((v) => !v)}
@@ -84,7 +101,7 @@ export default function Awards() {
             </h3>
             <ul>
               {GRANTS.map((g, i) => (
-                <Row key={i} item={g} lng={lng} />
+                <Row key={i} item={g} lng={lng} last={i === GRANTS.length - 1} />
               ))}
             </ul>
             <p className="mt-6 rounded-xl border border-line bg-base-850/60 p-4 text-[13px] leading-relaxed text-ink-500">

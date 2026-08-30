@@ -197,7 +197,10 @@ export default function WorldMap() {
         </ComposableMap>
 
         {activePin && (
-          <div className="absolute left-3 right-3 bottom-3 md:left-auto md:right-4 md:bottom-4 md:w-[26rem] max-h-[70%] overflow-y-auto thin-scroll rounded-xl border border-accent-500/30 bg-base-850/95 backdrop-blur p-4 shadow-2xl shadow-black/50">
+          <div
+            data-lenis-prevent
+            className="absolute left-3 right-3 bottom-3 md:left-auto md:right-4 md:bottom-4 md:w-[26rem] max-h-[70%] overflow-y-auto thin-scroll rounded-xl border border-accent-500/30 bg-base-850/95 backdrop-blur p-4 shadow-2xl shadow-black/50"
+          >
             <div className="flex items-baseline justify-between gap-3 mb-2">
               <p className="font-semibold text-ink-100">
                 {localizeField(activePin, "city", lng)}

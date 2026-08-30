@@ -1,13 +1,13 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Reveal, SectionHeading } from "./common.jsx";
+import { Collapse, Reveal, SectionHeading, TopStar, useAnchorScroll, useIsMobile } from "./common.jsx";
 import {
   ALL_PUBLICATIONS,
   KCI_COUNT_LABEL,
   BOOKS,
   KEYWORDS,
   YEAR_RANGES,
-  groupByJournal,
+  groupJournalsByType,
   paperUrl,
 } from "../data/publications.js";
 
@@ -126,19 +126,182 @@ function KeywordView({ pool }) {
   );
 }
 
-/* ---------- 저널별 보기 ---------- */
+/* ---------- 저널별 보기 (15차 §2 — SSCI/KCI 2단 그룹 + 마스터-디테일) ---------- */
+
+// URL 해시의 ?journal= 동기화 — 새로고침·뒤로가기에서 선택이 유지된다.
+// history.replaceState를 쓰므로 저널을 바꿔도 뒤로가기 기록이 쌓이지 않는다(뒤로가기 = 이전 섹션).
+const journalFromHash = () => {
+  const query = window.location.hash.split("?")[1];
+  return query ? new URLSearchParams(query).get("journal") : null;
+};
+
+const syncJournalHash = (journal) => {
+  const base = window.location.hash.split("?")[0] || "#publications";
+  const next = journal ? `${base}?journal=${encodeURIComponent(journal)}` : base;
+  if (window.location.hash !== next) window.history.replaceState(null, "", next);
+};
+
+// 저널 목록 행 — 칩이 아니라 프로필 섹션과 같은 리스트 언어 (저널명 · 편수 · 얇은 비율 바)
+function JournalRow({ item, max, active, onSelect }) {
+  const { t } = useTranslation();
+  const ratio = max > 0 ? Math.max(8, Math.round((item.count / max) * 100)) : 0;
+  return (
+    <button
+      type="button"
+      onClick={() => onSelect(item.journal)}
+      aria-current={active ? "true" : undefined}
+      className={`group relative block w-full py-2 pl-3 pr-1 text-left transition-colors focus-visible:outline-2 focus-visible:outline-accent-400 ${
+        active ? "text-ink-100" : "text-ink-500 hover:text-ink-300"
+      }`}
+    >
+      <span
+        aria-hidden="true"
+        className={`absolute left-0 top-1.5 bottom-1.5 w-[2px] rounded-full transition-colors ${
+          active ? "bg-accent-400" : "bg-transparent group-hover:bg-base-600"
+        }`}
+      />
+      <span className="flex items-baseline gap-2">
+        <span className={`min-w-0 flex-1 text-[13px] leading-snug ${active ? "font-medium" : ""}`}>
+          {item.journal}
+          {item.hasTop && <TopStar className="ml-1" title={t("students.topJournal")} />}
+        </span>
+        <span
+          className={`shrink-0 font-display text-[12px] tabular-nums ${
+            active ? "text-accent-300" : "text-ink-600"
+          }`}
+        >
+          {item.count}
+        </span>
+      </span>
+      <span aria-hidden="true" className="mt-1.5 block h-[3px] w-full rounded-full bg-base-800">
+        <span
+          className={`block h-[3px] rounded-full transition-colors ${
+            active ? "bg-accent-400" : "bg-base-600 group-hover:bg-ink-600"
+          }`}
+          style={{ width: `${ratio}%` }}
+        />
+      </span>
+    </button>
+  );
+}
+
+// 그룹(SSCI / KCI) — 데스크톱은 항상 펼침, 모바일(<768px)은 아코디언
+function JournalGroup({ group, journal, onSelect, isMobile, open, onToggleGroup }) {
+  const { t } = useTranslation();
+  const [restOpen, setRestOpen] = useState(false);
+  const heading = t(group.type === "SSCI" ? "pubsUI.groupSsci" : "pubsUI.groupKci");
+  const expanded = !isMobile || open;
+
+  const rows = (list) =>
+    list.map((item) => (
+      <JournalRow
+        key={item.journal}
+        item={item}
+        max={group.max}
+        active={journal === item.journal}
+        onSelect={onSelect}
+      />
+    ));
+
+  const headingContent = (
+    <>
+      <span className="font-display text-[11px] tracking-[0.22em] uppercase text-ink-500">
+        {heading}
+      </span>
+      <span className="font-display text-[12px] tabular-nums text-ink-600">{group.total}</span>
+    </>
+  );
+
+  return (
+    <div className="mb-6 last:mb-0">
+      {isMobile ? (
+        <button
+          type="button"
+          onClick={onToggleGroup}
+          aria-expanded={open}
+          className="flex w-full items-center justify-between gap-2 border-b border-line pb-2"
+        >
+          <span className="flex items-center gap-2">
+            <span
+              aria-hidden="true"
+              className={`inline-block text-ink-600 transition-transform ${open ? "rotate-90" : ""}`}
+            >
+              ▸
+            </span>
+            {headingContent}
+          </span>
+        </button>
+      ) : (
+        <div className="flex items-baseline justify-between gap-2 border-b border-line pb-2">
+          {headingContent}
+        </div>
+      )}
+
+      <Collapse open={expanded}>
+        <div className="pt-1.5">
+          {rows(group.primary)}
+          {group.rest.length > 0 && (
+            <>
+              <button
+                type="button"
+                onClick={() => setRestOpen((v) => !v)}
+                aria-expanded={restOpen}
+                className="mt-1 inline-flex items-center gap-1.5 pl-3 py-2 text-[12px] text-ink-600 transition-colors hover:text-accent-300"
+              >
+                <span
+                  aria-hidden="true"
+                  className={`inline-block transition-transform ${restOpen ? "rotate-90" : ""}`}
+                >
+                  ▸
+                </span>
+                {restOpen
+                  ? t("pubsUI.lessJournals")
+                  : t("pubsUI.moreJournals", { count: group.rest.length })}
+              </button>
+              <Collapse open={restOpen}>{rows(group.rest)}</Collapse>
+            </>
+          )}
+        </div>
+      </Collapse>
+    </div>
+  );
+}
+
 function JournalView({ pool }) {
   const { t } = useTranslation();
-  const journals = useMemo(() => groupByJournal(pool), [pool]);
-  const [journal, setJournal] = useState(journals[0]?.journal ?? null);
+  const isMobile = useIsMobile();
+  const scrollToAnchor = useAnchorScroll();
+  const listRef = useRef(null);
+  const detailRef = useRef(null);
+
+  const groups = useMemo(() => groupJournalsByType(pool), [pool]);
+  const allJournals = useMemo(
+    () => groups.flatMap((g) => [...g.primary, ...g.rest]),
+    [groups]
+  );
+  // 초기 선택: 편수 최다 저널. 단 URL에 ?journal=이 있고 현재 풀에 존재하면 그것을 우선.
+  const [journal, setJournal] = useState(() => {
+    const fromHash = journalFromHash();
+    if (allJournals.some((j) => j.journal === fromHash)) return fromHash;
+    return allJournals.reduce((best, j) => (!best || j.count > best.count ? j : best), null)
+      ?.journal ?? null;
+  });
+  const [openGroups, setOpenGroups] = useState(() => new Set());
   const [subMode, setSubMode] = useState("keyword");
   const [subKeyword, setSubKeyword] = useState(null);
   const [subRange, setSubRange] = useState(null);
 
-  const currentPapers = useMemo(
-    () => journals.find((j) => j.journal === journal)?.papers ?? [],
-    [journals, journal]
+  useEffect(() => {
+    syncJournalHash(journal);
+  }, [journal]);
+  // 키워드별 보기로 돌아가거나 섹션을 떠나면 ?journal= 제거
+  useEffect(() => () => syncJournalHash(null), []);
+
+  const current = useMemo(
+    () => allJournals.find((j) => j.journal === journal) ?? null,
+    [allJournals, journal]
   );
+  const currentPapers = current?.papers ?? [];
 
   const availableKeywords = useMemo(
     () => KEYWORDS.filter((k) => currentPapers.some((p) => p.keywords.includes(k))),
@@ -146,9 +309,7 @@ function JournalView({ pool }) {
   );
   const availableRanges = useMemo(
     () =>
-      YEAR_RANGES.filter((r) =>
-        currentPapers.some((p) => p.year >= r.from && p.year <= r.to)
-      ),
+      YEAR_RANGES.filter((r) => currentPapers.some((p) => p.year >= r.from && p.year <= r.to)),
     [currentPapers]
   );
 
@@ -164,102 +325,147 @@ function JournalView({ pool }) {
     setJournal(j);
     setSubKeyword(null);
     setSubRange(null);
+    if (isMobile) {
+      // 모바일: 아코디언을 닫고 논문 목록으로 이동
+      setOpenGroups(new Set());
+      requestAnimationFrame(() => scrollToAnchor(detailRef));
+    }
+  };
+
+  const toggleGroup = (type) =>
+    setOpenGroups((prev) => {
+      const next = new Set(prev);
+      if (next.has(type)) next.delete(type);
+      else next.add(type);
+      return next;
+    });
+
+  const backToJournalList = () => {
+    setOpenGroups(new Set(groups.map((g) => g.type)));
+    requestAnimationFrame(() => scrollToAnchor(listRef));
   };
 
   return (
-    <div>
-      <div className="flex flex-wrap gap-2 mb-6">
-        {journals.map(({ journal: j, papers }) => (
-          <FilterBtn key={j} activeState={journal === j} onClick={() => selectJournal(j)}>
-            {j}{" "}
-            <span
-              className={`ml-1 inline-flex items-center justify-center rounded-full px-1.5 font-display text-[11px] ${
-                journal === j ? "bg-accent-500/25" : "bg-base-700/70"
+    <div className="md:grid md:grid-cols-[320px_minmax(0,1fr)] md:gap-8 md:items-start">
+      {/* 좌측: 저널 목록 (데스크톱 sticky) */}
+      <nav
+        ref={listRef}
+        aria-label={t("pubsUI.journalListLabel")}
+        data-lenis-prevent
+        className="scroll-mt-20 md:sticky md:top-20 md:max-h-[calc(100vh-6rem)] md:overflow-y-auto md:pr-2 thin-scroll"
+      >
+        {groups.map((g) => (
+          <JournalGroup
+            key={g.type}
+            group={g}
+            journal={journal}
+            onSelect={selectJournal}
+            isMobile={isMobile}
+            open={openGroups.has(g.type)}
+            onToggleGroup={() => toggleGroup(g.type)}
+          />
+        ))}
+      </nav>
+
+      {/* 우측: 선택 저널의 논문 목록 */}
+      <div ref={detailRef} className="mt-8 md:mt-0 scroll-mt-20">
+        <div className="mb-4 flex flex-wrap items-center gap-x-3 gap-y-2">
+          {isMobile && (
+            <button
+              type="button"
+              onClick={backToJournalList}
+              className="rounded-lg border border-line bg-base-800/60 px-3 py-1.5 text-[12px] text-ink-500 transition-colors hover:text-ink-100 hover:border-base-600"
+            >
+              {t("pubsUI.backToJournals")}
+            </button>
+          )}
+          <h3 className="text-base font-semibold leading-snug text-ink-100">
+            {current?.hasTop && <TopStar className="mr-1.5" title={t("students.topJournal")} />}
+            {journal}
+          </h3>
+          <span className="font-display text-[12px] text-ink-500">
+            {t("pubsUI.paperCount", { count: currentPapers.length })}
+          </span>
+        </div>
+
+        <div className="rounded-xl border border-line bg-base-850/60 p-4 mb-6">
+          <div className="flex items-center gap-2 mb-3">
+            <span className="font-display text-[11px] tracking-[0.2em] uppercase text-ink-600 mr-1">
+              Filter
+            </span>
+            <button
+              type="button"
+              onClick={() => {
+                setSubMode("keyword");
+                setSubRange(null);
+              }}
+              className={`rounded-md px-2.5 py-1 text-xs transition-colors ${
+                subMode === "keyword"
+                  ? "bg-accent-500/15 text-accent-300"
+                  : "text-ink-500 hover:text-ink-300"
               }`}
             >
-              {papers.length}
-            </span>
-          </FilterBtn>
-        ))}
-      </div>
-
-      <div className="rounded-xl border border-line bg-base-850/60 p-4 mb-6">
-        <div className="flex items-center gap-2 mb-3">
-          <span className="font-display text-[11px] tracking-[0.2em] uppercase text-ink-600 mr-1">
-            Filter
-          </span>
-          <button
-            type="button"
-            onClick={() => {
-              setSubMode("keyword");
-              setSubRange(null);
-            }}
-            className={`rounded-md px-2.5 py-1 text-xs transition-colors ${
-              subMode === "keyword"
-                ? "bg-accent-500/15 text-accent-300"
-                : "text-ink-500 hover:text-ink-300"
-            }`}
-          >
-            {t("pubsUI.filterKeyword")}
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              setSubMode("year");
-              setSubKeyword(null);
-            }}
-            className={`rounded-md px-2.5 py-1 text-xs transition-colors ${
-              subMode === "year"
-                ? "bg-accent-500/15 text-accent-300"
-                : "text-ink-500 hover:text-ink-300"
-            }`}
-          >
-            {t("pubsUI.filterYear")}
-          </button>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          {subMode === "keyword" ? (
-            <>
-              <FilterBtn activeState={subKeyword === null} onClick={() => setSubKeyword(null)}>
-                {t("pubsUI.all")}
-              </FilterBtn>
-              {availableKeywords.map((k) => (
-                <FilterBtn
-                  key={k}
-                  activeState={subKeyword === k}
-                  onClick={() => setSubKeyword(k)}
-                >
-                  {t(`keywords.${k}`)}
+              {t("pubsUI.filterKeyword")}
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setSubMode("year");
+                setSubKeyword(null);
+              }}
+              className={`rounded-md px-2.5 py-1 text-xs transition-colors ${
+                subMode === "year"
+                  ? "bg-accent-500/15 text-accent-300"
+                  : "text-ink-500 hover:text-ink-300"
+              }`}
+            >
+              {t("pubsUI.filterYear")}
+            </button>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {subMode === "keyword" ? (
+              <>
+                <FilterBtn activeState={subKeyword === null} onClick={() => setSubKeyword(null)}>
+                  {t("pubsUI.all")}
                 </FilterBtn>
-              ))}
-            </>
-          ) : (
-            <>
-              <FilterBtn activeState={subRange === null} onClick={() => setSubRange(null)}>
-                {t("pubsUI.all")}
-              </FilterBtn>
-              {availableRanges.map((r) => (
-                <FilterBtn
-                  key={r.label}
-                  activeState={subRange?.label === r.label}
-                  onClick={() => setSubRange(r)}
-                >
-                  {r.label}
+                {availableKeywords.map((k) => (
+                  <FilterBtn
+                    key={k}
+                    activeState={subKeyword === k}
+                    onClick={() => setSubKeyword(k)}
+                  >
+                    {t(`keywords.${k}`)}
+                  </FilterBtn>
+                ))}
+              </>
+            ) : (
+              <>
+                <FilterBtn activeState={subRange === null} onClick={() => setSubRange(null)}>
+                  {t("pubsUI.all")}
                 </FilterBtn>
-              ))}
-            </>
-          )}
+                {availableRanges.map((r) => (
+                  <FilterBtn
+                    key={r.label}
+                    activeState={subRange?.label === r.label}
+                    onClick={() => setSubRange(r)}
+                  >
+                    {r.label}
+                  </FilterBtn>
+                ))}
+              </>
+            )}
+          </div>
         </div>
-      </div>
 
-      <div className="grid md:grid-cols-2 gap-4">
-        {filtered.map((p) => (
-          <PaperCard key={p.id} paper={p} />
-        ))}
+        <div className="grid gap-4">
+          {filtered.map((p) => (
+            <PaperCard key={p.id} paper={p} />
+          ))}
+        </div>
+        {filtered.length === 0 && (
+          <p className="text-sm text-ink-600 py-8 text-center">{t("pubsUI.none")}</p>
+        )}
       </div>
-      {filtered.length === 0 && (
-        <p className="text-sm text-ink-600 py-8 text-center">{t("pubsUI.none")}</p>
-      )}
     </div>
   );
 }

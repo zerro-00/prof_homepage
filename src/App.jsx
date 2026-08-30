@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { Globe, Check } from "lucide-react";
+import Lenis from "lenis";
 import { LANGS } from "./i18n/index.js";
 import Hero from "./components/Hero.jsx";
 import Interests from "./components/Interests.jsx";
@@ -11,8 +12,10 @@ import Awards from "./components/Awards.jsx";
 
 const SECTION_IDS = ["profile", "interests", "alumni", "publications", "awards"];
 
+// 해시는 "#publications?journal=..." 형태를 가질 수 있다 (논문 섹션의 저널 선택 유지).
+// 섹션 판정은 "?" 앞부분만 본다.
 const getSectionFromHash = () => {
-  const h = window.location.hash.replace("#", "");
+  const h = window.location.hash.replace(/^#/, "").split("?")[0];
   return SECTION_IDS.includes(h) ? h : "profile";
 };
 
@@ -116,18 +119,35 @@ function LangSwitcher() {
   );
 }
 
+// 휠 스크롤 부드럽게 — prefers-reduced-motion이면 초기화하지 않는다(=브라우저 기본 스크롤).
+// window.__lenis로 노출해 섹션 전환(instant)·앵커 이동(smooth)이 같은 엔진을 쓰게 한다.
+function useSmoothScroll(disabled) {
+  useEffect(() => {
+    if (disabled) return;
+    const lenis = new Lenis({ lerp: 0.1, smoothWheel: true, autoRaf: true });
+    window.__lenis = lenis;
+    return () => {
+      lenis.destroy();
+      delete window.__lenis;
+    };
+  }, [disabled]);
+}
+
 export default function App() {
   const { t } = useTranslation();
   const [section, setSection] = useState(getSectionFromHash);
   const [payload, setPayload] = useState(null);
   const payloadRef = useRef(null);
   const reduced = useReducedMotion();
+  useSmoothScroll(reduced);
 
   const navigate = useCallback((id, pl = null) => {
     payloadRef.current = pl;
-    if (window.location.hash !== `#${id}`) {
+    // 현재 해시에 ?journal= 같은 쿼리가 붙어 있어도 섹션이 같으면 해시를 다시 쓰지 않는다.
+    if (window.location.hash.replace(/^#/, "").split("?")[0] !== id) {
       window.location.hash = id;
     } else {
+      payloadRef.current = null;
       setPayload(pl);
     }
   }, []);
@@ -142,8 +162,11 @@ export default function App() {
     return () => window.removeEventListener("hashchange", onHash);
   }, []);
 
+  // 섹션 전환 시 최상단 이동은 즉시(instant) — 전환 애니메이션과 겹치지 않게 한다.
+  // 섹션 "내부" 앵커 이동만 smooth (common.jsx의 useAnchorScroll).
   useEffect(() => {
-    window.scrollTo(0, 0);
+    window.__lenis?.scrollTo(0, { immediate: true });
+    window.scrollTo({ top: 0, behavior: "instant" });
   }, [section]);
 
   const content = {
