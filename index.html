@@ -9,15 +9,47 @@
     />
     <title>최정혜 교수 연구실 · Yonsei School of Business</title>
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+    <link
+      rel="preload"
+      as="style"
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
+    />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
+      media="print"
+      onload="this.media='all'"
     />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
+      />
+    </noscript>
+    <!-- 라틴 전용(Space Grotesk)만 기본 로드. 중국어·일본어 웹폰트(Noto Sans SC/JP, 합계 ~180KB)는
+         해당 언어를 고를 때만 내려받는다 — 한국어 방문자의 첫 렌더를 막지 않기 위해. (src/i18n/index.js) -->
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      />
+    </noscript>
+    <link
+      rel="preload"
+      as="image"
+      href="/profile-small.webp"
+      imagesrcset="/profile-small.webp 427w, /profile.webp 800w"
+      imagesizes="(max-width: 767px) 208px, 240px"
+      type="image/webp"
+      fetchpriority="high"
     />
   </head>
   <body>

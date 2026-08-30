@@ -146,6 +146,19 @@ export function Collapse({ open, children, className = "" }) {
   );
 }
 
+// prefers-reduced-motion (framer-motion의 useReducedMotion 대체)
+export function usePrefersReducedMotion() {
+  const [reduced, setReduced] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const onChange = (e) => setReduced(e.matches);
+    setReduced(mq.matches);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
+  return reduced;
+}
+
 // 모바일(<768px) 여부 — 저널별 보기의 아코디언 전환에 사용
 export function useIsMobile(query = "(max-width: 767px)") {
   const [isMobile, setIsMobile] = useState(false);

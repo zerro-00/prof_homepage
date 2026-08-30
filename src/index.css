@@ -21,8 +21,8 @@
   --color-line: #1e2a44;
   --color-ink-100: #eef2f9;
   --color-ink-300: #c3cddd;
-  --color-ink-500: #8b98b0;
-  --color-ink-600: #667191;
+  --color-ink-500: #9aa6bd;
+  --color-ink-600: #7e8aa6;
   --color-accent-300: #7cc5ff;
   --color-accent-400: #4da3ff;
   --color-accent-500: #2f7ff2;
@@ -103,6 +103,40 @@ html[lang="ja"] body {
 
 ::selection {
   background: var(--selection);
+}
+
+/* ---- 섹션 전환 (framer-motion 대체) ---- */
+@keyframes section-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.section-enter {
+  animation: section-in 0.35s ease-out both;
+}
+.section-exit {
+  opacity: 0;
+  transform: translateY(-20px);
+  filter: blur(4px);
+  transition:
+    opacity 0.25s ease-in,
+    transform 0.25s ease-in,
+    filter 0.25s ease-in;
+}
+@media (prefers-reduced-motion: reduce) {
+  .section-enter,
+  .section-exit {
+    animation: none;
+    transition: none;
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
 }
 
 /* ---- scroll reveal ---- */

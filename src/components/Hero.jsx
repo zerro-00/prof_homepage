@@ -42,9 +42,9 @@ function InfoCard({ title, children, className = "", delay = 0 }) {
   return (
     <Reveal delay={delay} className={className}>
       <div className="h-full rounded-2xl border border-line bg-base-900/70 p-6">
-        <h3 className="font-display text-xs tracking-[0.25em] uppercase text-accent-400 mb-4">
+        <h2 className="font-display text-xs tracking-[0.25em] uppercase text-accent-400 mb-4">
           {title}
-        </h3>
+        </h2>
         {children}
       </div>
     </Reveal>
@@ -97,13 +97,21 @@ export default function Hero({ navigate }) {
               <div className="absolute -inset-2 rounded-3xl bg-gradient-to-br from-accent-500/35 via-transparent to-mint-400/20 blur-md opacity-70 transition-opacity duration-300 group-hover:opacity-100" />
               <div className="relative h-64 w-52 md:h-80 md:w-60 overflow-hidden rounded-2xl border border-accent-500/25">
                 <picture>
-                  <source srcSet="/profile.webp" type="image/webp" />
+                  {/* 모바일에서는 208~256px로만 표시되므로 작은 소스를 따로 준다 */}
+                  <source
+                    type="image/webp"
+                    srcSet="/profile-small.webp 427w, /profile.webp 800w"
+                    sizes="(max-width: 767px) 208px, 240px"
+                  />
                   <img
                     src="/profile.jpg"
+                    srcSet="/profile-small.jpg 427w, /profile.jpg 800w"
+                    sizes="(max-width: 767px) 208px, 240px"
                     alt={t("hero.photoAlt")}
                     width={800}
                     height={1200}
                     loading="eager"
+                    fetchpriority="high"
                     className="h-full w-full object-cover object-[center_top]"
                     onError={(e) => {
                       e.currentTarget.closest("picture").style.display = "none";

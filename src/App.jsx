@@ -1,14 +1,16 @@
-import { useCallback, useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { Suspense, lazy, useCallback, useEffect, useRef, useState } from "react";
+import { usePrefersReducedMotion } from "./components/common.jsx";
 import { useTranslation } from "react-i18next";
 import { Globe, Check } from "lucide-react";
 import Lenis from "lenis";
-import { LANGS } from "./i18n/index.js";
+import { LANGS, ensureLanguage } from "./i18n/index.js";
 import Hero from "./components/Hero.jsx";
-import Interests from "./components/Interests.jsx";
-import StudentsSection from "./components/StudentsSection.jsx";
-import Publications from "./components/Publications.jsx";
-import Awards from "./components/Awards.jsx";
+
+// 첫 화면(히어로) 외 섹션은 필요할 때 받는다 — 초기 번들을 줄이기 위한 분할
+const Interests = lazy(() => import("./components/Interests.jsx"));
+const StudentsSection = lazy(() => import("./components/StudentsSection.jsx"));
+const Publications = lazy(() => import("./components/Publications.jsx"));
+const Awards = lazy(() => import("./components/Awards.jsx"));
 
 const SECTION_IDS = ["profile", "interests", "alumni", "publications", "awards"];
 
@@ -65,7 +67,7 @@ function LangSwitcher() {
   };
 
   const select = (code) => {
-    i18n.changeLanguage(code);
+    ensureLanguage(code);
     setOpen(false);
   };
 
@@ -76,7 +78,7 @@ function LangSwitcher() {
         onClick={() => (open ? setOpen(false) : openMenu())}
         aria-haspopup="menu"
         aria-expanded={open}
-        aria-label="Language"
+        aria-label={`Language: ${LANG_NAMES[current.code]}`}
         className="inline-flex items-center gap-1.5 rounded-lg px-2 py-1.5 text-ink-500 transition-colors hover:bg-base-800/70 hover:text-ink-100 focus-visible:outline-2 focus-visible:outline-accent-400"
       >
         <Globe size={15} strokeWidth={1.8} aria-hidden="true" />
@@ -87,7 +89,7 @@ function LangSwitcher() {
       {open && (
         <div
           role="menu"
-          aria-label="Language"
+          aria-label={`Language: ${LANG_NAMES[current.code]}`}
           onKeyDown={onMenuKeyDown}
           className="absolute right-0 top-full mt-2 w-36 rounded-xl border border-line bg-base-850/95 backdrop-blur p-1 shadow-2xl shadow-black/50"
         >
@@ -138,7 +140,24 @@ export default function App() {
   const [section, setSection] = useState(getSectionFromHash);
   const [payload, setPayload] = useState(null);
   const payloadRef = useRef(null);
-  const reduced = useReducedMotion();
+  const reduced = usePrefersReducedMotion();
+  // 화면에 실제로 그려지는 섹션 — 나가는 애니메이션이 끝난 뒤 교체한다
+  const [shown, setShown] = useState(section);
+  const [phase, setPhase] = useState("enter");
+
+  useEffect(() => {
+    if (section === shown) return;
+    if (reduced) {
+      setShown(section);
+      return;
+    }
+    setPhase("out");
+    const timer = setTimeout(() => {
+      setShown(section);
+      setPhase("enter");
+    }, 250);
+    return () => clearTimeout(timer);
+  }, [section, shown, reduced]);
   useSmoothScroll(reduced);
 
   const navigate = useCallback((id, pl = null) => {
@@ -167,7 +186,7 @@ export default function App() {
   useEffect(() => {
     window.__lenis?.scrollTo(0, { immediate: true });
     window.scrollTo({ top: 0, behavior: "instant" });
-  }, [section]);
+  }, [shown]);
 
   const content = {
     profile: <Hero navigate={navigate} />,
@@ -175,7 +194,7 @@ export default function App() {
     alumni: <StudentsSection focus={payload?.focus} />,
     publications: <Publications focus={payload?.focus} />,
     awards: <Awards />,
-  }[section];
+  }[shown];
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -206,12 +225,9 @@ export default function App() {
                 >
                   {t(`nav.${id}`)}
                   {isActive && (
-                    <motion.span
-                      layoutId="nav-active"
-                      className="absolute left-2 right-2 -bottom-[3px] h-[2px] rounded-full bg-accent-400"
-                      transition={
-                        reduced ? { duration: 0 } : { type: "spring", stiffness: 500, damping: 40 }
-                      }
+                    <span
+                      aria-hidden="true"
+                      className="absolute -bottom-[3px] left-2 right-2 h-[2px] rounded-full bg-accent-400"
                     />
                   )}
                 </button>
@@ -225,41 +241,11 @@ export default function App() {
       </nav>
 
       <main className="flex-1 pt-14">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={section}
-            initial={reduced ? { opacity: 1 } : { opacity: 0, y: 20 }}
-            animate={{
-              opacity: 1,
-              y: 0,
-              filter: "blur(0px)",
-              transition: reduced ? { duration: 0 } : { duration: 0.35, ease: "easeOut" },
-            }}
-            exit={
-              reduced
-                ? { opacity: 1, transition: { duration: 0 } }
-                : {
-                    opacity: 0,
-                    y: -20,
-                    filter: "blur(4px)",
-                    transition: { duration: 0.25, ease: "easeIn" },
-                  }
-            }
-            className="relative"
-          >
-            {!reduced && (
-              <motion.div
-                key={`scan-${section}`}
-                aria-hidden="true"
-                className="pointer-events-none absolute inset-x-0 top-0 z-10 h-px bg-gradient-to-r from-transparent via-accent-400/70 to-transparent"
-                initial={{ top: "0%", opacity: 0.7 }}
-                animate={{ top: "100%", opacity: 0 }}
-                transition={{ duration: 0.3, ease: "easeOut" }}
-              />
-            )}
-            {content}
-          </motion.div>
-        </AnimatePresence>
+        {/* 섹션 전환 — 나감 250ms(y-20px, blur 4px) → 들어옴 350ms ease-out.
+            framer-motion 대신 CSS로 처리한다(초기 번들 129KB 절감). */}
+        <div key={shown} className={phase === "out" ? "section-exit" : "section-enter"}>
+          <Suspense fallback={<div className="min-h-[60vh]" />}>{content}</Suspense>
+        </div>
       </main>
 
       <footer className="border-t border-line/60 py-10">
