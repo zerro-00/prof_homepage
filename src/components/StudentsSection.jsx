@@ -104,10 +104,21 @@ function RosterRow({ person, lng, hot, onHover, onSelect, rowRef }) {
         onFocus={onHover ? () => onHover(person) : undefined}
         onClick={onSelect ? () => onSelect(person) : undefined}
         aria-current={hot ? "true" : undefined}
-        className={`flex w-full items-start gap-2.5 rounded-lg px-2.5 py-2 text-left transition-colors focus-visible:outline-2 focus-visible:outline-accent-400 ${
-          hot ? "bg-base-800/80" : "hover:bg-base-800/50"
-        }`}
+        onMouseLeave={(e) => {
+          if (!hot) e.currentTarget.style.background = "";
+        }}
+        onMouseOver={(e) => {
+          if (!hot) e.currentTarget.style.background = "var(--roster-hover)";
+        }}
+        style={hot ? { background: "var(--roster-hot)" } : undefined}
+        className="relative flex w-full items-start gap-2.5 rounded-lg px-2.5 py-2 text-left transition-colors focus-visible:outline-2 focus-visible:outline-accent-400"
       >
+        {/* 활성 표시는 좌측 바 하나로만 */}
+        <span
+          aria-hidden="true"
+          className="absolute bottom-1 left-0 top-1 w-[2px] rounded-full transition-opacity"
+          style={{ background: "var(--pin-active)", opacity: hot ? 1 : 0 }}
+        />
         <span
           aria-hidden="true"
           className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full"

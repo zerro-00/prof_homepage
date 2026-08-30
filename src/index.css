@@ -47,6 +47,10 @@
   --glow-strong: rgba(47, 127, 242, 0.25);
   --glow-soft: rgba(47, 127, 242, 0.15);
 
+  /* 명단 패널에서 지도 핀과 연동돼 강조되는 행 */
+  --roster-hot: rgba(47, 127, 242, 0.14);
+  --roster-hover: rgba(47, 127, 242, 0.07);
+
   --grid-line: rgba(124, 197, 255, 0.045);
   --selection: rgba(47, 127, 242, 0.35);
 
