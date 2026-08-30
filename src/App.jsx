@@ -77,7 +77,7 @@ function LangSwitcher() {
         aria-haspopup="menu"
         aria-expanded={open}
         aria-label="Language"
-        className="inline-flex items-center gap-1.5 rounded-lg border border-line bg-base-850/80 px-2.5 py-1.5 text-ink-500 hover:text-ink-100 hover:border-base-600 transition-colors"
+        className="inline-flex items-center gap-1.5 rounded-lg px-2 py-1.5 text-ink-500 transition-colors hover:bg-base-800/70 hover:text-ink-100 focus-visible:outline-2 focus-visible:outline-accent-400"
       >
         <Globe size={15} strokeWidth={1.8} aria-hidden="true" />
         <span className="font-display text-[10px] font-semibold tracking-wide">
@@ -189,7 +189,7 @@ export default function App() {
             <span className="text-accent-300">JC</span>
             <span className="text-ink-500 ml-2 hidden lg:inline">{t("nav.brand")}</span>
           </button>
-          <div className="flex items-center gap-1 md:gap-2 overflow-x-auto thin-scroll">
+          <div className="flex items-center gap-1 md:gap-2 py-1.5 nav-scroll">
             {SECTION_IDS.map((id) => {
               const isActive = section === id;
               return (

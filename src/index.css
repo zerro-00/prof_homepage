@@ -142,6 +142,19 @@ html[lang="ja"] body {
   mask-image: radial-gradient(ellipse 90% 70% at 50% 30%, black 30%, transparent 75%);
 }
 
+/* 상단 네비의 가로 스크롤 영역 — 스크롤바를 완전히 숨긴다.
+   `overflow-x: auto`는 CSS 규칙상 overflow-y도 auto로 만들고, 활성 탭 언더라인이
+   컨테이너 아래로 3px 넘쳐 세로 스크롤바가 "세로 네모"로 보이던 문제를 여기서 차단한다. */
+.nav-scroll {
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.nav-scroll::-webkit-scrollbar {
+  display: none;
+}
+
 /* thin scrollbar for chip rows */
 .thin-scroll::-webkit-scrollbar {
   height: 6px;

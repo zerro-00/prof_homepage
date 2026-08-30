@@ -96,16 +96,21 @@ export default function Hero({ navigate }) {
             <div className="group relative transition-transform duration-300 hover:-translate-y-0.5">
               <div className="absolute -inset-2 rounded-3xl bg-gradient-to-br from-accent-500/35 via-transparent to-mint-400/20 blur-md opacity-70 transition-opacity duration-300 group-hover:opacity-100" />
               <div className="relative h-64 w-52 md:h-80 md:w-60 overflow-hidden rounded-2xl border border-accent-500/25">
-                <img
-                  src="/profile.jpg"
-                  alt={t("hero.photoAlt")}
-                  loading="eager"
-                  className="h-full w-full object-cover"
-                  onError={(e) => {
-                    e.currentTarget.style.display = "none";
-                    e.currentTarget.nextElementSibling.style.display = "flex";
-                  }}
-                />
+                <picture>
+                  <source srcSet="/profile.webp" type="image/webp" />
+                  <img
+                    src="/profile.jpg"
+                    alt={t("hero.photoAlt")}
+                    width={800}
+                    height={1200}
+                    loading="eager"
+                    className="h-full w-full object-cover object-[center_top]"
+                    onError={(e) => {
+                      e.currentTarget.closest("picture").style.display = "none";
+                      e.currentTarget.closest("picture").nextElementSibling.style.display = "flex";
+                    }}
+                  />
+                </picture>
                 <div
                   className="hidden h-full w-full bg-base-800 items-center justify-center"
                   aria-hidden="true"
