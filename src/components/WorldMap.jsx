@@ -1,8 +1,8 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ComposableMap, Geographies, Geography, Marker } from "react-simple-maps";
 import { geoNaturalEarth1 } from "d3-geo";
-import { CITY_PINS } from "../data/alumni.js";
+import { CITY_PINS, MEMBERS_PIN } from "../data/alumni.js";
 import { localizeField } from "../i18n/index.js";
 import { worksForStudent } from "../data/publications.js";
 import geoData from "../data/countries-110m.json";
@@ -45,6 +45,46 @@ function layoutPins(pins) {
     }
   });
   return pts;
+}
+
+/* ---- 서울에서 뻗어나가는 호 (§4-1) ----
+   국내(서울·세종·연세)는 거리가 짧아 점으로 보이므로 호를 그리지 않는다. */
+const SEOUL = [126.978, 37.5665];
+const ARC_DRAW_MS = 500;
+const ARC_STAGGER_MS = 120; // 8개 도시 × 120ms + 500ms = 1.34초 (1.5초 이내)
+const DOMESTIC = new Set(["seoul", "sejong", "yonsei"]);
+const ARCS_SEEN_KEY = "alumni-arcs-drawn";
+
+/* 화면 좌표에서 2차 베지에로 호를 그린다.
+   ⚠️ 처음엔 지령대로 geoInterpolate(대권)를 썼는데, 서울↔북미는 대권이 북극을 지나
+   NaturalEarth1 투영에서 지도 위쪽 밖으로 나가 잘리고 가로줄처럼 보였다.
+   투영 좌표의 중점을 위로 들어 올리는 방식이 항상 지도 안에 머물고 의도한 "뻗어나가는 호"로 읽힌다. */
+function arcPath(to) {
+  const a = PROJECTION(SEOUL);
+  const b = PROJECTION(to);
+  if (!a || !b) return null;
+  const dist = Math.hypot(b[0] - a[0], b[1] - a[1]);
+  const bulge = Math.min(dist * 0.18, 60);
+  const cx = (a[0] + b[0]) / 2;
+  const cy = Math.max(10, (a[1] + b[1]) / 2 - bulge);
+  return `M${a[0].toFixed(1)} ${a[1].toFixed(1)} Q${cx.toFixed(1)} ${cy.toFixed(1)} ${b[0].toFixed(1)} ${b[1].toFixed(1)}`;
+}
+
+// 서울에서 가까운 곳부터 그린다
+function buildArcs(pins) {
+  return pins
+    .filter((p) => !DOMESTIC.has(p.id))
+    .map((pin) => ({
+      id: pin.id,
+      faculty: pin.entries.some((e) => e.isFaculty),
+      d: arcPath(pin.coordinates),
+      dist: Math.hypot(
+        (PROJECTION(pin.coordinates) ?? [0, 0])[0] - (PROJECTION(SEOUL) ?? [0, 0])[0],
+        (PROJECTION(pin.coordinates) ?? [0, 0])[1] - (PROJECTION(SEOUL) ?? [0, 0])[1]
+      ),
+    }))
+    .filter((a) => a.d)
+    .sort((a, b) => a.dist - b.dist);
 }
 
 function displayName(entry, lng) {
@@ -154,7 +194,39 @@ export default function WorldMap({
 }) {
   const { t, i18n } = useTranslation();
   const lng = i18n.language;
-  const laid = useMemo(() => layoutPins(CITY_PINS), []);
+  const allPins = useMemo(() => [...CITY_PINS, MEMBERS_PIN], []);
+  const laid = useMemo(() => layoutPins(allPins), [allPins]);
+  const arcs = useMemo(() => buildArcs(CITY_PINS), []);
+
+  // 섹션 진입 시 순차 드로잉. 재진입(sessionStorage)이나 reduced-motion이면 즉시 최종 상태.
+  const reducedRef = useRef(
+    typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  );
+  const seenRef = useRef(
+    typeof sessionStorage !== "undefined" && sessionStorage.getItem(ARCS_SEEN_KEY) === "1"
+  );
+  const instant = reducedRef.current || seenRef.current;
+
+  // 애니메이션이 끝나면 재진입 시 생략하도록 기록
+  useEffect(() => {
+    if (instant) return;
+    const total = ARC_STAGGER_MS * Math.max(0, arcs.length - 1) + ARC_DRAW_MS;
+    const timer = setTimeout(() => {
+      try {
+        sessionStorage.setItem(ARCS_SEEN_KEY, "1");
+      } catch {
+        /* 프라이빗 모드 등 — 무시 */
+      }
+    }, total);
+    return () => clearTimeout(timer);
+  }, [instant, arcs.length]);
+
+  const arcDelay = (i) => (instant ? 0 : i * ARC_STAGGER_MS);
+  const pinDelay = (id) => {
+    const i = arcs.findIndex((a) => a.id === id);
+    return i < 0 || instant ? 0 : arcDelay(i) + ARC_DRAW_MS * 0.7;
+  };
 
   return (
     <div>
@@ -206,9 +278,35 @@ export default function WorldMap({
             }
           </Geographies>
 
+          {/* 호 — 핀보다 아래에 깔린다 */}
+          <g aria-hidden="true" fill="none" strokeLinecap="round">
+            {arcs.map((a, i) => {
+              const dim = highlightPinId && highlightPinId !== a.id;
+              const lit = highlightPinId === a.id;
+              const base = a.faculty ? 0.3 : 0.22;
+              return (
+                <path
+                  key={a.id}
+                  className={`arc-line${instant ? " is-instant" : ""}`}
+                  d={a.d}
+                  pathLength="1"
+                  strokeWidth={0.8}
+                  strokeDasharray="1"
+                  style={{
+                    stroke: a.faculty ? "var(--arc-faculty)" : "var(--arc)",
+                    opacity: dim ? 0.08 : lit ? 0.6 : base,
+                    animationDelay: `${arcDelay(i)}ms`,
+                    transition: "opacity .2s",
+                  }}
+                />
+              );
+            })}
+          </g>
+
           {laid.map(({ pin, dx, dy }) => {
             const inTab = activePinIds.has(pin.id);
             const isHot = highlightPinId === pin.id;
+            const isMembers = !!pin.isMembers;
             const isFaculty = pin.entries.some((e) => e.isFaculty);
             const core = isFaculty ? "var(--pin-faculty)" : "var(--pin)";
             const coreActive = isFaculty ? "var(--pin-faculty-active)" : "var(--pin-active)";
@@ -241,7 +339,8 @@ export default function WorldMap({
                     transform={`translate(${dx} ${dy}) scale(${isHot ? 1.4 : 1})`}
                     style={{ transition: "transform .18s" }}
                   >
-                    {(isHot || isFaculty) && (
+                    {/* 호가 도착하면 핀 팝인 */}
+                    {(isHot || (isFaculty && !isMembers)) && (
                       <circle
                         r={6}
                         fill="none"
@@ -250,15 +349,33 @@ export default function WorldMap({
                         style={{ stroke: ring }}
                       />
                     )}
-                    <circle
-                      r={r}
-                      strokeWidth={1.5}
-                      style={{
-                        fill: isHot ? coreActive : core,
-                        stroke: "var(--pin-stroke)",
-                        transition: "all .2s",
-                      }}
-                    />
+                    <g
+                      className={`pin-pop${instant ? " is-instant" : ""}`}
+                      style={{ animationDelay: `${pinDelay(pin.id)}ms` }}
+                    >
+                    {isMembers ? (
+                      /* 재학생 — 외곽선만 있는 중공 원 */
+                      <circle
+                        r={r}
+                        fill="none"
+                        strokeWidth={1.6}
+                        style={{
+                          stroke: isHot ? "var(--pin-active)" : "var(--color-accent-300)",
+                          transition: "all .2s",
+                        }}
+                      />
+                    ) : (
+                      <circle
+                        r={r}
+                        strokeWidth={1.5}
+                        style={{
+                          fill: isHot ? coreActive : core,
+                          stroke: "var(--pin-stroke)",
+                          transition: "all .2s",
+                        }}
+                      />
+                    )}
+                    </g>
                     {pin.entries.length > 1 && (
                       <text
                         textAnchor="middle"

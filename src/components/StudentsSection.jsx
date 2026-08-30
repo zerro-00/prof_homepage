@@ -1,7 +1,7 @@
 import { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Collapse, Reveal, SectionHeading, TopStar, useAnchorScroll } from "./common.jsx";
-import { CITY_PINS, CURRENT_MEMBERS } from "../data/alumni.js";
+import { CITY_PINS, CURRENT_MEMBERS, MEMBERS_PIN } from "../data/alumni.js";
 import { worksForStudent } from "../data/publications.js";
 import { localizeField } from "../i18n/index.js";
 
@@ -207,7 +207,10 @@ function AlumniCard({ entry, lng, faculty = false }) {
   );
 }
 
-const TAB_KEYS = ["faculty", "phd", "industry", "members"];
+// 맨 앞 "전체"(졸업생 13 + 재학생 4 = 17)가 기본 선택 (§4-2)
+const MEMBER_IDS = new Set(CURRENT_MEMBERS.map((m) => m.personId));
+
+const TAB_KEYS = ["all", "faculty", "phd", "industry", "members"];
 
 export default function StudentsSection({ focus = null }) {
   const { t, i18n } = useTranslation();
@@ -216,7 +219,7 @@ export default function StudentsSection({ focus = null }) {
   const mapRef = useRef(null);
   const rowRefs = useRef({});
 
-  const [tab, setTab] = useState(() => (TAB_KEYS.includes(focus) ? focus : "faculty"));
+  const [tab, setTab] = useState(() => (TAB_KEYS.includes(focus) ? focus : "all"));
   const [hoverPin, setHoverPin] = useState(null);
   const [pinnedPin, setPinnedPin] = useState(null);
 
@@ -243,12 +246,19 @@ export default function StudentsSection({ focus = null }) {
       faculty: all.filter((e) => e.isFaculty),
       phd: all.filter((e) => !e.isFaculty && e.personId !== "lee-jiyeon"),
       industry: all.filter((e) => e.personId === "lee-jiyeon"),
-      members: CURRENT_MEMBERS.map((m) => ({ ...m, _pinId: null })),
+      members: CURRENT_MEMBERS.map((m) => ({
+        ...m,
+        _pinId: MEMBERS_PIN.id,
+        _city: localizeField(MEMBERS_PIN, "city", lng),
+        _country: localizeField(MEMBERS_PIN, "country", lng),
+      })),
     }),
-    [all]
+    [all, lng]
   );
 
-  const current = groups[tab];
+  // "전체"는 그룹 헤더로 구분해 전원을 보여준다
+  const ORDER = ["faculty", "phd", "industry", "members"];
+  const current = tab === "all" ? ORDER.flatMap((k) => groups[k]) : groups[tab];
   // 현재 탭에 해당하는 핀 — 지도와 명단에 같은 필터가 걸린다
   const activePinIds = useMemo(
     () => new Set(current.map((p) => p._pinId).filter(Boolean)),
@@ -257,7 +267,7 @@ export default function StudentsSection({ focus = null }) {
 
   const highlightPinId = pinnedPin ?? hoverPin;
   const shownPin = useMemo(
-    () => CITY_PINS.find((p) => p.id === (pinnedPin ?? hoverPin)) ?? null,
+    () => [...CITY_PINS, MEMBERS_PIN].find((p) => p.id === (pinnedPin ?? hoverPin)) ?? null,
     [pinnedPin, hoverPin]
   );
 
@@ -282,7 +292,7 @@ export default function StudentsSection({ focus = null }) {
   const tabItems = TAB_KEYS.map((k) => ({
     key: k,
     label: t(`students.tab${k[0].toUpperCase()}${k.slice(1)}`),
-    count: groups[k].length,
+    count: k === "all" ? ORDER.reduce((n, g) => n + groups[g].length, 0) : groups[k].length,
   }));
 
   const badges = t("map.badges", { returnObjects: true });
@@ -351,22 +361,35 @@ export default function StudentsSection({ focus = null }) {
               data-lenis-prevent
               className="thin-scroll -mx-1 max-h-[380px] overflow-y-auto px-1 lg:max-h-[420px]"
             >
-              {current.map((p) => (
-                <RosterRow
-                  key={p.personId}
-                  person={p}
-                  lng={lng}
-                  hot={!!p._pinId && highlightPinId === p._pinId}
-                  onHover={p._pinId ? (x) => setHoverPin(x._pinId) : undefined}
-                  onSelect={p._pinId ? (x) => onSelectPin(x._pinId) : undefined}
-                  rowRef={(el) => {
-                    if (p._pinId) rowRefs.current[p._pinId] = el;
-                  }}
-                />
+              {(tab === "all" ? ORDER : [tab]).map((g) => (
+                <li key={g}>
+                  {tab === "all" && (
+                    <p className="mb-1 mt-3 px-2.5 font-display text-[10px] uppercase tracking-[0.18em] text-ink-600 first:mt-0">
+                      {t(`students.tab${g[0].toUpperCase()}${g.slice(1)}`)}
+                    </p>
+                  )}
+                  <ul>
+                    {groups[g].map((p) => (
+                      <RosterRow
+                        key={p.personId}
+                        person={p}
+                        lng={lng}
+                        hot={!!p._pinId && highlightPinId === p._pinId}
+                        onHover={p._pinId ? (x) => setHoverPin(x._pinId) : undefined}
+                        onSelect={p._pinId ? (x) => onSelectPin(x._pinId) : undefined}
+                        rowRef={(el) => {
+                          if (p._pinId && !rowRefs.current[p._pinId]) rowRefs.current[p._pinId] = el;
+                        }}
+                      />
+                    ))}
+                  </ul>
+                </li>
               ))}
             </ul>
             <p className="mt-2 hidden px-2.5 text-[11px] leading-relaxed text-ink-600 lg:block">
               {t("students.rosterHint")}
+              <br />
+              {t("students.worksHint")}
             </p>
           </div>
         </div>
@@ -446,9 +469,9 @@ export default function StudentsSection({ focus = null }) {
             tab === "faculty" ? "md:grid-cols-2" : "sm:grid-cols-2 lg:grid-cols-3"
           }`}
         >
-          {current.map((e, i) => (
+          {(tab === "all" ? current : current).map((e, i) => (
             <Reveal key={e.personId} delay={(i % 3) * 60} className="h-full">
-              {tab === "members" ? (
+              {MEMBER_IDS.has(e.personId) ? (
                 <div className="h-full rounded-2xl border border-line bg-base-850/80 p-4">
                   <div className="flex items-start justify-between gap-2">
                     <span className="inline-flex items-center gap-2 text-sm font-medium text-ink-100">
@@ -468,7 +491,7 @@ export default function StudentsSection({ focus = null }) {
                   <WorksAccordion works={worksForStudent(e.personId)} />
                 </div>
               ) : (
-                <AlumniCard entry={e} lng={lng} faculty={tab === "faculty"} />
+                <AlumniCard entry={e} lng={lng} faculty={!!e.isFaculty} />
               )}
             </Reveal>
           ))}

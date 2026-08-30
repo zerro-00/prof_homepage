@@ -172,6 +172,55 @@ html[lang="ja"] body {
   }
 }
 
+/* ---- 서울에서 뻗어나가는 호 (§4-1) ----
+   rAF 상태 전환에 기대면 배경 탭에서 그려지지 않으므로 CSS 애니메이션으로 처리한다.
+   fill-mode both — 지연 전에는 offset 1(안 그려짐), 끝나면 0(완성)에서 정지. */
+@keyframes arc-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+.arc-line {
+  stroke-dashoffset: 1;
+  animation: arc-draw 500ms ease-out both;
+}
+.arc-line.is-instant {
+  animation: none;
+  stroke-dashoffset: 0;
+}
+
+@keyframes pin-pop {
+  from {
+    transform: scale(0.2);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+.pin-pop {
+  animation: pin-pop 260ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  transform-origin: center;
+  transform-box: fill-box;
+}
+.pin-pop.is-instant {
+  animation: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .arc-line {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+  .pin-pop {
+    animation: none;
+  }
+}
+
 /* ---- map pin pulse ---- */
 @keyframes pin-pulse {
   0% {

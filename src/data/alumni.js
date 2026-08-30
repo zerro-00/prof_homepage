@@ -345,3 +345,22 @@ export const CURRENT_MEMBERS = [
   //       동명이인이 매우 많아 웹 검색으로 특정 불가 → 현재 배정 논문 0편.
   { personId: "kim-yeonjeong", nameKo: "김연정", nameEn: null },
 ];
+
+// 재학생은 연세대(신촌) 위치에 중공(hollow) 원으로 표시한다 (§4-3).
+// ⚠️ 졸업생 집계(CITY_PINS)에는 넣지 않는다 — check-authorship 규칙 7이 13명을 강제한다.
+export const MEMBERS_PIN = {
+  id: "yonsei",
+  region: "YONSEI, SEOUL",
+  lang: {
+    en: { city: "Seoul", country: "South Korea" },
+    zh: { city: "首尔", country: "韩国" },
+    ja: { city: "ソウル", country: "韓国" },
+  },
+  city: "서울",
+  country: "대한민국",
+  coordinates: [126.9387, 37.5652],
+  labelDx: 10,
+  labelDy: 16,
+  isMembers: true,
+  entries: CURRENT_MEMBERS,
+};
