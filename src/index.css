@@ -11,73 +11,197 @@
     system-ui, "Segoe UI", sans-serif;
   --font-display: "Space Grotesk", "Pretendard Variable", sans-serif;
 
-  /* 세련된 네이비 — 형광 파랑을 걷어내고 채도를 낮춘 슬레이트 블루로 (§2)
-     대비 실측값은 CLAUDE.md 참조 */
-  --color-base-950: #080e1a;
-  --color-base-900: #0e1729;
-  --color-base-850: #131e36;
-  --color-base-800: #182545;
-  --color-base-700: #21315a;
-  --color-base-600: #2e4370;
-  --color-line: rgba(148, 173, 208, 0.14);
+  /* ⚠️ design-v3 — Yonsei Blue Field (§10).
+     값은 [data-surface] 블록에서 면(FIELD/PAPER)별로 다시 선언된다.
+     여기 값은 FIELD 기준 기본값이다. 컴포넌트는 main과 100% 동일하다. */
+  --color-base-950: #00295c;
+  --color-base-900: #002f68;
+  --color-base-850: #003876;
+  --color-base-800: #0f4a93;
+  --color-base-700: #1f5aa6;
+  --color-base-600: #3a74be;
+  --color-line: rgba(245, 242, 234, 0.16);
 
-  --color-ink-100: #eef1f7;
-  --color-ink-300: #afbacd;
-  --color-ink-500: #7e8aa0;
-  --color-ink-600: #7a86a3;
+  --color-ink-100: #f5f2ea;
+  --color-ink-300: #b9c6de;
+  --color-ink-500: #a5b6d4;
+  --color-ink-600: #8ea2c4;
 
-  /* 포인트 — 형광 제거 */
-  --color-accent-300: #a9c0e0;
-  --color-accent-400: #8fadd6;
-  --color-accent-500: #5b7cae;
-  --color-accent-600: #2e4a7a;
+  --color-accent-300: #a9c6ea;
+  --color-accent-400: #7fa8e0;
+  --color-accent-500: #4f7ec0;
+  --color-accent-600: #003876;
   --color-yonsei: #003876;
 
-  /* 골드 — 교수 임용·수상 ★ 전용 */
   --color-gold-300: #dcc28c;
   --color-gold-400: #c9a96e;
-  --color-gold-500: #a8874d;
+  --color-gold-500: #c9a96e;
 
-  --color-mint-400: #7fb3a8;
+  --color-mint-400: #86c3b6;
 }
 
 /* Tailwind 유틸리티가 아니라 var()로만 참조하는 색 — SVG 지도, 그라디언트, 선택 영역.
    §1-7: SSCI/KCI는 "3px 바"와 "12px 텍스트"가 요구 대비가 달라 토큰을 분리한다.
    바는 비텍스트 3:1, 텍스트는 4.5:1 이상. (v1 실측값은 CLAUDE.md 참조) */
 :root {
-  /* SSCI/KCI — 3px 바와 12px 텍스트는 요구 대비가 달라 토큰을 나눈다 (바 3:1, 텍스트 4.5:1) */
-  --ssci-bar: #5b7cae;
-  --ssci-text: #8fadd6;
-  --kci-bar: #5f9a8e;
-  --kci-text: #7fb3a8;
+  /* ---- Yonsei Blue Field 팔레트 (§10) ---- */
+  --field: #00295c;
+  --field-2: #003876;
+  --field-3: #0a1e42;
+  --paper: #f5f2ea;
+  --paper-2: #e9e4d8;
+  --ink: #10203c;
+  --ink-2: #46536b;
+  --ivory: #f5f2ea;
+  --ivory-2: #b9c6de;
+  --gold: #c9a96e;
+  --gold-ink: #7a5f2f;
+  --sky: #7fa8e0;
+  --rule-light: rgba(245, 242, 234, 0.16);
+  --rule-dark: #d5cfc1;
 
-  /* 발광(글로우) — v3는 transparent로 끈다 */
-  --glow-strong: rgba(46, 74, 122, 0.3);
-  --glow-soft: rgba(46, 74, 122, 0.18);
+  /* FIELD 기본값 */
+  --ssci-bar: #7fa8e0;
+  --ssci-text: #7fa8e0;
+  --kci-bar: #c9a96e;
+  --kci-text: #dcc28c;
 
-  --grid-line: rgba(169, 192, 224, 0.04);
-  --selection: rgba(46, 74, 122, 0.45);
-  --hero-glow: rgba(46, 74, 122, 0.42);
+  --glow-strong: transparent;
+  --glow-soft: transparent;
+  --grid-line: transparent;
+  --selection: rgba(0, 56, 118, 0.5);
+  --hero-glow: transparent;
 
-  /* 명단 패널에서 지도 핀과 연동돼 강조되는 행 */
-  --roster-hot: rgba(143, 173, 214, 0.13);
-  --roster-hover: rgba(143, 173, 214, 0.06);
+  --roster-hot: rgba(127, 168, 224, 0.16);
+  --roster-hover: rgba(127, 168, 224, 0.08);
 
-  /* 세계지도 */
-  --map-land: #16213a;
-  --map-land-hover: #1d2b48;
-  --map-stroke: rgba(148, 173, 208, 0.14);
-  --map-glow: rgba(46, 74, 122, 0.16);
-  --map-label: #7a86a3;
-  --pin-stroke: #0e1729;
-  --pin: #8fadd6;
-  --pin-active: #cfdcf0;
-  --pin-ring: #8fadd6;
+  --map-land: #003876;
+  --map-land-hover: #0f4a93;
+  --map-stroke: rgba(245, 242, 234, 0.16);
+  --map-glow: transparent;
+  --map-label: #a5b6d4;
+  --pin-stroke: #00295c;
+  --pin: #7fa8e0;
+  --pin-active: #d8e4f6;
+  --pin-ring: #7fa8e0;
   --pin-faculty: #c9a96e;
-  --pin-faculty-active: #dcc28c;
-  /* 서울에서 뻗어나가는 호 (§4-1) */
-  --arc: #5b7cae;
-  --arc-faculty: #a8874d;
+  --pin-faculty-active: #e3cd9c;
+  --arc: #7fa8e0;
+  --arc-faculty: #c9a96e;
+}
+
+/* ============================================================
+   면 교대 (§10) — 컴포넌트의 data-surface 훅만 보고 CSS로 처리한다.
+   ⚠️ Tailwind의 --color-* 는 선언된 곳에서 값이 확정되므로, 면마다 전부 다시 선언해야 한다.
+   (입력 변수만 바꾸면 :root에서 확정된 값이 그대로 상속된다)
+   ============================================================ */
+[data-surface="field"],
+[data-surface="deep"] {
+  --color-base-900: #002f68;
+  --color-base-850: #003876;
+  --color-base-800: #0f4a93;
+  --color-base-700: #1f5aa6;
+  --color-base-600: #3a74be;
+  --color-line: rgba(245, 242, 234, 0.16);
+  --color-ink-100: #f5f2ea;
+  --color-ink-300: #b9c6de;
+  --color-ink-500: #a5b6d4;
+  --color-ink-600: #8ea2c4;
+  --color-accent-300: #a9c6ea;
+  --color-accent-400: #7fa8e0;
+  --color-accent-500: #4f7ec0;
+  --color-gold-300: #dcc28c;
+  --color-gold-400: #c9a96e;
+  --color-gold-500: #c9a96e;
+  --color-mint-400: #86c3b6;
+  --ssci-bar: #7fa8e0;
+  --ssci-text: #7fa8e0;
+  --kci-bar: #c9a96e;
+  --kci-text: #dcc28c;
+  --roster-hot: rgba(127, 168, 224, 0.16);
+  --roster-hover: rgba(127, 168, 224, 0.08);
+  background-color: var(--field);
+  color: var(--ivory);
+}
+
+[data-surface="deep"] {
+  background-color: var(--field-3);
+}
+
+[data-surface="paper"] {
+  --color-base-950: #f5f2ea;
+  --color-base-900: #f5f2ea;
+  --color-base-850: #e9e4d8;
+  --color-base-800: #e9e4d8;
+  --color-base-700: #d9d3c5;
+  --color-base-600: #c7c0b0;
+  --color-line: #d5cfc1;
+  --color-ink-100: #10203c;
+  --color-ink-300: #46536b;
+  --color-ink-500: #5c6880;
+  --color-ink-600: #616c85;
+  --color-accent-300: #003876;
+  --color-accent-400: #003876;
+  --color-accent-500: #003876;
+  --color-accent-600: #00295c;
+  /* paper 면에 밝은 골드 금지 — 대비 미달 */
+  --color-gold-300: #7a5f2f;
+  --color-gold-400: #7a5f2f;
+  --color-gold-500: #7a5f2f;
+  --color-mint-400: #7a5f2f;
+  --ssci-bar: #003876;
+  --ssci-text: #003876;
+  --kci-bar: #7a5f2f;
+  --kci-text: #7a5f2f;
+  --glow-strong: transparent;
+  --glow-soft: transparent;
+  --roster-hot: rgba(0, 56, 118, 0.09);
+  --roster-hover: rgba(0, 56, 118, 0.045);
+  background-color: var(--paper);
+  color: var(--ink);
+}
+
+/* 면 경계는 그라디언트 없이 딱 끊고 1px 골드 헤어라인 */
+[data-surface="field"],
+[data-surface="paper"],
+[data-surface="deep"] {
+  border-top: 1px solid var(--gold);
+}
+#profile[data-surface="field"] {
+  border-top: 0;
+}
+
+/* 히어로는 --field 단색 (§10) — 그리드 패턴과 글로우를 끈다.
+   두 장식 레이어 모두 aria-hidden이라 컴포넌트를 건드리지 않고 CSS로 제거할 수 있다. */
+#profile > [aria-hidden="true"] {
+  display: none;
+}
+/* 사진 뒤 그라디언트 글로우 제거 + 테두리는 rule-light 1px */
+#profile .blur-md {
+  display: none;
+}
+#profile picture {
+  display: block;
+}
+#profile .rounded-2xl.border {
+  border-color: var(--rule-light);
+}
+
+/* 히어로 안의 프로필 상세는 PAPER 면 — 좌우로 꽉 차게 뽑아낸다 */
+#profile [data-surface="paper"] {
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  padding: 3.5rem max(1.25rem, calc(50vw - 36rem)) 4rem;
+}
+
+/* 섹션 자체가 면이 되므로 좌우 여백을 면 안쪽으로 */
+#interests[data-surface],
+#alumni[data-surface],
+#publications[data-surface],
+#awards[data-surface] {
+  max-width: none;
+  padding-left: max(1.25rem, calc(50vw - 36rem));
+  padding-right: max(1.25rem, calc(50vw - 36rem));
 }
 
 /* ---- 스크롤 ---- */
@@ -93,7 +217,8 @@ html {
 }
 
 body {
-  background-color: var(--color-base-950);
+  background-color: var(--field);
+  transition: background-color 220ms linear;
   color: var(--color-ink-100);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
