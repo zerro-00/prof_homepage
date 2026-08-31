@@ -97,17 +97,11 @@ function PaperCard({ paper }) {
         className="absolute inset-y-0 left-0 w-[3px]"
         style={{ background: paper.type === "SSCI" ? "var(--ssci-bar)" : "var(--kci-bar)" }}
       />
-      <span
-        aria-hidden="true"
-        className="absolute right-4 top-4 font-display text-sm text-ink-600 opacity-0 transition-all duration-200 group-hover:text-accent-300 group-hover:opacity-100 group-focus-visible:opacity-100"
-      >
-        ↗
-      </span>
       <a
         href={paperUrl(paper)}
         target="_blank"
         rel="noopener noreferrer"
-        aria-label={`${paper.title} — ${t("pubsUI.openLink")}`}
+        aria-label={t("pubsUI.openPaperAria", { title: paper.title })}
         className="block p-5 pl-6 focus-visible:outline-2 focus-visible:outline-accent-400 md:p-6 md:pl-7"
       >
       <div className="mb-3 flex flex-wrap items-center gap-2 pr-6">
@@ -123,6 +117,23 @@ function PaperCard({ paper }) {
       </div>
       <h4 className="text-[15px] font-semibold leading-snug text-ink-100 transition-colors group-hover:text-accent-300 md:text-base">
         <Highlight text={paper.title} />
+        {/* 원문으로 나간다는 표시 — 제목 바로 뒤 12px 아이콘 (21차 §3) */}
+        <svg
+          aria-hidden="true"
+          width="12"
+          height="12"
+          viewBox="0 0 12 12"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.4"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="ml-1.5 inline-block shrink-0 -translate-y-px text-ink-500 transition-colors group-hover:text-accent-300"
+        >
+          <path d="M4.5 1.5h6v6" />
+          <path d="M10.5 1.5 5 7" />
+          <path d="M9 7.5v3H1.5V3h3" />
+        </svg>
       </h4>
       <p className="mt-3 text-[13px] leading-relaxed text-ink-300 md:text-sm">
         {t(`pubs.${paper.id}`)}
@@ -149,7 +160,10 @@ function PaperCard({ paper }) {
               {a.personId ? (
                 <button
                   type="button"
-                  onClick={() => navigate?.("alumni", { person: a.personId })}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    navigate?.("alumni", { person: a.personId });
+                  }}
                   aria-label={t("pubsUI.personAria", { name: a.name })}
                   className="rounded text-accent-400 underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-accent-400"
                 >

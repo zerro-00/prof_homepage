@@ -1149,9 +1149,9 @@ export function authorsWithLinks(paper) {
 // KCI 논문은 KCI 포털 검색, SSCI 논문은 Google Scholar 검색으로 폴백
 export function paperUrl(p) {
   if (p.doi) return `https://doi.org/${p.doi}`;
-  if (p.type === "KCI")
-    return `https://www.kci.go.kr/kciportal/po/search/poSereArtiSearList.kci?searchQuery=${encodeURIComponent(p.title)}`;
-  return `https://scholar.google.com/scholar?q=${encodeURIComponent(`"${p.title}" Jeonghye Choi`)}`;
+  // DOI가 없으면 Google Scholar 제목 정확일치 검색 (21차 §3).
+  // ⚠️ DOI를 추측해서 만들지 말 것.
+  return `https://scholar.google.com/scholar?q=${encodeURIComponent(`"${p.title}"`)}`;
 }
 
 // ---------------------------------------------------------------

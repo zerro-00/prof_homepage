@@ -321,7 +321,8 @@
     "clearSearch": "× Clear search",
     "searchResult": "{{count}} results for “{{query}}”",
     "noResults": "No results. Try a different word.",
-    "clearAllFilters": "Clear all filters"
+    "clearAllFilters": "Clear all filters",
+    "openPaperAria": "Open the original of {{title}}"
   },
   "keywords": {
     "모바일·앱": "Mobile & Apps",

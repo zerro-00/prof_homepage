@@ -321,7 +321,8 @@
     "clearSearch": "× 清除搜索",
     "searchResult": "“{{query}}” 的搜索结果 {{count}} 篇",
     "noResults": "没有找到结果。请尝试其他关键词。",
-    "clearAllFilters": "清除全部筛选"
+    "clearAllFilters": "清除全部筛选",
+    "openPaperAria": "查看 {{title}} 原文"
   },
   "keywords": {
     "모바일·앱": "移动·应用",

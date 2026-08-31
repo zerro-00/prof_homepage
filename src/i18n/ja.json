@@ -321,7 +321,8 @@
     "clearSearch": "× 検索を解除",
     "searchResult": "「{{query}}」の検索結果 {{count}}件",
     "noResults": "検索結果がありません。別の語で試してください。",
-    "clearAllFilters": "絞り込みをすべて解除"
+    "clearAllFilters": "絞り込みをすべて解除",
+    "openPaperAria": "{{title}} の原文を見る"
   },
   "keywords": {
     "모바일·앱": "モバイル・アプリ",

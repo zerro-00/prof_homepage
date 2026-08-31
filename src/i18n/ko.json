@@ -321,7 +321,8 @@
     "clearSearch": "× 검색 해제",
     "searchResult": "\"{{query}}\" 검색 결과 {{count}}편",
     "noResults": "검색 결과가 없습니다. 다른 단어로 찾아보세요.",
-    "clearAllFilters": "필터 전체 해제"
+    "clearAllFilters": "필터 전체 해제",
+    "openPaperAria": "{{title}} 원문 보기"
   },
   "keywords": {
     "모바일·앱": "모바일·앱",
