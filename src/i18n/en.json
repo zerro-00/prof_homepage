@@ -316,7 +316,12 @@
     "prevPage": "← Prev",
     "nextPage": "Next →",
     "pageAria": "Go to page {{page}}",
-    "pageRange": "{{total}} publications · showing {{from}}–{{to}}"
+    "pageRange": "{{total}} publications · showing {{from}}–{{to}}",
+    "searchPlaceholder": "Search by title, author, or keyword",
+    "clearSearch": "× Clear search",
+    "searchResult": "{{count}} results for “{{query}}”",
+    "noResults": "No results. Try a different word.",
+    "clearAllFilters": "Clear all filters"
   },
   "keywords": {
     "모바일·앱": "Mobile & Apps",

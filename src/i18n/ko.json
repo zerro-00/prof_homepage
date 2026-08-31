@@ -316,7 +316,12 @@
     "prevPage": "← 이전",
     "nextPage": "다음 →",
     "pageAria": "{{page}}페이지로 이동",
-    "pageRange": "전체 논문 {{total}}편 · {{from}}–{{to}} 표시 중"
+    "pageRange": "전체 논문 {{total}}편 · {{from}}–{{to}} 표시 중",
+    "searchPlaceholder": "제목·저자·키워드로 검색",
+    "clearSearch": "× 검색 해제",
+    "searchResult": "\"{{query}}\" 검색 결과 {{count}}편",
+    "noResults": "검색 결과가 없습니다. 다른 단어로 찾아보세요.",
+    "clearAllFilters": "필터 전체 해제"
   },
   "keywords": {
     "모바일·앱": "모바일·앱",

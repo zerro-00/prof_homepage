@@ -17,6 +17,58 @@ import {
 // 논문 → 제자 이동(§5-2)을 카드 깊숙한 곳까지 prop으로 끌고 내려가지 않기 위한 컨텍스트
 const NavContext = createContext(null);
 
+// 검색어(21차 §5) — 카드 안 제목·저자 하이라이트에만 쓴다
+const QueryContext = createContext("");
+
+const normalize = (v) => v.trim().toLowerCase();
+
+/* 매칭 구간만 <mark>로 감싼다. 하이라이트는 제목·저자에만 (요약문에는 하지 않는다). */
+function Highlight({ text }) {
+  const query = normalize(useContext(QueryContext));
+  if (!query || !text) return text;
+  const lower = String(text).toLowerCase();
+  const parts = [];
+  let from = 0;
+  for (;;) {
+    const at = lower.indexOf(query, from);
+    if (at === -1) break;
+    if (at > from) parts.push(String(text).slice(from, at));
+    parts.push(
+      <mark
+        key={`${at}-${parts.length}`}
+        className="rounded-[3px] bg-accent-500/25 text-inherit"
+      >
+        {String(text).slice(at, at + query.length)}
+      </mark>
+    );
+    from = at + query.length;
+  }
+  if (!parts.length) return text;
+  if (from < String(text).length) parts.push(String(text).slice(from));
+  return parts;
+}
+
+/* 검색 대상: 제목 · 저널명 · 저자명(원문 표기 + 제자의 한글·영문 표기) · 키워드(원문·번역) ·
+   연도 · 3줄 요약(번역). 요약을 넣는 이유 — SSCI 논문은 제목이 영문뿐이라
+   한국어 검색어로는 요약 말고 걸릴 데가 없다. 형태소 분석 없이 부분 일치로 충분하다. */
+function haystack(paper, t) {
+  const names = authorsWithLinks(paper).flatMap((a) =>
+    a.person ? [a.name, a.person.nameKo, a.person.nameEn] : [a.name]
+  );
+  return [
+    paper.title,
+    paper.journal,
+    String(paper.year),
+    t(`pubs.${paper.id}`),
+    ...names,
+    ...paper.keywords,
+    ...paper.keywords.map((k) => t(`keywords.${k}`)),
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+}
+
 /* ---------- SSCI / KCI 타입 태그 ---------- */
 function TypeTag({ type }) {
   return (
@@ -70,7 +122,7 @@ function PaperCard({ paper }) {
         </span>
       </div>
       <h4 className="text-[15px] font-semibold leading-snug text-ink-100 transition-colors group-hover:text-accent-300 md:text-base">
-        {paper.title}
+        <Highlight text={paper.title} />
       </h4>
       <p className="mt-3 text-[13px] leading-relaxed text-ink-300 md:text-sm">
         {t(`pubs.${paper.id}`)}
@@ -101,10 +153,10 @@ function PaperCard({ paper }) {
                   aria-label={t("pubsUI.personAria", { name: a.name })}
                   className="rounded text-accent-400 underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-accent-400"
                 >
-                  {a.name}
+                  <Highlight text={a.name} />
                 </button>
               ) : (
-                a.name
+                <Highlight text={a.name} />
               )}
             </span>
           ))}
@@ -214,11 +266,62 @@ function DetailHeading({ title, count, onBack, backLabel }) {
   );
 }
 
+/* ---------- 검색창 (21차 §5) ---------- */
+function SearchBox({ value, onChange }) {
+  const { t } = useTranslation();
+  return (
+    <div className="relative">
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-ink-600"
+      >
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6">
+          <circle cx="7" cy="7" r="4.5" />
+          <path d="M10.5 10.5 14 14" strokeLinecap="round" />
+        </svg>
+      </span>
+      <input
+        type="search"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Escape") {
+            e.preventDefault();
+            onChange("");
+          }
+        }}
+        placeholder={t("pubsUI.searchPlaceholder")}
+        aria-label={t("pubsUI.searchPlaceholder")}
+        className="w-full rounded-xl border border-line bg-base-900/70 py-3 pl-10 pr-10 text-[15px] text-ink-100 placeholder:text-ink-600 transition-colors focus:border-accent-400 focus:outline-none"
+      />
+      {value && (
+        <button
+          type="button"
+          onClick={() => onChange("")}
+          aria-label={t("pubsUI.clearSearch")}
+          className="absolute right-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-lg text-ink-500 transition-colors hover:bg-base-800/70 hover:text-ink-100 focus-visible:outline-2 focus-visible:outline-accent-400"
+        >
+          ×
+        </button>
+      )}
+    </div>
+  );
+}
+
 /* ---------- 논문 목록 + 페이지네이션 (21차 §4) ----------
    79편을 한 화면에 쏟으면 아래 저서 영역까지 스크롤하기가 너무 힘들다.
    한 페이지 5편으로 끊고, 페이지 이동 시 "목록 상단"으로만 부드럽게 이동한다
    (페이지 최상단으로 튀지 않게). 저서 섹션은 페이지네이션 대상이 아니다. */
 const PAGE_SIZE = 5;
+
+const readQueryParam = () => new URLSearchParams(window.location.search).get("q") ?? "";
+
+const writeQueryParam = (q) => {
+  const url = new URL(window.location.href);
+  if (q.trim()) url.searchParams.set("q", q.trim());
+  else url.searchParams.delete("q");
+  window.history.replaceState(null, "", url.toString());
+};
 
 const readPageParam = () => {
   const n = Number.parseInt(new URLSearchParams(window.location.search).get("page") ?? "1", 10);
@@ -364,7 +467,7 @@ function PaperList({ papers, resetKey }) {
 /* ---------- 키워드별 보기 (§2-1 — 칩 제거, 마스터-디테일) ---------- */
 const ALL_KEY = "__all__";
 
-function KeywordView({ pool }) {
+function KeywordView({ pool, searchKey = "" }) {
   const { t } = useTranslation();
   const isMobile = useIsMobile();
   const scrollToAnchor = useAnchorScroll();
@@ -412,7 +515,7 @@ function KeywordView({ pool }) {
         </label>
         <div ref={detailRef} className="mt-6 scroll-mt-20">
           <DetailHeading title={title} count={papers.length} />
-          <PaperList papers={papers} resetKey={`kw-${active}-${pool.length}`} />
+          <PaperList papers={papers} resetKey={`kw-${active}-${searchKey}-${pool.length}`} />
         </div>
       </div>
     );
@@ -447,7 +550,7 @@ function KeywordView({ pool }) {
       }
     >
       <DetailHeading title={title} count={papers.length} />
-      <PaperList papers={papers} resetKey={`kw-${active}-${pool.length}`} />
+      <PaperList papers={papers} resetKey={`kw-${active}-${searchKey}-${pool.length}`} />
     </MasterDetail>
   );
 }
@@ -547,7 +650,7 @@ function JournalGroup({ group, journal, onSelect, isMobile, open, onToggleGroup 
   );
 }
 
-function JournalView({ pool }) {
+function JournalView({ pool, searchKey = "" }) {
   const { t } = useTranslation();
   const isMobile = useIsMobile();
   const scrollToAnchor = useAnchorScroll();
@@ -710,7 +813,7 @@ function JournalView({ pool }) {
 
       <PaperList
         papers={filtered}
-        resetKey={`jn-${journal}-${subKeyword ?? ""}-${subRange?.label ?? ""}-${pool.length}`}
+        resetKey={`jn-${journal}-${subKeyword ?? ""}-${subRange?.label ?? ""}-${searchKey}-${pool.length}`}
       />
       {filtered.length === 0 && (
         <p className="py-8 text-center text-sm text-ink-600">{t("pubsUI.none")}</p>
@@ -784,6 +887,9 @@ export default function Publications({ focus = null, studentFilter = null, onCle
   const { t, i18n } = useTranslation();
   const lng = i18n.language;
   const [mode, setMode] = useState("keyword");
+  // 검색 (21차 §5) — 입력은 즉시 반영하고, 실제 필터링은 200ms 디바운스
+  const [searchInput, setSearchInput] = useState(readQueryParam);
+  const [query, setQuery] = useState(() => readQueryParam().trim());
   const [typeFilter, setTypeFilter] = useState(
     focus === "kci" ? "KCI" : focus === "ssci" ? "SSCI" : "ALL"
   );
@@ -793,6 +899,15 @@ export default function Publications({ focus = null, studentFilter = null, onCle
     if (studentFilter?.type) setTypeFilter(studentFilter.type);
   }, [studentFilter]);
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const next = searchInput.trim();
+      setQuery(next);
+      writeQueryParam(next);
+    }, 200);
+    return () => clearTimeout(timer);
+  }, [searchInput]);
+
   const person = studentFilter?.student ? findPerson(studentFilter.student) : null;
   const personName = person
     ? lng === "ko"
@@ -800,13 +915,22 @@ export default function Publications({ focus = null, studentFilter = null, onCle
       : (person.nameEn ?? person.nameKo)
     : null;
 
+  // 검색어는 기존 필터와 AND로 함께 걸린다
   const pool = useMemo(() => {
     let list = ALL_PUBLICATIONS;
     if (studentFilter?.student)
       list = list.filter((p) => p.studentIds?.includes(studentFilter.student));
     if (typeFilter !== "ALL") list = list.filter((p) => p.type === typeFilter);
+    const q = normalize(query);
+    if (q) list = list.filter((p) => haystack(p, t).includes(q));
     return list;
-  }, [typeFilter, studentFilter]);
+  }, [typeFilter, studentFilter, query, t]);
+
+  const clearAll = () => {
+    setSearchInput("");
+    setTypeFilter("ALL");
+    if (studentFilter?.student) onClearStudent?.();
+  };
 
   return (
     <section id="publications" data-surface="paper" className="relative mx-auto max-w-6xl px-5 py-20 md:px-8 md:py-28">
@@ -828,6 +952,25 @@ export default function Publications({ focus = null, studentFilter = null, onCle
             className="rounded-lg border border-line px-3 py-1.5 text-[13px] text-ink-500 transition-colors hover:border-base-600 hover:text-ink-100"
           >
             {t("pubsUI.clearFilter")}
+          </button>
+        </div>
+      )}
+
+      <Reveal className="mb-5">
+        <SearchBox value={searchInput} onChange={setSearchInput} />
+      </Reveal>
+
+      {query && (
+        <div className="mb-6 flex flex-wrap items-center gap-3 rounded-xl border border-accent-400/40 bg-base-850/70 px-4 py-3">
+          <span className="text-[14px] text-ink-100">
+            {t("pubsUI.searchResult", { query, count: pool.length })}
+          </span>
+          <button
+            type="button"
+            onClick={() => setSearchInput("")}
+            className="rounded-lg border border-line px-3 py-1.5 text-[13px] text-ink-500 transition-colors hover:border-base-600 hover:text-ink-100"
+          >
+            {t("pubsUI.clearSearch")}
           </button>
         </div>
       )}
@@ -873,13 +1016,26 @@ export default function Publications({ focus = null, studentFilter = null, onCle
       </Reveal>
 
       <NavContext.Provider value={navigate}>
-        {mode === "keyword" ? (
-          <KeywordView key={typeFilter} pool={pool} />
-        ) : (
-          <JournalView key={typeFilter} pool={pool} />
-        )}
+        <QueryContext.Provider value={query}>
+          {pool.length === 0 ? (
+            <div className="rounded-2xl border border-line bg-base-900/70 px-6 py-14 text-center">
+              <p className="text-[15px] text-ink-300">{t("pubsUI.noResults")}</p>
+              <button
+                type="button"
+                onClick={clearAll}
+                className="mt-5 rounded-lg border border-line px-4 py-2 text-[13px] text-ink-500 transition-colors hover:border-base-600 hover:text-ink-100"
+              >
+                {t("pubsUI.clearAllFilters")}
+              </button>
+            </div>
+          ) : mode === "keyword" ? (
+            <KeywordView key={typeFilter} pool={pool} searchKey={query} />
+          ) : (
+            <JournalView key={typeFilter} pool={pool} searchKey={query} />
+          )}
 
-        <KciAndBooks studentId={studentFilter?.student ?? null} />
+          <KciAndBooks studentId={studentFilter?.student ?? null} />
+        </QueryContext.Provider>
       </NavContext.Provider>
 
       {/* §5-2 안내 + §10② 저자 확인 범위 각주 */}

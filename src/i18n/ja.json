@@ -316,7 +316,12 @@
     "prevPage": "← 前へ",
     "nextPage": "次へ →",
     "pageAria": "{{page}}ページへ移動",
-    "pageRange": "全 {{total}} 件 · {{from}}–{{to}} を表示中"
+    "pageRange": "全 {{total}} 件 · {{from}}–{{to}} を表示中",
+    "searchPlaceholder": "タイトル・著者・キーワードで検索",
+    "clearSearch": "× 検索を解除",
+    "searchResult": "「{{query}}」の検索結果 {{count}}件",
+    "noResults": "検索結果がありません。別の語で試してください。",
+    "clearAllFilters": "絞り込みをすべて解除"
   },
   "keywords": {
     "모바일·앱": "モバイル・アプリ",
