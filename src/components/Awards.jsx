@@ -45,10 +45,10 @@ export default function Awards() {
       <div className="grid lg:grid-cols-2 gap-5 items-start">
         {/* 수상 */}
         <Reveal>
-          <div className="rounded-2xl border border-line bg-base-900/70 p-6 md:p-8">
+          <div className="rounded-2xl border border-line bg-surface-2 p-6 md:p-8">
             <h3 className="font-display text-xs tracking-[0.25em] uppercase text-gold-300 mb-4">
               {t("awardsUI.awardsTitle")}
-              <span className="ml-2 rounded-full bg-base-800/80 px-2 py-0.5 text-[11px] text-ink-500 tracking-normal">
+              <span className="ml-2 rounded-full bg-surface-3 px-2 py-0.5 text-[11px] text-ink-500 tracking-normal">
                 {AWARDS.length}
               </span>
             </h3>
@@ -92,10 +92,10 @@ export default function Awards() {
 
         {/* 연구비 */}
         <Reveal delay={80}>
-          <div className="rounded-2xl border border-line bg-base-900/70 p-6 md:p-8">
+          <div className="rounded-2xl border border-line bg-surface-2 p-6 md:p-8">
             <h3 className="font-display text-xs tracking-[0.25em] uppercase text-accent-400 mb-4">
               {t("awardsUI.grantsTitle")}
-              <span className="ml-2 rounded-full bg-base-800/80 px-2 py-0.5 text-[11px] text-ink-500 tracking-normal">
+              <span className="ml-2 rounded-full bg-surface-3 px-2 py-0.5 text-[11px] text-ink-500 tracking-normal">
                 {GRANTS.length}
               </span>
             </h3>
@@ -104,7 +104,7 @@ export default function Awards() {
                 <Row key={i} item={g} lng={lng} last={i === GRANTS.length - 1} />
               ))}
             </ul>
-            <p className="mt-6 rounded-xl border border-line bg-base-850/60 p-4 text-[13px] leading-relaxed text-ink-500">
+            <p className="mt-6 rounded-xl border border-line bg-surface-1 p-4 text-[13px] leading-relaxed text-ink-500">
               {t("awardsUI.grantNote")}
             </p>
           </div>

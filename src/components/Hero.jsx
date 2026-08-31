@@ -12,7 +12,7 @@ function StatCard({ stat, delay, navigate }) {
       <button
         type="button"
         onClick={() => navigate(stat.section, stat.focus ? { focus: stat.focus } : null)}
-        className="group relative flex h-full w-full cursor-pointer flex-col justify-between rounded-xl border border-line bg-base-850/80 px-5 pb-9 pt-4 text-left backdrop-blur transition-all duration-200 hover:-translate-y-1 hover:border-accent-400/60 hover:shadow-[0_0_24px_var(--glow-strong)] focus-visible:outline-2 focus-visible:outline-accent-400"
+        className="group relative flex h-full w-full cursor-pointer flex-col justify-between rounded-xl border border-line bg-surface-1 px-5 pb-9 pt-4 text-left backdrop-blur transition-all duration-200 hover:-translate-y-1 hover:border-accent-400/60 hover:shadow-[0_0_24px_var(--glow-strong)] focus-visible:outline-2 focus-visible:outline-accent-400"
         aria-label={`${t(`hero.stats.${stat.key}`)} — ${t("hero.statAria")}`}
       >
         <span
@@ -45,7 +45,7 @@ function StatCard({ stat, delay, navigate }) {
 function InfoCard({ title, children, className = "", delay = 0 }) {
   return (
     <Reveal delay={delay} className={className}>
-      <div className="h-full rounded-2xl border border-line bg-base-900/70 p-6">
+      <div className="h-full rounded-2xl border border-line bg-surface-2 p-6">
         <h2 className="font-display text-xs tracking-[0.25em] uppercase text-accent-400 mb-4">
           {title}
         </h2>
@@ -124,7 +124,7 @@ export default function Hero({ navigate }) {
                   />
                 </picture>
                 <div
-                  className="hidden h-full w-full bg-base-800 items-center justify-center"
+                  className="hidden h-full w-full bg-surface-3 items-center justify-center"
                   aria-hidden="true"
                 >
                   <span className="font-display text-4xl font-bold text-accent-300/60">JC</span>

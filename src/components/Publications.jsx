@@ -70,14 +70,12 @@ function haystack(paper, t) {
 }
 
 /* ---------- SSCI / KCI 타입 태그 ---------- */
+/* 알약 배지를 쓰지 않는다 (22차 §2-5) — 유형 구분은 좌측 3px 바와 이 텍스트로만 한다 */
 function TypeTag({ type }) {
   return (
     <span
-      className="inline-flex items-center rounded-md border px-1.5 py-0.5 font-display text-[10px] font-semibold tracking-wide"
-      style={{
-        color: type === "SSCI" ? "var(--ssci-text)" : "var(--kci-text)",
-        borderColor: type === "SSCI" ? "var(--ssci-bar)" : "var(--kci-bar)",
-      }}
+      className="font-display text-[11px] font-semibold tracking-[0.08em]"
+      style={{ color: type === "SSCI" ? "var(--ssci-text)" : "var(--kci-text)" }}
     >
       {type}
     </span>
@@ -90,11 +88,11 @@ function PaperCard({ paper }) {
   const navigate = useContext(NavContext);
   const authors = authorsWithLinks(paper);
   return (
-    <div className="group relative overflow-hidden rounded-2xl border border-line bg-base-900/70 transition-all hover:border-accent-500/50 hover:shadow-[0_0_20px_var(--glow-soft)]">
+    <div className="group relative overflow-hidden rounded-2xl border border-line bg-surface-2 transition-all hover:border-accent-500/50 hover:shadow-[0_0_20px_var(--glow-soft)]">
       {/* 좌측 SSCI/KCI 구분 바 — 텍스트와 다른 토큰(비텍스트 3:1) */}
       <span
         aria-hidden="true"
-        className="absolute inset-y-0 left-0 w-[3px]"
+        className="absolute inset-y-0 left-0 w-[3px] rounded-r"
         style={{ background: paper.type === "SSCI" ? "var(--ssci-bar)" : "var(--kci-bar)" }}
       />
       <a
@@ -102,7 +100,7 @@ function PaperCard({ paper }) {
         target="_blank"
         rel="noopener noreferrer"
         aria-label={t("pubsUI.openPaperAria", { title: paper.title })}
-        className="block p-5 pl-6 focus-visible:outline-2 focus-visible:outline-accent-400 md:p-6 md:pl-7"
+        className="block p-6 pl-7 focus-visible:outline-2 focus-visible:outline-accent-400"
       >
       <div className="mb-3 flex flex-wrap items-center gap-2 pr-6">
         <TypeTag type={paper.type} />
@@ -135,14 +133,14 @@ function PaperCard({ paper }) {
           <path d="M9 7.5v3H1.5V3h3" />
         </svg>
       </h4>
-      <p className="mt-3 text-[13px] leading-relaxed text-ink-300 md:text-sm">
+      <p className="mt-3 max-w-[74ch] text-[13px] leading-[1.7] text-ink-500 md:text-sm">
         {t(`pubs.${paper.id}`)}
       </p>
       <div className="mt-4 flex flex-wrap gap-1.5">
         {paper.keywords.map((k) => (
           <span
             key={k}
-            className="rounded-full border border-line bg-base-800/60 px-2.5 py-0.5 text-[11px] text-ink-500"
+            className="rounded-full border border-line bg-surface-3 px-2.5 py-0.5 text-[11px] text-ink-500"
           >
             {t(`keywords.${k}`)}
           </span>
@@ -152,7 +150,7 @@ function PaperCard({ paper }) {
       {/* §5-2 논문 → 제자. 카드 전체가 원문 링크이므로 저자 줄은 <a> 밖에 둔다
           (앵커 안에 버튼을 넣으면 마크업이 깨진다). */}
       {authors.length > 0 && (
-        <p className="px-5 pb-5 pl-6 text-[12px] leading-relaxed text-ink-500 md:px-6 md:pb-6 md:pl-7">
+        <p className="px-6 pb-6 pl-7 text-[12px] leading-relaxed text-ink-500">
           <span className="text-ink-600">{t("pubsUI.authorsLabel")} </span>
           {authors.map((a, i) => (
             <span key={`${a.name}-${i}`}>
@@ -189,7 +187,7 @@ function FilterBtn({ activeState, onClick, children }) {
       className={`shrink-0 rounded-full border px-3.5 py-1.5 text-[13px] transition-colors ${
         activeState
           ? "border-accent-400 bg-accent-500/15 text-accent-300"
-          : "border-line bg-base-800/50 text-ink-500 hover:border-base-600 hover:text-ink-300"
+          : "border-line bg-surface-3 text-ink-500 hover:border-line-strong hover:text-ink-300"
       }`}
     >
       {children}
@@ -206,14 +204,14 @@ function ListRow({ label, count, max, active, onSelect }) {
       type="button"
       onClick={onSelect}
       aria-current={active ? "true" : undefined}
-      className={`group relative block w-full py-2 pl-3 pr-1 text-left transition-colors focus-visible:outline-2 focus-visible:outline-accent-400 ${
-        active ? "text-ink-100" : "text-ink-500 hover:text-ink-300"
+      className={`group relative block w-full rounded-r-lg py-2 pl-3 pr-2 text-left transition-colors focus-visible:outline-2 focus-visible:outline-accent-400 ${
+        active ? "bg-surface-3 text-ink-100" : "text-ink-500 hover:bg-surface-2 hover:text-ink-300"
       }`}
     >
       <span
         aria-hidden="true"
-        className={`absolute bottom-1.5 left-0 top-1.5 w-[2px] rounded-full transition-colors ${
-          active ? "bg-accent-400" : "bg-transparent group-hover:bg-base-600"
+        className={`absolute bottom-0 left-0 top-0 w-[3px] rounded-r transition-colors ${
+          active ? "bg-accent-400" : "bg-transparent group-hover:bg-line-strong"
         }`}
       />
       <span className="flex items-baseline gap-2">
@@ -228,10 +226,10 @@ function ListRow({ label, count, max, active, onSelect }) {
           {count}
         </span>
       </span>
-      <span aria-hidden="true" className="mt-1.5 block h-[3px] w-full rounded-full bg-base-800">
+      <span aria-hidden="true" className="mt-1.5 block h-[3px] w-full rounded-full bg-surface-3">
         <span
           className={`block h-[3px] rounded-full transition-colors ${
-            active ? "bg-accent-400" : "bg-base-600 group-hover:bg-ink-600"
+            active ? "bg-accent-400" : "bg-line-strong group-hover:bg-ink-600"
           }`}
           style={{ width: `${ratio}%` }}
         />
@@ -267,7 +265,7 @@ function DetailHeading({ title, count, onBack, backLabel }) {
         <button
           type="button"
           onClick={onBack}
-          className="rounded-lg border border-line bg-base-800/60 px-3 py-1.5 text-[12px] text-ink-500 transition-colors hover:border-base-600 hover:text-ink-100"
+          className="rounded-lg border border-line bg-surface-3 px-3 py-1.5 text-[12px] text-ink-500 transition-colors hover:border-line-strong hover:text-ink-100"
         >
           {backLabel}
         </button>
@@ -306,14 +304,14 @@ function SearchBox({ value, onChange }) {
         }}
         placeholder={t("pubsUI.searchPlaceholder")}
         aria-label={t("pubsUI.searchPlaceholder")}
-        className="w-full rounded-xl border border-line bg-base-900/70 py-3 pl-10 pr-10 text-[15px] text-ink-100 placeholder:text-ink-600 transition-colors focus:border-accent-400 focus:outline-none"
+        className="w-full rounded-xl border border-line bg-surface-2 py-3 pl-10 pr-10 text-[15px] text-ink-100 placeholder:text-ink-600 transition-colors focus:border-accent-400 focus:outline-none"
       />
       {value && (
         <button
           type="button"
           onClick={() => onChange("")}
           aria-label={t("pubsUI.clearSearch")}
-          className="absolute right-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-lg text-ink-500 transition-colors hover:bg-base-800/70 hover:text-ink-100 focus-visible:outline-2 focus-visible:outline-accent-400"
+          className="absolute right-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-lg text-ink-500 transition-colors hover:bg-surface-3 hover:text-ink-100 focus-visible:outline-2 focus-visible:outline-accent-400"
         >
           ×
         </button>
@@ -326,7 +324,7 @@ function SearchBox({ value, onChange }) {
    79편을 한 화면에 쏟으면 아래 저서 영역까지 스크롤하기가 너무 힘들다.
    한 페이지 5편으로 끊고, 페이지 이동 시 "목록 상단"으로만 부드럽게 이동한다
    (페이지 최상단으로 튀지 않게). 저서 섹션은 페이지네이션 대상이 아니다. */
-const PAGE_SIZE = 5;
+const PAGE_SIZE = 4;
 
 const readQueryParam = () => new URLSearchParams(window.location.search).get("q") ?? "";
 
@@ -383,7 +381,7 @@ function Pagination({ current, total, onGo }) {
         type="button"
         onClick={() => onGo(current - 1)}
         disabled={current === 1}
-        className={`${btn} border-line text-ink-500 hover:border-base-600 hover:text-ink-100 disabled:opacity-35 disabled:hover:border-line disabled:hover:text-ink-500`}
+        className={`${btn} border-line text-ink-500 hover:border-line-strong hover:text-ink-100 disabled:opacity-35 disabled:hover:border-line disabled:hover:text-ink-500`}
       >
         {t("pubsUI.prevPage")}
       </button>
@@ -402,7 +400,7 @@ function Pagination({ current, total, onGo }) {
             className={`${btn} ${
               it.page === current
                 ? "border-accent-400 bg-accent-500/20 text-accent-300"
-                : "border-line text-ink-500 hover:border-base-600 hover:text-ink-100"
+                : "border-line text-ink-500 hover:border-line-strong hover:text-ink-100"
             }`}
           >
             {it.page}
@@ -413,7 +411,7 @@ function Pagination({ current, total, onGo }) {
         type="button"
         onClick={() => onGo(current + 1)}
         disabled={current === total}
-        className={`${btn} border-line text-ink-500 hover:border-base-600 hover:text-ink-100 disabled:opacity-35 disabled:hover:border-line disabled:hover:text-ink-500`}
+        className={`${btn} border-line text-ink-500 hover:border-line-strong hover:text-ink-100 disabled:opacity-35 disabled:hover:border-line disabled:hover:text-ink-500`}
       >
         {t("pubsUI.nextPage")}
       </button>
@@ -468,7 +466,7 @@ function PaperList({ papers, resetKey }) {
           total: papers.length,
         })}
       </p>
-      <div className="grid gap-4">
+      <div className="grid gap-5">
         {shown.map((p) => (
           <PaperCard key={p.id} paper={p} />
         ))}
@@ -515,7 +513,7 @@ function KeywordView({ pool, searchKey = "" }) {
           <select
             value={active}
             onChange={(e) => select(e.target.value)}
-            className="w-full rounded-xl border border-line bg-base-850 px-4 py-3 text-[15px] text-ink-100"
+            className="w-full rounded-xl border border-line bg-surface-1 px-4 py-3 text-[15px] text-ink-100"
           >
             <option value={ALL_KEY}>
               {t("pubsUI.allPapers")} ({pool.length})
@@ -760,7 +758,7 @@ function JournalView({ pool, searchKey = "" }) {
         backLabel={t("pubsUI.backToJournals")}
       />
 
-      <div className="mb-6 rounded-xl border border-line bg-base-850/60 p-4">
+      <div className="mb-6 rounded-xl border border-line bg-surface-1 p-4">
         <div className="mb-3 flex items-center gap-2">
           <span className="mr-1 font-display text-[11px] uppercase tracking-[0.2em] text-ink-600">
             Filter
@@ -844,7 +842,7 @@ function KciAndBooks({ studentId = null }) {
   return (
     <div className="mt-14 grid gap-4 md:grid-cols-2 md:gap-5">
       <Reveal>
-        <div className="h-full rounded-2xl border border-line bg-base-900/70 p-6">
+        <div className="h-full rounded-2xl border border-line bg-surface-2 p-6">
           <div className="mb-2 flex items-baseline gap-3">
             <span className="font-display text-3xl font-bold text-ink-100">{KCI_COUNT_LABEL}</span>
             <h3 className="text-sm font-semibold text-ink-300">{t("pubsUI.kciTitle")}</h3>
@@ -854,7 +852,7 @@ function KciAndBooks({ studentId = null }) {
       </Reveal>
 
       <Reveal delay={70}>
-        <div className="h-full rounded-2xl border border-line bg-base-900/70 p-6">
+        <div className="h-full rounded-2xl border border-line bg-surface-2 p-6">
           <h3 className="mb-4 font-display text-xs uppercase tracking-[0.25em] text-accent-400">
             {t("pubsUI.booksTitle")}
           </h3>
@@ -956,14 +954,14 @@ export default function Publications({ focus = null, studentFilter = null, onCle
       />
 
       {person && (
-        <div className="mb-6 flex flex-wrap items-center gap-3 rounded-xl border border-accent-400/40 bg-base-850/70 px-4 py-3">
+        <div className="mb-6 flex flex-wrap items-center gap-3 rounded-xl border border-accent-400/40 bg-surface-1 px-4 py-3">
           <span className="text-[14px] text-ink-100">
             {t("pubsUI.studentFilter", { name: personName, count: pool.length })}
           </span>
           <button
             type="button"
             onClick={onClearStudent}
-            className="rounded-lg border border-line px-3 py-1.5 text-[13px] text-ink-500 transition-colors hover:border-base-600 hover:text-ink-100"
+            className="rounded-lg border border-line px-3 py-1.5 text-[13px] text-ink-500 transition-colors hover:border-line-strong hover:text-ink-100"
           >
             {t("pubsUI.clearFilter")}
           </button>
@@ -975,14 +973,14 @@ export default function Publications({ focus = null, studentFilter = null, onCle
       </Reveal>
 
       {query && (
-        <div className="mb-6 flex flex-wrap items-center gap-3 rounded-xl border border-accent-400/40 bg-base-850/70 px-4 py-3">
+        <div className="mb-6 flex flex-wrap items-center gap-3 rounded-xl border border-accent-400/40 bg-surface-1 px-4 py-3">
           <span className="text-[14px] text-ink-100">
             {t("pubsUI.searchResult", { query, count: pool.length })}
           </span>
           <button
             type="button"
             onClick={() => setSearchInput("")}
-            className="rounded-lg border border-line px-3 py-1.5 text-[13px] text-ink-500 transition-colors hover:border-base-600 hover:text-ink-100"
+            className="rounded-lg border border-line px-3 py-1.5 text-[13px] text-ink-500 transition-colors hover:border-line-strong hover:text-ink-100"
           >
             {t("pubsUI.clearSearch")}
           </button>
@@ -990,7 +988,7 @@ export default function Publications({ focus = null, studentFilter = null, onCle
       )}
 
       <Reveal className="mb-8 flex flex-wrap items-center gap-3">
-        <div className="inline-flex rounded-xl border border-line bg-base-850/80 p-1">
+        <div className="inline-flex rounded-xl border border-line bg-surface-1 p-1">
           {[
             { key: "keyword", label: t("pubsUI.viewKeyword") },
             { key: "journal", label: t("pubsUI.viewJournal") },
@@ -1007,7 +1005,7 @@ export default function Publications({ focus = null, studentFilter = null, onCle
             </button>
           ))}
         </div>
-        <div className="inline-flex rounded-xl border border-line bg-base-850/80 p-1">
+        <div className="inline-flex rounded-xl border border-line bg-surface-1 p-1">
           {[
             { key: "ALL", label: t("pubsUI.all") },
             { key: "SSCI", label: "SSCI" },
@@ -1032,12 +1030,12 @@ export default function Publications({ focus = null, studentFilter = null, onCle
       <NavContext.Provider value={navigate}>
         <QueryContext.Provider value={query}>
           {pool.length === 0 ? (
-            <div className="rounded-2xl border border-line bg-base-900/70 px-6 py-14 text-center">
+            <div className="rounded-2xl border border-line bg-surface-2 px-6 py-14 text-center">
               <p className="text-[15px] text-ink-300">{t("pubsUI.noResults")}</p>
               <button
                 type="button"
                 onClick={clearAll}
-                className="mt-5 rounded-lg border border-line px-4 py-2 text-[13px] text-ink-500 transition-colors hover:border-base-600 hover:text-ink-100"
+                className="mt-5 rounded-lg border border-line px-4 py-2 text-[13px] text-ink-500 transition-colors hover:border-line-strong hover:text-ink-100"
               >
                 {t("pubsUI.clearAllFilters")}
               </button>

@@ -183,8 +183,8 @@ function AlumniCard({ entry, lng, faculty = false, navigate }) {
   const works = worksForStudent(entry.personId);
   return (
     <div
-      className={`h-full rounded-2xl border bg-base-900/70 transition-colors ${
-        faculty ? "border-gold-500/25 p-5 hover:border-gold-500/50" : "border-line p-4 hover:border-base-600"
+      className={`h-full rounded-2xl border bg-surface-2 transition-colors ${
+        faculty ? "border-gold-500/25 p-5 hover:border-gold-500/50" : "border-line p-4 hover:border-line-strong"
       }`}
     >
       <div className="flex items-start justify-between gap-3">
@@ -236,7 +236,7 @@ function AlumniCard({ entry, lng, faculty = false, navigate }) {
                 href={entry.subLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex min-h-11 items-center rounded-lg border border-line bg-base-800/60 px-3 text-[13px] text-ink-300 transition-colors hover:border-base-600 hover:text-ink-100"
+                className="inline-flex min-h-11 items-center rounded-lg border border-line bg-surface-3 px-3 text-[13px] text-ink-300 transition-colors hover:border-line-strong hover:text-ink-100"
               >
                 {localizeField(entry, "subLinkLabel", lng) ?? "Link →"}
               </a>
@@ -412,7 +412,7 @@ export default function StudentsSection({ focus = null, personFocus = null, onCl
       {/* §3: xl 이상에서 컨테이너 마진을 풀어 full-bleed. 남는 폭은 전부 지도가 가져간다.
           (body가 overflow-x:hidden이라 50vw 계산으로 가로 스크롤이 생기지 않는다) */}
       {focusedPerson && (
-        <div className="mb-6 flex flex-wrap items-center gap-3 rounded-xl border border-accent-400/40 bg-base-850/70 px-4 py-3">
+        <div className="mb-6 flex flex-wrap items-center gap-3 rounded-xl border border-accent-400/40 bg-surface-1 px-4 py-3">
           <span className="text-[14px] text-ink-100">
             {t("students.personFocus", {
               name: (() => {
@@ -427,7 +427,7 @@ export default function StudentsSection({ focus = null, personFocus = null, onCl
               setPinnedPin(null);
               onClearPerson?.();
             }}
-            className="rounded-lg border border-line px-3 py-1.5 text-[13px] text-ink-500 transition-colors hover:border-base-600 hover:text-ink-100"
+            className="rounded-lg border border-line px-3 py-1.5 text-[13px] text-ink-500 transition-colors hover:border-line-strong hover:text-ink-100"
           >
             {t("students.clearFocus")}
           </button>
@@ -437,7 +437,7 @@ export default function StudentsSection({ focus = null, personFocus = null, onCl
       <div ref={mapRef} className="scroll-mt-20 xl:mx-[calc(50%-50vw)] xl:px-8">
         <div className="lg:grid lg:grid-cols-[260px_minmax(0,1fr)] lg:gap-6">
         <div className="order-2 mt-6 lg:order-1 lg:mt-0">
-          <div className="rounded-2xl border border-line bg-base-900/70 p-4">
+          <div className="rounded-2xl border border-line bg-surface-2 p-4">
             <div className="mb-2 flex items-baseline justify-between gap-2">
               <h3 className="font-display text-[11px] uppercase tracking-[0.2em] text-ink-500">
                 {t("students.rosterTitle")}
@@ -490,7 +490,7 @@ export default function StudentsSection({ focus = null, personFocus = null, onCl
         <div className="order-1 lg:order-2">
           <Suspense
             fallback={
-              <div className="flex h-64 items-center justify-center rounded-2xl border border-line bg-base-900/70 text-sm text-ink-600">
+              <div className="flex h-64 items-center justify-center rounded-2xl border border-line bg-surface-2 text-sm text-ink-600">
                 …
               </div>
             }
@@ -531,7 +531,7 @@ export default function StudentsSection({ focus = null, personFocus = null, onCl
             <button
               type="button"
               onClick={() => (badgeTabs[i] ? setTab(badgeTabs[i]) : scrollTo(mapRef))}
-              className="group relative w-full cursor-pointer rounded-xl border border-line bg-base-900/70 px-5 py-4 text-left transition-all duration-200 hover:-translate-y-1 hover:border-accent-400/60 hover:shadow-[0_0_24px_var(--glow-strong)] focus-visible:outline-2 focus-visible:outline-accent-400"
+              className="group relative w-full cursor-pointer rounded-xl border border-line bg-surface-2 px-5 py-4 text-left transition-all duration-200 hover:-translate-y-1 hover:border-accent-400/60 hover:shadow-[0_0_24px_var(--glow-strong)] focus-visible:outline-2 focus-visible:outline-accent-400"
             >
               <span className="flex items-baseline gap-3">
                 <span className="font-display text-2xl font-bold tabular-nums text-accent-300">
@@ -566,7 +566,7 @@ export default function StudentsSection({ focus = null, personFocus = null, onCl
           {(tab === "all" ? current : current).map((e, i) => (
             <Reveal key={e.personId} delay={(i % 3) * 60} className="h-full">
               {MEMBER_IDS.has(e.personId) ? (
-                <div className="h-full rounded-2xl border border-line bg-base-850/80 p-4">
+                <div className="h-full rounded-2xl border border-line bg-surface-1 p-4">
                   <div className="flex items-start justify-between gap-2">
                     <span className="inline-flex items-center gap-2 text-sm font-medium text-ink-100">
                       <span className="relative flex h-1.5 w-1.5" aria-hidden="true">
