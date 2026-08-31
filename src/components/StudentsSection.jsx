@@ -152,11 +152,16 @@ function RosterRow({ person, lng, hot, onHover, onSelect, rowRef, navigate }) {
           style={{ background: isFaculty ? "var(--pin-faculty)" : "var(--pin)" }}
         />
         <span className="min-w-0 flex-1">
-          <span className="flex flex-wrap items-baseline gap-x-1.5">
-            <span className={`text-[13px] font-medium ${hot ? "text-ink-100" : "text-ink-300"}`}>
+          {/* 패널이 260px로 좁아졌으므로(§3) 이름 줄은 접지 않고 잘라낸다 */}
+          <span className="flex min-w-0 items-baseline gap-x-1.5">
+            <span
+              className={`shrink-0 text-[13px] font-medium ${hot ? "text-ink-100" : "text-ink-300"}`}
+            >
               {name.main}
             </span>
-            {name.sub && <span className="text-[11px] text-ink-600">({name.sub})</span>}
+            {name.sub && (
+              <span className="truncate text-[11px] text-ink-600">({name.sub})</span>
+            )}
           </span>
           <span className="mt-0.5 block truncate text-[12px] text-ink-500">
             {shortAffiliation(localizeField(person, "affiliation", lng)) || person._city || ""}

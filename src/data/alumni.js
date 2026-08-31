@@ -26,8 +26,8 @@ export const CITY_PINS = [
     country: "미국",
     coordinates: [-83.0007, 39.9612],
     label: "김민경",
-    labelDx: 10,
-    labelDy: 4,
+    labelDx: 2,
+    labelDy: 35,
     entries: [
       {
         nameKo: "김민경",
@@ -54,8 +54,8 @@ export const CITY_PINS = [
     country: "미국",
     coordinates: [-86.9212, 40.4237],
     label: "조우용",
-    labelDx: -10,
-    labelDy: -10,
+    labelDx: -14,
+    labelDy: 2,
     entries: [
       {
         nameKo: "조우용",
@@ -82,8 +82,8 @@ export const CITY_PINS = [
     country: "캐나다",
     coordinates: [-79.8711, 43.2557],
     label: "김상화",
-    labelDx: 10,
-    labelDy: -8,
+    labelDx: 14,
+    labelDy: -20,
     entries: [
       {
         nameKo: "김상화",
@@ -175,7 +175,7 @@ export const CITY_PINS = [
     country: "미국",
     coordinates: [-95.3698, 29.7604],
     label: "장연",
-    labelDx: -8,
+    labelDx: -14,
     labelDy: 14,
     entries: [
       {
@@ -223,8 +223,8 @@ export const CITY_PINS = [
     country: "미국",
     coordinates: [-75.1652, 39.9526],
     label: "정현우",
-    labelDx: 10,
-    labelDy: -8,
+    labelDx: 14,
+    labelDy: 4,
     entries: [
       {
         nameKo: "정현우",
@@ -247,8 +247,8 @@ export const CITY_PINS = [
     country: "미국",
     coordinates: [-84.388, 33.749],
     label: "애틀랜타 ×4",
-    labelDx: 10,
-    labelDy: 14,
+    labelDx: -14,
+    labelDy: 6,
     entries: [
       {
         nameKo: "김혜정",
@@ -305,8 +305,8 @@ export const CITY_PINS = [
     country: "미국",
     coordinates: [-93.265, 44.9778],
     label: "윤여림",
-    labelDx: -8,
-    labelDy: -10,
+    labelDx: -14,
+    labelDy: -12,
     entries: [
       {
         nameKo: "윤여림",
