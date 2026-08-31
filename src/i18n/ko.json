@@ -311,7 +311,12 @@
     "authorsLabel": "저자",
     "authorHint": "저자 이름을 클릭하면 해당 제자의 진출 정보를 볼 수 있습니다.",
     "authorNote": "제자 공저 표기는 원문에서 저자가 확인된 논문에 한합니다.",
-    "personAria": "{{name}} 진출 정보 보기"
+    "personAria": "{{name}} 진출 정보 보기",
+    "pageNavLabel": "논문 목록 페이지",
+    "prevPage": "← 이전",
+    "nextPage": "다음 →",
+    "pageAria": "{{page}}페이지로 이동",
+    "pageRange": "전체 논문 {{total}}편 · {{from}}–{{to}} 표시 중"
   },
   "keywords": {
     "모바일·앱": "모바일·앱",

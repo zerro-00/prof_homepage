@@ -214,6 +214,153 @@ function DetailHeading({ title, count, onBack, backLabel }) {
   );
 }
 
+/* ---------- 논문 목록 + 페이지네이션 (21차 §4) ----------
+   79편을 한 화면에 쏟으면 아래 저서 영역까지 스크롤하기가 너무 힘들다.
+   한 페이지 5편으로 끊고, 페이지 이동 시 "목록 상단"으로만 부드럽게 이동한다
+   (페이지 최상단으로 튀지 않게). 저서 섹션은 페이지네이션 대상이 아니다. */
+const PAGE_SIZE = 5;
+
+const readPageParam = () => {
+  const n = Number.parseInt(new URLSearchParams(window.location.search).get("page") ?? "1", 10);
+  return Number.isFinite(n) && n > 0 ? n : 1;
+};
+
+const writePageParam = (page) => {
+  const url = new URL(window.location.href);
+  if (page > 1) url.searchParams.set("page", String(page));
+  else url.searchParams.delete("page");
+  window.history.replaceState(null, "", url.toString());
+};
+
+// 현재 페이지 앞뒤 2개 + 첫·마지막은 항상. 사이가 벌어지면 "…"으로 축약.
+// 모바일은 앞뒤 1개만 노출한다.
+function pageItems(current, total, span) {
+  const keep = new Set([1, total]);
+  for (let i = current - span; i <= current + span; i += 1) {
+    if (i >= 1 && i <= total) keep.add(i);
+  }
+  const sorted = [...keep].sort((a, b) => a - b);
+  const out = [];
+  let prev = 0;
+  for (const n of sorted) {
+    if (prev && n - prev > 1) out.push({ gap: true, key: `gap-${prev}` });
+    out.push({ page: n, key: `p-${n}` });
+    prev = n;
+  }
+  return out;
+}
+
+function Pagination({ current, total, onGo }) {
+  const { t } = useTranslation();
+  const isMobile = useIsMobile();
+  if (total <= 1) return null;
+  const items = pageItems(current, total, isMobile ? 1 : 2);
+  const btn =
+    "inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg border px-3 font-display text-[13px] tabular-nums transition-colors focus-visible:outline-2 focus-visible:outline-accent-400";
+  return (
+    <nav
+      aria-label={t("pubsUI.pageNavLabel")}
+      className="mt-8 flex flex-wrap items-center justify-center gap-1.5"
+    >
+      <button
+        type="button"
+        onClick={() => onGo(current - 1)}
+        disabled={current === 1}
+        className={`${btn} border-line text-ink-500 hover:border-base-600 hover:text-ink-100 disabled:opacity-35 disabled:hover:border-line disabled:hover:text-ink-500`}
+      >
+        {t("pubsUI.prevPage")}
+      </button>
+      {items.map((it) =>
+        it.gap ? (
+          <span key={it.key} aria-hidden="true" className="px-1 text-[13px] text-ink-600">
+            …
+          </span>
+        ) : (
+          <button
+            key={it.key}
+            type="button"
+            onClick={() => onGo(it.page)}
+            aria-current={it.page === current ? "page" : undefined}
+            aria-label={t("pubsUI.pageAria", { page: it.page })}
+            className={`${btn} ${
+              it.page === current
+                ? "border-accent-400 bg-accent-500/20 text-accent-300"
+                : "border-line text-ink-500 hover:border-base-600 hover:text-ink-100"
+            }`}
+          >
+            {it.page}
+          </button>
+        )
+      )}
+      <button
+        type="button"
+        onClick={() => onGo(current + 1)}
+        disabled={current === total}
+        className={`${btn} border-line text-ink-500 hover:border-base-600 hover:text-ink-100 disabled:opacity-35 disabled:hover:border-line disabled:hover:text-ink-500`}
+      >
+        {t("pubsUI.nextPage")}
+      </button>
+    </nav>
+  );
+}
+
+/* 논문 카드 목록 — 범위 표시 + 페이지네이션을 한 곳에서 담당한다.
+   resetKey(필터·검색어·보기 조합)가 바뀌면 1페이지로 되돌린다. */
+function PaperList({ papers, resetKey }) {
+  const { t } = useTranslation();
+  const scrollToAnchor = useAnchorScroll();
+  const topRef = useRef(null);
+  const [page, setPage] = useState(readPageParam);
+
+  const total = Math.max(1, Math.ceil(papers.length / PAGE_SIZE));
+  const current = Math.min(Math.max(page, 1), total); // 범위를 벗어나면 끌어당긴다
+
+  // 필터가 바뀌면 1페이지로. 첫 렌더에서는 URL의 page를 존중한다.
+  const mounted = useRef(false);
+  useEffect(() => {
+    if (!mounted.current) {
+      mounted.current = true;
+      return;
+    }
+    setPage(1);
+  }, [resetKey]);
+
+  useEffect(() => {
+    writePageParam(current);
+    if (page !== current) setPage(current);
+  }, [current, page]);
+
+  const start = (current - 1) * PAGE_SIZE;
+  const shown = papers.slice(start, start + PAGE_SIZE);
+
+  const go = (next) => {
+    const clamped = Math.min(Math.max(next, 1), total);
+    if (clamped === current) return;
+    setPage(clamped);
+    requestAnimationFrame(() => scrollToAnchor(topRef));
+  };
+
+  if (papers.length === 0) return null;
+
+  return (
+    <div ref={topRef} className="scroll-mt-24">
+      <p className="mb-3 font-display text-[12px] tabular-nums text-ink-600">
+        {t("pubsUI.pageRange", {
+          from: start + 1,
+          to: start + shown.length,
+          total: papers.length,
+        })}
+      </p>
+      <div className="grid gap-4">
+        {shown.map((p) => (
+          <PaperCard key={p.id} paper={p} />
+        ))}
+      </div>
+      <Pagination current={current} total={total} onGo={go} />
+    </div>
+  );
+}
+
 /* ---------- 키워드별 보기 (§2-1 — 칩 제거, 마스터-디테일) ---------- */
 const ALL_KEY = "__all__";
 
@@ -265,11 +412,7 @@ function KeywordView({ pool }) {
         </label>
         <div ref={detailRef} className="mt-6 scroll-mt-20">
           <DetailHeading title={title} count={papers.length} />
-          <div className="grid gap-4">
-            {papers.map((p) => (
-              <PaperCard key={p.id} paper={p} />
-            ))}
-          </div>
+          <PaperList papers={papers} resetKey={`kw-${active}-${pool.length}`} />
         </div>
       </div>
     );
@@ -304,11 +447,7 @@ function KeywordView({ pool }) {
       }
     >
       <DetailHeading title={title} count={papers.length} />
-      <div className="grid gap-4">
-        {papers.map((p) => (
-          <PaperCard key={p.id} paper={p} />
-        ))}
-      </div>
+      <PaperList papers={papers} resetKey={`kw-${active}-${pool.length}`} />
     </MasterDetail>
   );
 }
@@ -569,11 +708,10 @@ function JournalView({ pool }) {
         </div>
       </div>
 
-      <div className="grid gap-4">
-        {filtered.map((p) => (
-          <PaperCard key={p.id} paper={p} />
-        ))}
-      </div>
+      <PaperList
+        papers={filtered}
+        resetKey={`jn-${journal}-${subKeyword ?? ""}-${subRange?.label ?? ""}-${pool.length}`}
+      />
       {filtered.length === 0 && (
         <p className="py-8 text-center text-sm text-ink-600">{t("pubsUI.none")}</p>
       )}

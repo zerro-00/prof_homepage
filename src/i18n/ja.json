@@ -311,7 +311,12 @@
     "authorsLabel": "著者",
     "authorHint": "著者名をクリックすると、その修了生の進路情報を表示します。",
     "authorNote": "修了生の共著表記は、原典で著者を確認できた論文に限ります。",
-    "personAria": "{{name}}の進路情報を見る"
+    "personAria": "{{name}}の進路情報を見る",
+    "pageNavLabel": "論文一覧のページ",
+    "prevPage": "← 前へ",
+    "nextPage": "次へ →",
+    "pageAria": "{{page}}ページへ移動",
+    "pageRange": "全 {{total}} 件 · {{from}}–{{to}} を表示中"
   },
   "keywords": {
     "모바일·앱": "モバイル・アプリ",

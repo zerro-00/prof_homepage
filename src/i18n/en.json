@@ -311,7 +311,12 @@
     "authorsLabel": "Authors",
     "authorHint": "Click an author’s name to see where that alumnus went on to.",
     "authorNote": "Student co-authorship is shown only for papers whose authorship was verified against the original source.",
-    "personAria": "View placement of {{name}}"
+    "personAria": "View placement of {{name}}",
+    "pageNavLabel": "Publication list pages",
+    "prevPage": "← Prev",
+    "nextPage": "Next →",
+    "pageAria": "Go to page {{page}}",
+    "pageRange": "{{total}} publications · showing {{from}}–{{to}}"
   },
   "keywords": {
     "모바일·앱": "Mobile & Apps",

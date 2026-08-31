@@ -311,7 +311,12 @@
     "authorsLabel": "作者",
     "authorHint": "点击作者姓名即可查看该毕业生的去向信息。",
     "authorNote": "仅对已在原文中核实作者信息的论文标注毕业生合著。",
-    "personAria": "查看{{name}}的去向信息"
+    "personAria": "查看{{name}}的去向信息",
+    "pageNavLabel": "论文列表分页",
+    "prevPage": "← 上一页",
+    "nextPage": "下一页 →",
+    "pageAria": "转到第 {{page}} 页",
+    "pageRange": "共 {{total}} 篇 · 显示 {{from}}–{{to}}"
   },
   "keywords": {
     "모바일·앱": "移动·应用",
