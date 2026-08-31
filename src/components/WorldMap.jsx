@@ -7,9 +7,12 @@ import { localizeField } from "../i18n/index.js";
 import { worksForStudent } from "../data/publications.js";
 import geoData from "../data/countries-110m.json";
 
-const MAP_W = 980;
-const MAP_H = 470;
-const PROJECTION_CONFIG = { scale: 165, center: [15, 8] };
+// §3 지도 확대 — full-bleed 폭을 전부 쓰고, 남극을 잘라내 북반구를 크게 잡는다.
+// viewBox 1120×650(비 0.58)은 1440px 화면의 full-bleed 폭에서 자연 높이가 620px을 넘긴다.
+// scale 240 / center [15, 12]에서 모든 핀(휴스턴 x172 ~ 멜버른 x998, y185~536)이 여백 안에 든다.
+const MAP_W = 1120;
+const MAP_H = 650;
+const PROJECTION_CONFIG = { scale: 240, center: [15, 12] };
 
 // ComposableMap과 동일한 투영을 재현해 핀의 화면 좌표를 미리 계산한다.
 // 8px 이내로 겹치는 핀(예: 서울 ↔ 세종 3.7px)은 최대 6px 벌리고
@@ -19,8 +22,9 @@ const PROJECTION = geoNaturalEarth1()
   .center(PROJECTION_CONFIG.center)
   .translate([MAP_W / 2, MAP_H / 2]);
 
-const OVERLAP_PX = 8;
-const SPREAD_PX = 6;
+// 핀이 커진 만큼(5→7px) 겹침 판정·분리 거리도 비례해서 키운다
+const OVERLAP_PX = 11;
+const SPREAD_PX = 8;
 
 function layoutPins(pins) {
   const pts = pins.map((pin) => ({ pin, xy: PROJECTION(pin.coordinates) ?? [0, 0], dx: 0, dy: 0 }));
@@ -230,9 +234,11 @@ export default function WorldMap({
   return (
     <div>
       <div
-        className="relative overflow-hidden rounded-2xl border border-line bg-base-900/70"
+        className={`relative overflow-hidden rounded-2xl border border-line bg-base-900/70 ${
+          compact ? "" : "flex items-center xl:min-h-[620px] [@media(min-width:1440px)]:min-h-[720px]"
+        }`}
         onMouseLeave={() => onHoverPin(null)}
-        style={compact ? { height: 260 } : undefined}
+        style={compact ? { height: 340 } : undefined}
       >
         <div
           className="pointer-events-none absolute inset-0"
@@ -282,14 +288,14 @@ export default function WorldMap({
             {arcs.map((a, i) => {
               const dim = highlightPinId && highlightPinId !== a.id;
               const lit = highlightPinId === a.id;
-              const base = a.faculty ? 0.3 : 0.22;
+              const base = a.faculty ? 0.36 : 0.28;
               return (
                 <path
                   key={a.id}
                   className={`arc-line${instant ? " is-instant" : ""}`}
                   d={a.d}
                   pathLength="1"
-                  strokeWidth={0.8}
+                  strokeWidth={1.2}
                   strokeDasharray="1"
                   style={{
                     stroke: a.faculty ? "var(--arc-faculty)" : "var(--arc)",
@@ -310,7 +316,7 @@ export default function WorldMap({
             const core = isFaculty ? "var(--pin-faculty)" : "var(--pin)";
             const coreActive = isFaculty ? "var(--pin-faculty-active)" : "var(--pin-active)";
             const ring = isFaculty ? "var(--pin-faculty-active)" : "var(--pin-ring)";
-            const r = isHot ? 6.3 : isFaculty ? 5.2 : 4.5;
+            const r = isHot ? 9.5 : isFaculty ? 8 : 7;
             const spread = dx !== 0 || dy !== 0;
             return (
               <Marker
@@ -341,9 +347,9 @@ export default function WorldMap({
                     {/* 호가 도착하면 핀 팝인 */}
                     {(isHot || (isFaculty && !isMembers)) && (
                       <circle
-                        r={6}
+                        r={11}
                         fill="none"
-                        strokeWidth={1.2}
+                        strokeWidth={1.6}
                         className="pin-pulse"
                         style={{ stroke: ring }}
                       />
@@ -357,7 +363,7 @@ export default function WorldMap({
                       <circle
                         r={r}
                         fill="none"
-                        strokeWidth={1.6}
+                        strokeWidth={2}
                         style={{
                           stroke: isHot ? "var(--pin-active)" : "var(--color-accent-300)",
                           transition: "all .2s",
@@ -366,7 +372,7 @@ export default function WorldMap({
                     ) : (
                       <circle
                         r={r}
-                        strokeWidth={1.5}
+                        strokeWidth={2}
                         style={{
                           fill: isHot ? coreActive : core,
                           stroke: "var(--pin-stroke)",
@@ -378,11 +384,11 @@ export default function WorldMap({
                     {pin.entries.length > 1 && (
                       <text
                         textAnchor="middle"
-                        y={-10}
+                        y={-14}
                         className="pointer-events-none select-none"
                         style={{
                           fontFamily: "'Space Grotesk', sans-serif",
-                          fontSize: 9.5,
+                          fontSize: 13,
                           fontWeight: 700,
                           fill: isFaculty ? "var(--pin-faculty-active)" : "var(--pin-active)",
                           paintOrder: "stroke",
@@ -398,21 +404,21 @@ export default function WorldMap({
                       겹침 완화로 옮긴 핀은 라벨도 이동 방향 바깥쪽으로 밀어야
                       두 라벨이 서로 교차하지 않는다 (서울 ↔ 세종). */}
                   <text
-                    x={spread ? dx * 1.8 + (dx >= 0 ? 10 : -10) : (pin.labelDx ?? 10)}
-                    y={spread ? dy * 1.8 + (dy < 0 ? -3 : 11) : (pin.labelDy ?? 4)}
+                    x={spread ? dx * 1.8 + (dx >= 0 ? 14 : -14) : (pin.labelDx ?? 14)}
+                    y={spread ? dy * 1.8 + (dy < 0 ? -5 : 15) : (pin.labelDy ?? 5)}
                     textAnchor={
-                      spread ? (dx >= 0 ? "start" : "end") : (pin.labelDx ?? 10) < 0 ? "end" : "start"
+                      spread ? (dx >= 0 ? "start" : "end") : (pin.labelDx ?? 14) < 0 ? "end" : "start"
                     }
                     className="pointer-events-none hidden select-none md:block"
                     style={{
                       fontFamily: "'Space Grotesk', sans-serif",
-                      fontSize: 8.5,
-                      fontWeight: isHot ? 700 : 600,
+                      fontSize: 15,
+                      fontWeight: isHot ? 700 : 500,
                       letterSpacing: "0.08em",
                       fill: isHot ? "var(--pin-active)" : "var(--map-label)",
                       paintOrder: "stroke",
                       stroke: "var(--pin-stroke)",
-                      strokeWidth: 3,
+                      strokeWidth: 2,
                     }}
                   >
                     {pin.region}
@@ -423,10 +429,10 @@ export default function WorldMap({
           })}
         </ComposableMap>
 
-        <div className="absolute left-4 top-4 font-display text-[11px] uppercase tracking-[0.3em] text-ink-600">
+        <div className="absolute left-4 top-4 font-display text-[13px] uppercase tracking-[0.3em] text-ink-600">
           {t("map.hud")}
         </div>
-        <div className="absolute right-4 top-4 hidden items-center gap-4 text-[11px] text-ink-500 md:flex">
+        <div className="absolute right-4 top-4 hidden items-center gap-4 text-[13px] text-ink-500 md:flex">
           <span className="flex items-center gap-1.5">
             <span className="inline-block h-2.5 w-2.5 rounded-full bg-gold-400" />
             {t("map.legendFaculty")}

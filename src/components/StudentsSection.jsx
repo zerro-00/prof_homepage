@@ -383,7 +383,10 @@ export default function StudentsSection({ focus = null, navigate }) {
       </div>
 
       {/* 좌: 상시 명단 패널 / 우: 지도 (모바일은 지도 축약 후 명단) */}
-      <div ref={mapRef} className="scroll-mt-20 lg:grid lg:grid-cols-[320px_minmax(0,1fr)] lg:gap-6">
+      {/* §3: xl 이상에서 컨테이너 마진을 풀어 full-bleed. 남는 폭은 전부 지도가 가져간다.
+          (body가 overflow-x:hidden이라 50vw 계산으로 가로 스크롤이 생기지 않는다) */}
+      <div ref={mapRef} className="scroll-mt-20 xl:mx-[calc(50%-50vw)] xl:px-8">
+        <div className="lg:grid lg:grid-cols-[260px_minmax(0,1fr)] lg:gap-6">
         <div className="order-2 mt-6 lg:order-1 lg:mt-0">
           <div className="rounded-2xl border border-line bg-base-900/70 p-4">
             <div className="mb-2 flex items-baseline justify-between gap-2">
@@ -395,7 +398,7 @@ export default function StudentsSection({ focus = null, navigate }) {
               </span>
             </div>
             <ul
-              className="thin-scroll -mx-1 max-h-[380px] overflow-y-auto px-1 lg:max-h-[420px]"
+              className="thin-scroll -mx-1 max-h-[380px] overflow-y-auto px-1 lg:max-h-[460px] xl:max-h-[520px]"
             >
               {(tab === "all" ? ORDER : [tab]).map((g) => (
                 <li key={g}>
@@ -464,6 +467,7 @@ export default function StudentsSection({ focus = null, navigate }) {
               </Suspense>
             </div>
           )}
+        </div>
         </div>
       </div>
 
