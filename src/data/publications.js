@@ -22,6 +22,13 @@ const _SSCI = [
   // ---------- 2026 ----------
   {
     id: "ssci-2026-01",
+    // 저자 확인 (19차 §7-5): Crossref 출판사 예치 메타데이터에서 full name 4인 확인.
+    // 'Y Kwak'(Google Scholar 이니셜 표기)의 정체가 Youshin Kwak(곽유신)으로 확정됐다.
+    // ⚠️ 'Jikyung (Jeanne) Kim'은 IE University 소속 외부 공동연구자 — 김지연(kim-jeeyeon)이 아니다.
+    authors: ["Chang Hee Park", "Jikyung (Jeanne) Kim", "Youshin Kwak", "Jeonghye Choi"],
+    studentIds: ["kwak-yushin"],
+    authorSource: "Crossref 출판사 메타데이터 (DOI 10.1016/j.jbusres.2026.116256, 2026.09.01 확인)",
+    doi: "10.1016/j.jbusres.2026.116256",
     title:
       "Free Versus Paid Over-the-Top Video Streaming Services and the Influence of Social Media",
     journal: "Journal of Business Research",
