@@ -1,11 +1,15 @@
 @import "tailwindcss";
 
 /* ============================================================
-   색 토큰 — v1(main) / v3(design-v3)의 유일한 차이 지점.
-   컴포넌트에는 hex·rgba를 직접 쓰지 말고 반드시 이 토큰을 경유할 것.
+   design-v3 — 흰 배경 (19차 §2)
 
-   v1 = 파란 배경 (19차 §1). 기준 팔레트는 교수님 발표자료 「AI쇼핑시대」에서 추출.
-   대비 실측값은 CLAUDE.md 참조. #002855보다 어두운 값을 쓰지 말 것.
+   ⚠️ 이 브랜치는 main과 **레이아웃·기능이 100% 동일하고 색만 다르다.**
+   `git diff main design-v3 --stat`이 이 파일 + CLAUDE.md만 나와야 한다.
+   컴포넌트를 건드리지 말 것. 섹션 리듬은 main이 심어 둔 data-surface 훅만 보고
+   --paper / --paper-2 교대로만 만든다. **본문 중간에 파란 띠를 넣지 말 것.**
+   파랑은 상단 네비와 하단 푸터(--band)에만 쓴다.
+
+   기준 팔레트는 교수님 발표자료 「AI쇼핑시대」에서 추출. 대비 실측값은 CLAUDE.md 참조.
    ============================================================ */
 
 @theme {
@@ -13,73 +17,142 @@
     system-ui, "Segoe UI", sans-serif;
   --font-display: "Space Grotesk", "Pretendard Variable", sans-serif;
 
-  /* 면(surface) — 전부 파랑.
-     카드는 bg-base-900/70처럼 알파와 함께 쓰이므로, 합성 결과가 지령서의
-     --bg-1 #003B70 / --bg-2 #0A4A85에 앉도록 토큰 값을 그만큼 올려 두었다. */
-  --color-base-950: #002855; /* 페이지 배경 --bg-0 */
-  --color-base-900: #00437c; /* 카드 면 (/70 합성 시 ≈ #003B70) */
-  --color-base-850: #0a4a85; /* 떠 있는 패널·드롭다운 --bg-2 */
-  --color-base-800: #0f5896; /* 칩·작은 배지·hover 면 (/50~/80으로 사용) */
-  --color-base-700: #0a4a85;
-  --color-base-600: #2e76b5; /* 테두리 hover·비율 바 — 비텍스트 전용 */
-  --color-line: rgba(214, 222, 232, 0.2);
+  /* 면(surface) — 흰 종이.
+     main과 같은 토큰 이름을 쓰되 값만 뒤집는다(어두운 면 → 밝은 면).
+     카드는 bg-base-900/70처럼 알파와 함께 쓰이므로 흰 배경 위에서
+     거의 보이지 않는다 → 카드는 배경색 대신 1px 괘선으로 구분한다. */
+  --color-base-950: #ffffff; /* 페이지 배경 --paper */
+  --color-base-900: #ffffff; /* 카드 — 면색 없이 괘선으로만 */
+  --color-base-850: #f5f7fa; /* 떠 있는 패널·드롭다운 --paper-2 */
+  --color-base-800: #f5f7fa; /* 칩·작은 배지 */
+  --color-base-700: #dceaf5;
+  --color-base-600: #a9c2da; /* 테두리 hover·비율 바 — 비텍스트 */
+  --color-line: #d6dee8; /* 1px 괘선 --rule */
 
   /* 텍스트 */
-  --color-ink-100: #f5f7fa; /* 본문   --text-0 */
-  --color-ink-300: #d6dee8; /* 보조   --text-1 */
-  --color-ink-500: #a8bcd2; /* 약보조 --text-2 */
-  --color-ink-600: #a8bcd2; /* 약보조 --text-2 */
+  --color-ink-100: #263238; /* 본문   --ink */
+  --color-ink-300: #263238; /* 본문   --ink */
+  --color-ink-500: #5a6b78; /* 보조   --ink-2 */
+  --color-ink-600: #5a6b78; /* 보조   --ink-2
+                               (§B-1: --ink-3 #8494A0은 3.12:1로 미달이라 폐기) */
 
   /* 포인트 */
-  --color-accent-300: #dceaf5; /* kicker·활성 언더라인 --accent-1 */
-  --color-accent-400: #8fc3f0; /* 링크·강조 숫자 --accent-2 */
-  --color-accent-500: #4c89c4; /* ⚠️ 비텍스트 전용 (3.96:1) --accent-3 */
-  --color-accent-600: #0a4a85; /* 그라디언트 끝단 — 비텍스트 */
+  --color-accent-300: #003b70; /* kicker·강조 텍스트 --accent */
+  --color-accent-400: #003b70; /* 링크·활성 --accent */
+  --color-accent-500: #0a4a85; /* hover --accent-2 */
+  --color-accent-600: #dceaf5; /* 그라디언트 끝단 — 비텍스트 */
   --color-yonsei: #003b70;
 
-  /* 골드 — 교수 임용 핀 · 수상 ★ 전용 */
-  --color-gold-300: #e0c68f;
-  --color-gold-400: #c6a15b;
-  --color-gold-500: #c6a15b;
+  /* 골드 — 흰 배경에서는 #C6A15B가 2.4:1로 미달이라 --gold-ink만 쓴다 (§2·§B-1) */
+  --color-gold-300: #7a6031;
+  --color-gold-400: #7a6031;
+  --color-gold-500: #7a6031;
 
-  --color-mint-400: #7fc4b4;
+  --color-mint-400: #7a6031;
 }
 
-/* Tailwind 유틸리티가 아니라 var()로만 참조하는 색 — SVG 지도, 그라디언트, 선택 영역. */
 :root {
-  /* SSCI/KCI — 12px 텍스트라 4.5:1 이상을 만족하는 값만 쓴다 (바도 같은 값) */
-  --ssci-bar: #8fc3f0;
-  --ssci-text: #8fc3f0;
-  --kci-bar: #7fc4b4;
-  --kci-text: #7fc4b4;
+  /* 논문 카드 좌측 3px 바 — SSCI는 accent, KCI는 gold-ink */
+  --ssci-bar: #003b70;
+  --ssci-text: #003b70;
+  --kci-bar: #7a6031;
+  --kci-text: #7a6031;
 
-  /* 발광(글로우) — v3는 transparent로 끈다 */
-  --glow-strong: rgba(10, 74, 133, 0.55);
-  --glow-soft: rgba(10, 74, 133, 0.3);
+  /* 발광·글로우 전부 제거 (§2) — 그림자는 아주 옅게만 */
+  --glow-strong: rgba(38, 50, 56, 0.06);
+  --glow-soft: rgba(38, 50, 56, 0.06);
 
-  --grid-line: rgba(220, 234, 245, 0.05);
-  --selection: rgba(76, 137, 196, 0.45);
-  --hero-glow: rgba(10, 74, 133, 0.55);
+  --grid-line: transparent;
+  --selection: rgba(220, 234, 245, 0.9);
+  --hero-glow: transparent;
 
   /* 명단 패널에서 지도 핀과 연동돼 강조되는 행 */
-  --roster-hot: rgba(143, 195, 240, 0.16);
-  --roster-hover: rgba(143, 195, 240, 0.08);
+  --roster-hot: #dceaf5;
+  --roster-hover: #f5f7fa;
 
   /* 세계지도 */
-  --map-land: #0a4a85;
-  --map-land-hover: #1560a0;
-  --map-stroke: rgba(214, 222, 232, 0.18);
-  --map-glow: rgba(10, 74, 133, 0.35);
-  --map-label: #d6dee8;
-  --pin-stroke: #002855;
-  --pin: #8fc3f0;
-  --pin-active: #dceaf5;
-  --pin-ring: #8fc3f0;
-  --pin-faculty: #c6a15b;
-  --pin-faculty-active: #e0c68f;
-  /* 서울에서 뻗어나가는 호 (§3-1) — 비텍스트 */
-  --arc: #4c89c4;
-  --arc-faculty: #c6a15b;
+  --map-land: #dceaf5;
+  --map-land-hover: #c3dcef;
+  --map-stroke: #a9c2da;
+  --map-glow: transparent;
+  --map-label: #5a6b78;
+  --pin-stroke: #ffffff;
+  --pin: #003b70;
+  --pin-active: #0a4a85;
+  --pin-ring: #003b70;
+  --pin-faculty: #7a6031;
+  --pin-faculty-active: #5e4a24;
+  --arc: #003b70;
+  --arc-faculty: #7a6031;
+
+  /* 네비·푸터 전용 파란 띠 (§2) */
+  --band: #002855;
+  --on-band: #f5f7fa;
+  --on-band-active: #8fc3f0;
+}
+
+/* ---- 흰 배경용 보정 ----
+   main의 컴포넌트를 그대로 쓰기 위해, 어두운 면을 전제로 짜인 표현만 CSS로 눌러 준다. */
+
+/* 카드 그림자는 아주 옅게. 발광(box-shadow 글로우)은 위 토큰에서 이미 죽였다. */
+[class*="rounded-2xl"][class*="border"],
+[class*="rounded-xl"][class*="border"] {
+  box-shadow: 0 1px 2px rgba(38, 50, 56, 0.06);
+}
+
+/* 발광·글로우 전부 제거 (§2) — 흰 배경에서는 얼룩·띠로 보인다.
+   히어로의 그리드 배경과 큰 블러 원, 사진 뒤 그라디언트가 모두 여기서 꺼진다. */
+.blur-md,
+#profile > [aria-hidden="true"] {
+  display: none;
+}
+
+/* 히어로 사진 테두리 — v1의 골드 30% 대신 1px 괘선 (§2) */
+[class~="border-gold-400/30"] {
+  border-color: var(--color-line) !important;
+}
+
+/* 섹션 리듬 — paper / paper-2 교대. 파란 띠는 여기 넣지 않는다. */
+[data-surface="paper"] {
+  background: #f5f7fa;
+}
+[data-surface="field"] {
+  background: #ffffff;
+}
+
+/* 상단 네비 + 하단 푸터만 파랑 */
+nav.fixed {
+  background: var(--band) !important;
+  border-bottom-color: rgba(214, 222, 232, 0.24) !important;
+}
+nav.fixed a,
+nav.fixed button,
+nav.fixed span {
+  color: var(--on-band);
+}
+nav.fixed [class*="text-accent"],
+nav.fixed [aria-current="page"] {
+  color: var(--on-band-active);
+}
+nav.fixed [class*="bg-accent"] {
+  background-color: var(--on-band-active);
+}
+/* 네비 안에서 열리는 언어 드롭다운은 흰 패널로 되돌린다 */
+nav.fixed [role="menu"],
+nav.fixed [role="listbox"] {
+  background: #ffffff;
+}
+nav.fixed [role="menu"] *,
+nav.fixed [role="listbox"] * {
+  color: var(--color-ink-300);
+}
+
+footer[data-surface="deep"] {
+  background: var(--band);
+}
+footer[data-surface="deep"] * {
+  color: var(--on-band) !important;
+  border-color: rgba(214, 222, 232, 0.24) !important;
 }
 
 /* ---- 스크롤 ---- */
@@ -298,7 +371,7 @@ html[lang="ja"] body {
   width: 6px;
 }
 .thin-scroll::-webkit-scrollbar-thumb {
-  background: var(--color-accent-500);
+  background: var(--color-base-600);
   border-radius: 3px;
 }
 
