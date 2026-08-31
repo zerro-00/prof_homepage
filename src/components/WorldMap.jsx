@@ -155,7 +155,6 @@ export function PinCard({ pin, lng, onClose }) {
   const { t } = useTranslation();
   return (
     <div
-      data-lenis-prevent
       className="thin-scroll max-h-full overflow-y-auto rounded-xl border border-accent-400/40 bg-base-850/95 p-4 backdrop-blur"
     >
       <div className="mb-2 flex items-baseline justify-between gap-3">

@@ -2,7 +2,6 @@ import { Suspense, lazy, useCallback, useEffect, useRef, useState } from "react"
 import { usePrefersReducedMotion } from "./components/common.jsx";
 import { useTranslation } from "react-i18next";
 import { Globe, Check } from "lucide-react";
-import Lenis from "lenis";
 import { LANGS, ensureLanguage } from "./i18n/index.js";
 import Hero from "./components/Hero.jsx";
 
@@ -143,20 +142,6 @@ function LangSwitcher() {
   );
 }
 
-// 휠 스크롤 부드럽게 — prefers-reduced-motion이면 초기화하지 않는다(=브라우저 기본 스크롤).
-// window.__lenis로 노출해 섹션 전환(instant)·앵커 이동(smooth)이 같은 엔진을 쓰게 한다.
-function useSmoothScroll(disabled) {
-  useEffect(() => {
-    if (disabled) return;
-    const lenis = new Lenis({ lerp: 0.1, smoothWheel: true, autoRaf: true });
-    window.__lenis = lenis;
-    return () => {
-      lenis.destroy();
-      delete window.__lenis;
-    };
-  }, [disabled]);
-}
-
 export default function App() {
   const { t } = useTranslation();
   const [section, setSection] = useState(getSectionFromHash);
@@ -181,7 +166,6 @@ export default function App() {
     }, 250);
     return () => clearTimeout(timer);
   }, [section, shown, reduced]);
-  useSmoothScroll(reduced);
 
   const navigate = useCallback((id, pl = null) => {
     if (id === "publications") {
@@ -221,8 +205,8 @@ export default function App() {
 
   // 섹션 전환 시 최상단 이동은 즉시(instant) — 전환 애니메이션과 겹치지 않게 한다.
   // 섹션 "내부" 앵커 이동만 smooth (common.jsx의 useAnchorScroll).
+  // §4: 관성 스크롤 라이브러리를 쓰지 않는다. 브라우저 기본 스크롤 + scroll-behavior만.
   useEffect(() => {
-    window.__lenis?.scrollTo(0, { immediate: true });
     window.scrollTo({ top: 0, behavior: "instant" });
   }, [shown]);
 

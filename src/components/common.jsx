@@ -173,18 +173,12 @@ export function useIsMobile(query = "(max-width: 767px)") {
 }
 
 // 섹션 내부 앵커 이동 — 상단 네비 높이는 대상의 scroll-mt-* 로 확보한다.
-// lenis가 켜져 있으면 lenis 경유(휠 스크롤과 같은 엔진), 아니면 기본 scrollIntoView.
+// §4: 관성 스크롤 엔진 없이 브라우저 기본 scrollIntoView만 쓴다.
 export function useAnchorScroll() {
   return useCallback((target) => {
     const el = target?.current ?? target;
     if (!el) return;
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const behavior = reduced ? "auto" : "smooth";
-    if (window.__lenis && !reduced) {
-      const offset = parseFloat(getComputedStyle(el).scrollMarginTop) || 0;
-      window.__lenis.scrollTo(el, { offset: -offset });
-      return;
-    }
-    el.scrollIntoView({ behavior, block: "start" });
+    el.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
   }, []);
 }

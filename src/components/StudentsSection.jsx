@@ -395,7 +395,6 @@ export default function StudentsSection({ focus = null, navigate }) {
               </span>
             </div>
             <ul
-              data-lenis-prevent
               className="thin-scroll -mx-1 max-h-[380px] overflow-y-auto px-1 lg:max-h-[420px]"
             >
               {(tab === "all" ? ORDER : [tab]).map((g) => (

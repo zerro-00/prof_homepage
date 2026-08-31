@@ -149,7 +149,6 @@ function MasterDetail({ listRef, detailRef, listLabel, list, children }) {
       <nav
         ref={listRef}
         aria-label={listLabel}
-        data-lenis-prevent
         className="thin-scroll scroll-mt-20 md:sticky md:top-20 md:max-h-[calc(100vh-6rem)] md:overflow-y-auto md:pr-2"
       >
         {list}
