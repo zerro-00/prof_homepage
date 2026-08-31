@@ -271,7 +271,9 @@
     "book": "著作",
     "topJournal": "顶级期刊",
     "phdHeading": "Ph.D. · 博士课程升学",
-    "industryHeading": "Industry · 企业就职"
+    "industryHeading": "Industry · 企业就职",
+    "personFocus": "{{name}}的去向信息",
+    "clearFocus": "取消高亮"
   },
   "pubsUI": {
     "viewKeyword": "按关键词浏览",
@@ -302,7 +304,11 @@
     "booksTitle": "Books · 著作/译作",
     "badgeStudentCoauthor": "师生合著",
     "topJournalBadge": "★ Top Journal",
-    "openLink": "在新标签页打开论文原文"
+    "openLink": "在新标签页打开论文原文",
+    "authorsLabel": "作者",
+    "authorHint": "点击作者姓名即可查看该毕业生的去向信息。",
+    "authorNote": "仅对已在原文中核实作者信息的论文标注毕业生合著。",
+    "personAria": "查看{{name}}的去向信息"
   },
   "keywords": {
     "모바일·앱": "移动·应用",

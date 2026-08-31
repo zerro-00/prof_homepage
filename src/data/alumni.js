@@ -264,8 +264,9 @@ export const CITY_PINS = [
       {
         nameKo: "곽유신",
         personId: "kwak-yushin",
+        // 영문 표기는 JBR 2026 OTT 논문의 Crossref 출판사 메타데이터에서 확인 (DOI 10.1016/j.jbusres.2026.116256)
         lang: {"en": {"grad": "M.S. 2022", "title": "Ph.D. Student in Marketing", "path": "Entered 2022"}, "zh": {"grad": "2022 硕士", "title": "市场营销博士生", "path": "2022 升学"}, "ja": {"grad": "2022年 修士", "title": "博士課程（マーケティング）", "path": "2022年 進学"}},
-        nameEn: null,
+        nameEn: "Youshin Kwak",
         grad: "2022 석사",
         affiliation: "Emory University",
         title: "마케팅 박사과정",

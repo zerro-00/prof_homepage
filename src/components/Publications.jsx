@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Collapse, Reveal, SectionHeading, useAnchorScroll, useIsMobile } from "./common.jsx";
 import { findPerson } from "../data/alumni.js";
@@ -11,7 +11,11 @@ import {
   groupJournalsByType,
   keywordRows,
   paperUrl,
+  authorsWithLinks,
 } from "../data/publications.js";
+
+// 논문 → 제자 이동(§5-2)을 카드 깊숙한 곳까지 prop으로 끌고 내려가지 않기 위한 컨텍스트
+const NavContext = createContext(null);
 
 /* ---------- SSCI / KCI 타입 태그 ---------- */
 function TypeTag({ type }) {
@@ -31,14 +35,10 @@ function TypeTag({ type }) {
 /* ---------- 논문 카드 — 전체가 원문 링크 (DOI 또는 검색 폴백) ---------- */
 function PaperCard({ paper }) {
   const { t } = useTranslation();
+  const navigate = useContext(NavContext);
+  const authors = authorsWithLinks(paper);
   return (
-    <a
-      href={paperUrl(paper)}
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-label={`${paper.title} — ${t("pubsUI.openLink")}`}
-      className="group relative block overflow-hidden rounded-2xl border border-line bg-base-900/70 p-5 pl-6 transition-all hover:border-accent-500/50 hover:shadow-[0_0_20px_var(--glow-soft)] focus-visible:outline-2 focus-visible:outline-accent-400 md:p-6 md:pl-7"
-    >
+    <div className="group relative overflow-hidden rounded-2xl border border-line bg-base-900/70 transition-all hover:border-accent-500/50 hover:shadow-[0_0_20px_var(--glow-soft)]">
       {/* 좌측 SSCI/KCI 구분 바 — 텍스트와 다른 토큰(비텍스트 3:1) */}
       <span
         aria-hidden="true"
@@ -51,6 +51,13 @@ function PaperCard({ paper }) {
       >
         ↗
       </span>
+      <a
+        href={paperUrl(paper)}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={`${paper.title} — ${t("pubsUI.openLink")}`}
+        className="block p-5 pl-6 focus-visible:outline-2 focus-visible:outline-accent-400 md:p-6 md:pl-7"
+      >
       <div className="mb-3 flex flex-wrap items-center gap-2 pr-6">
         <TypeTag type={paper.type} />
         {paper.tier === "top" && (
@@ -78,7 +85,32 @@ function PaperCard({ paper }) {
           </span>
         ))}
       </div>
-    </a>
+      </a>
+      {/* §5-2 논문 → 제자. 카드 전체가 원문 링크이므로 저자 줄은 <a> 밖에 둔다
+          (앵커 안에 버튼을 넣으면 마크업이 깨진다). */}
+      {authors.length > 0 && (
+        <p className="px-5 pb-5 pl-6 text-[12px] leading-relaxed text-ink-500 md:px-6 md:pb-6 md:pl-7">
+          <span className="text-ink-600">{t("pubsUI.authorsLabel")} </span>
+          {authors.map((a, i) => (
+            <span key={`${a.name}-${i}`}>
+              {i > 0 && <span aria-hidden="true">, </span>}
+              {a.personId ? (
+                <button
+                  type="button"
+                  onClick={() => navigate?.("alumni", { person: a.personId })}
+                  aria-label={t("pubsUI.personAria", { name: a.name })}
+                  className="rounded text-accent-400 underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-accent-400"
+                >
+                  {a.name}
+                </button>
+              ) : (
+                a.name
+              )}
+            </span>
+          ))}
+        </p>
+      )}
+    </div>
   );
 }
 
@@ -610,7 +642,7 @@ function KciAndBooks({ studentId = null }) {
 }
 
 /* ---------- 메인 ---------- */
-export default function Publications({ focus = null, studentFilter = null, onClearStudent }) {
+export default function Publications({ focus = null, studentFilter = null, onClearStudent, navigate }) {
   const { t, i18n } = useTranslation();
   const lng = i18n.language;
   const [mode, setMode] = useState("keyword");
@@ -702,13 +734,22 @@ export default function Publications({ focus = null, studentFilter = null, onCle
         </div>
       </Reveal>
 
-      {mode === "keyword" ? (
-        <KeywordView key={typeFilter} pool={pool} />
-      ) : (
-        <JournalView key={typeFilter} pool={pool} />
-      )}
+      <NavContext.Provider value={navigate}>
+        {mode === "keyword" ? (
+          <KeywordView key={typeFilter} pool={pool} />
+        ) : (
+          <JournalView key={typeFilter} pool={pool} />
+        )}
 
-      <KciAndBooks studentId={studentFilter?.student ?? null} />
+        <KciAndBooks studentId={studentFilter?.student ?? null} />
+      </NavContext.Provider>
+
+      {/* §5-2 안내 + §10② 저자 확인 범위 각주 */}
+      <p className="mt-10 border-t border-line pt-5 text-[12px] leading-relaxed text-ink-600">
+        {t("pubsUI.authorHint")}
+        <br />
+        {t("pubsUI.authorNote")}
+      </p>
     </section>
   );
 }

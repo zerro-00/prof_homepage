@@ -271,7 +271,9 @@
     "book": "著書",
     "topJournal": "トップジャーナル",
     "phdHeading": "Ph.D. · 博士課程進学",
-    "industryHeading": "Industry · 企業就職"
+    "industryHeading": "Industry · 企業就職",
+    "personFocus": "{{name}}の進路情報",
+    "clearFocus": "強調を解除"
   },
   "pubsUI": {
     "viewKeyword": "キーワード別に見る",
@@ -302,7 +304,11 @@
     "booksTitle": "Books · 著書/訳書",
     "badgeStudentCoauthor": "教え子との共著",
     "topJournalBadge": "★ Top Journal",
-    "openLink": "論文の原文を新しいタブで開く"
+    "openLink": "論文の原文を新しいタブで開く",
+    "authorsLabel": "著者",
+    "authorHint": "著者名をクリックすると、その修了生の進路情報を表示します。",
+    "authorNote": "修了生の共著表記は、原典で著者を確認できた論文に限ります。",
+    "personAria": "{{name}}の進路情報を見る"
   },
   "keywords": {
     "모바일·앱": "モバイル・アプリ",

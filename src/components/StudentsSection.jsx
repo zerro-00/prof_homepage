@@ -249,12 +249,13 @@ const MEMBER_IDS = new Set(CURRENT_MEMBERS.map((m) => m.personId));
 
 const TAB_KEYS = ["all", "faculty", "phd", "industry", "members"];
 
-export default function StudentsSection({ focus = null, navigate }) {
+export default function StudentsSection({ focus = null, personFocus = null, onClearPerson, navigate }) {
   const { t, i18n } = useTranslation();
   const lng = i18n.language;
   const scrollTo = useAnchorScroll();
   const mapRef = useRef(null);
   const rowRefs = useRef({});
+  const personRowRefs = useRef({});
 
   const [tab, setTab] = useState(() => (TAB_KEYS.includes(focus) ? focus : "all"));
   const [hoverPin, setHoverPin] = useState(null);
@@ -301,6 +302,26 @@ export default function StudentsSection({ focus = null, navigate }) {
     () => new Set(current.map((p) => p._pinId).filter(Boolean)),
     [current]
   );
+
+  // §5-2 논문 → 제자: 저자 이름으로 들어오면 전체 탭에서 해당 인물의 행·핀을 강조한다
+  const focusedPerson = useMemo(
+    () =>
+      personFocus
+        ? ([...all, ...groups.members].find((p) => p.personId === personFocus) ?? null)
+        : null,
+    [personFocus, all, groups]
+  );
+
+  useEffect(() => {
+    if (!focusedPerson) return;
+    setTab("all");
+    setPinnedPin(focusedPerson._pinId ?? null);
+    const timer = setTimeout(() => {
+      const row = personRowRefs.current[focusedPerson.personId];
+      (row ?? mapRef.current)?.scrollIntoView?.({ behavior: "smooth", block: "center" });
+    }, 80);
+    return () => clearTimeout(timer);
+  }, [focusedPerson]);
 
   const highlightPinId = pinnedPin ?? hoverPin;
   const shownPin = useMemo(
@@ -385,6 +406,29 @@ export default function StudentsSection({ focus = null, navigate }) {
       {/* 좌: 상시 명단 패널 / 우: 지도 (모바일은 지도 축약 후 명단) */}
       {/* §3: xl 이상에서 컨테이너 마진을 풀어 full-bleed. 남는 폭은 전부 지도가 가져간다.
           (body가 overflow-x:hidden이라 50vw 계산으로 가로 스크롤이 생기지 않는다) */}
+      {focusedPerson && (
+        <div className="mb-6 flex flex-wrap items-center gap-3 rounded-xl border border-accent-400/40 bg-base-850/70 px-4 py-3">
+          <span className="text-[14px] text-ink-100">
+            {t("students.personFocus", {
+              name: (() => {
+                const n = displayName(focusedPerson, lng);
+                return n.sub ? `${n.main} (${n.sub})` : n.main;
+              })(),
+            })}
+          </span>
+          <button
+            type="button"
+            onClick={() => {
+              setPinnedPin(null);
+              onClearPerson?.();
+            }}
+            className="rounded-lg border border-line px-3 py-1.5 text-[13px] text-ink-500 transition-colors hover:border-base-600 hover:text-ink-100"
+          >
+            {t("students.clearFocus")}
+          </button>
+        </div>
+      )}
+
       <div ref={mapRef} className="scroll-mt-20 xl:mx-[calc(50%-50vw)] xl:px-8">
         <div className="lg:grid lg:grid-cols-[260px_minmax(0,1fr)] lg:gap-6">
         <div className="order-2 mt-6 lg:order-1 lg:mt-0">
@@ -413,12 +457,16 @@ export default function StudentsSection({ focus = null, navigate }) {
                         key={p.personId}
                         person={p}
                         lng={lng}
-                        hot={!!p._pinId && highlightPinId === p._pinId}
+                        hot={
+                          p.personId === personFocus ||
+                          (!!p._pinId && highlightPinId === p._pinId)
+                        }
                         onHover={p._pinId ? (x) => setHoverPin(x._pinId) : undefined}
                         onSelect={p._pinId ? (x) => onSelectPin(x._pinId) : undefined}
                         navigate={navigate}
                         rowRef={(el) => {
                           if (p._pinId && !rowRefs.current[p._pinId]) rowRefs.current[p._pinId] = el;
+                          personRowRefs.current[p.personId] = el;
                         }}
                       />
                     ))}

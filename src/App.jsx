@@ -37,6 +37,16 @@ const writeStudentFilter = (filter) => {
   window.history.replaceState(null, "", url.toString());
 };
 
+// 논문 → 제자 (§5-2). ?person=li-yiling#alumni 형태로 남겨 새로고침·공유해도 강조가 유지된다.
+const readPersonFocus = () => new URLSearchParams(window.location.search).get("person");
+
+const writePersonFocus = (personId) => {
+  const url = new URL(window.location.href);
+  if (personId) url.searchParams.set("person", personId);
+  else url.searchParams.delete("person");
+  window.history.replaceState(null, "", url.toString());
+};
+
 const getSectionFromHash = () => {
   const h = window.location.hash.replace(/^#/, "").split("?")[0];
   return SECTION_IDS.includes(h) ? h : "profile";
@@ -147,6 +157,7 @@ export default function App() {
   const [section, setSection] = useState(getSectionFromHash);
   const [payload, setPayload] = useState(null);
   const [studentFilter, setStudentFilter] = useState(readStudentFilter);
+  const [personFocus, setPersonFocus] = useState(readPersonFocus);
   const payloadRef = useRef(null);
   const reduced = usePrefersReducedMotion();
   // 화면에 실제로 그려지는 섹션 — 나가는 애니메이션이 끝난 뒤 교체한다
@@ -175,6 +186,14 @@ export default function App() {
         writeStudentFilter(next);
       }
     }
+    // §5-2: 논문 카드의 저자 이름 → 제자 진출 섹션 강조
+    if (id === "alumni") {
+      setPersonFocus(pl?.person ?? null);
+      writePersonFocus(pl?.person ?? null);
+    } else if (personFocus) {
+      setPersonFocus(null);
+      writePersonFocus(null);
+    }
     payloadRef.current = pl;
     // 현재 해시에 ?journal= 같은 쿼리가 붙어 있어도 섹션이 같으면 해시를 다시 쓰지 않는다.
     if (window.location.hash.replace(/^#/, "").split("?")[0] !== id) {
@@ -183,7 +202,7 @@ export default function App() {
       payloadRef.current = null;
       setPayload(pl);
     }
-  }, []);
+  }, [personFocus]);
 
   useEffect(() => {
     const onHash = () => {
@@ -199,6 +218,8 @@ export default function App() {
   useEffect(() => {
     if (readStudentFilter() && getSectionFromHash() !== "publications") {
       window.location.hash = "publications";
+    } else if (readPersonFocus() && getSectionFromHash() !== "alumni") {
+      window.location.hash = "alumni";
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -213,11 +234,22 @@ export default function App() {
   const content = {
     profile: <Hero navigate={navigate} />,
     interests: <Interests />,
-    alumni: <StudentsSection focus={payload?.focus} navigate={navigate} />,
+    alumni: (
+      <StudentsSection
+        focus={payload?.focus}
+        personFocus={personFocus}
+        onClearPerson={() => {
+          setPersonFocus(null);
+          writePersonFocus(null);
+        }}
+        navigate={navigate}
+      />
+    ),
     publications: (
       <Publications
         focus={payload?.focus}
         studentFilter={studentFilter}
+        navigate={navigate}
         onClearStudent={() => {
           setStudentFilter(null);
           writeStudentFilter(null);
