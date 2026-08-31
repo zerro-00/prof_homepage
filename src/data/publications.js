@@ -52,6 +52,8 @@ const _SSCI = [
   },
   {
     id: "ssci-2026-03",
+    methods: ["log-panel-data"],
+    methodSource: "요약 명시(공간·날씨와 앱 사용 데이터 분석)",
     authors: ["Yiling Li", "Jeonghye Choi", "J. Kim"],
     studentIds: ["li-yiling"],
     authorSource: "출판사 원문 (14차 확정표)",
@@ -67,6 +69,8 @@ const _SSCI = [
   },
   {
     id: "ssci-2026-04",
+    methods: ["field-experiment"],
+    methodSource: "제목 명시(A Field Experiment)",
     authors: ["Jeeyeon Kim", "Wookyoung Kim", "Jeonghye Choi"],
     studentIds: ["kim-jeeyeon", "kim-wookyoung"],
     authorSource: "출판사 원문 (14차 확정표)",
@@ -99,6 +103,8 @@ const _SSCI = [
   // ---------- 2021–2025 ----------
   {
     id: "ssci-2025-01",
+    methods: ["log-panel-data"],
+    methodSource: "요약 명시(실제 온라인 게임 데이터)",
     authors: ["Wooyong Jo", "Sarang Sunder", "Jeonghye Choi", "Minakshi Trivedi"],
     studentIds: ["jo-wooyong"],
     authorSource: "출판사 원문 (14차 확정표)",
@@ -129,6 +135,8 @@ const _SSCI = [
   },
   {
     id: "ssci-2025-03",
+    methods: ["text-image-analysis"],
+    methodSource: "제목 명시(Logo Sizes in Social Media Posts)",
     authors: ["Wooyong Jo", "Hyejeong Kim", "Jeonghye Choi"],
     studentIds: ["jo-wooyong", "kim-hyejeong"],
     authorSource: "출판사 원문 (14차 확정표)",
@@ -200,6 +208,8 @@ const _SSCI = [
   },
   {
     id: "ssci-2023-01",
+    methods: ["meta-analysis"],
+    methodSource: "제목 명시(A Meta-analysis)",
     authors: ["Yeolib Kim", "Seung Hyun Kim", "Robert A. Peterson", "Jeonghye Choi"],
     studentIds: [],
     authorSource: "출판사 원문 (14차 확정표)",
@@ -213,6 +223,8 @@ const _SSCI = [
   },
   {
     id: "ssci-2023-02",
+    methods: ["machine-learning"],
+    methodSource: "제목 명시(A Recommendation System with Dynamic Preferences)",
     authors: ["Joonho Bae", "Jinkyoo Park", "Seung Bum Soh", "Jeonghye Choi"],
     studentIds: [],
     authorSource: "출판사 원문 (14차 확정표)",
@@ -227,6 +239,8 @@ const _SSCI = [
   },
   {
     id: "ssci-2022-01",
+    methods: ["field-experiment"],
+    methodSource: "제목 명시(A Field Experiment)",
     authors: ["Sanghwa Kim", "Jeonghye Choi", "Seung Hyun Kim"],
     studentIds: ["kim-sanghwa"],
     authorSource: "출판사 원문 (14차 확정표)",
@@ -241,6 +255,8 @@ const _SSCI = [
   },
   {
     id: "ssci-2022-02",
+    methods: ["text-image-analysis"],
+    methodSource: "제목 명시(Emotion in Thumbnails and Titles)",
     authors: ["Yiling Li", "Hye-jin Kim", "Boram Do", "Jeonghye Choi"],
     studentIds: ["li-yiling"],
     authorSource: "출판사 원문 (14차 확정표)",
@@ -255,6 +271,8 @@ const _SSCI = [
   },
   {
     id: "ssci-2022-03",
+    methods: ["log-panel-data"],
+    methodSource: "요약 명시(스마트폰 앱 사용 데이터 추적)",
     authors: ["Jae Yeon Yoon", "Chaehyeon Lee", "Jeonghye Choi", "Sue Ryung Chang", "Jikyung (Jeanne) Kim"],
     studentIds: [],
     authorSource: "출판사 원문 (14차 확정표)",
@@ -268,6 +286,8 @@ const _SSCI = [
   },
   {
     id: "ssci-2022-04",
+    methods: ["text-image-analysis"],
+    methodSource: "제목 명시(Evidence from Microblogging and News) + 요약 명시(감정 변화 분석)",
     authors: ["Jikyung (Jeanne) Kim", "Hang Dong", "Jeonghye Choi", "Sue Ryung Chang"],
     studentIds: [],
     authorSource: "출판사 원문 (14차 확정표)",
@@ -304,6 +324,8 @@ const _SSCI = [
   },
   {
     id: "ssci-2021-02",
+    methods: ["log-panel-data"],
+    methodSource: "제목 명시(Evidence from China and South Korea) + 요약 명시(소비자 데이터 비교)",
     authors: ["Jikyung (Jeanne) Kim", "Hyeasinn Song", "Jeonghye Choi", "Yongsup Kim", "Junghan Hong"],
     studentIds: ["song-hyeasinn"],
     authorSource: "출판사 원문 (14차 확정표)",
@@ -332,6 +354,8 @@ const _SSCI = [
   },
   {
     id: "ssci-2021-04",
+    methods: ["log-panel-data"],
+    methodSource: "제목 명시(Evidence from the French Apparel Industry) + 요약 명시(산업 데이터)",
     authors: ["Wooyong Jo", "Jikyung (Jeanne) Kim", "Jeonghye Choi"],
     studentIds: ["jo-wooyong"],
     authorSource: "출판사 원문 (14차 확정표)",
@@ -390,6 +414,8 @@ const _SSCI = [
   },
   {
     id: "ssci-2019-01",
+    methods: ["log-panel-data"],
+    methodSource: "제목 명시(Evidence from TripAdvisor.com) + 요약 명시(리뷰 데이터 분석)",
     authors: ["Yeohong Yoon", "Alex Jiyoung Kim", "Jeeyeon Kim", "Jeonghye Choi"],
     studentIds: ["yoon-yeohong", "kim-jeeyeon"],
     authorSource: "출판사 원문 (14차 확정표)",
@@ -520,6 +546,8 @@ const _SSCI = [
   },
   {
     id: "ssci-2010-01",
+    methods: ["econometric-model"],
+    methodSource: "제목 명시(Spatiotemporal Analysis)",
     title:
       "Spatiotemporal Analysis of Imitation Behavior across New Buyers at an Online Grocery Retailer",
     journal: "Journal of Marketing Research",
@@ -603,6 +631,8 @@ const _KCI = [
   // ---------- 2024 ----------
   {
     id: "kci-2024-01",
+    methods: ["text-image-analysis"],
+    methodSource: "제목 명시(가상 인플루언서의 얼굴 특성)",
     authors: ["김혜정", "최정혜", "박창희", "김지연"],
     studentIds: ["kim-hyejeong", "kim-jeeyeon"],
     authorSource: "KCI 포털 원문 (14차 확정표)",
@@ -646,6 +676,8 @@ const _KCI = [
   },
   {
     id: "kci-2023-02",
+    methods: ["machine-learning"],
+    methodSource: "제목 명시(with Machine Learning)",
     authors: ["정현우", "최정혜"],
     studentIds: ["jung-hyunwoo"],
     authorSource: "KCI 포털 원문 (14차 확정표)",
@@ -744,6 +776,8 @@ const _KCI = [
   },
   {
     id: "kci-2022-03",
+    methods: ["causal-inference", "econometric-model"],
+    methodSource: "제목 명시(Bayesian Multilevel Difference-in-Differences Approach)",
     authors: ["정현우", "Li Yiling", "최정혜"],
     studentIds: ["jung-hyunwoo", "li-yiling"],
     authorSource: "KCI 포털 원문 (14차 확정표)",
@@ -799,6 +833,8 @@ const _KCI = [
   },
   {
     id: "kci-2022-07",
+    methods: ["log-panel-data"],
+    methodSource: "요약 명시(온라인 구직 행동 데이터)",
     title:
       "Who Considers Leaving a Job in a Pandemic?: Determinants of Online Job Search Behavior in COVID-19",
     journal: "전문경영인연구",
@@ -812,6 +848,8 @@ const _KCI = [
   // ---------- 2021 ----------
   {
     id: "kci-2021-01",
+    methods: ["econometric-model"],
+    methodSource: "제목 명시(시계열 분석을 중심으로)",
     authors: ["한수현", "장정화", "장수령", "최정혜"],
     studentIds: [],
     authorSource: "KCI 포털 원문 (14차 확정표)",
@@ -841,6 +879,8 @@ const _KCI = [
   // ---------- 2020 ----------
   {
     id: "kci-2020-01",
+    methods: ["case-study"],
+    methodSource: "제목 명시(어메이징 브루잉 컴퍼니의 사례를 중심으로)",
     authors: ["장성현", "임수빈", "최정혜"],
     studentIds: [],
     authorSource: "KCI 포털 원문 (14차 확정표)",
@@ -895,6 +935,8 @@ const _KCI = [
   // ---------- 2016 ----------
   {
     id: "kci-2016-01",
+    methods: ["text-image-analysis"],
+    methodSource: "제목 명시(기업 및 소비자 텍스트 분석)",
     authors: ["김지연", "조우용", "최정혜", "정예림"],
     studentIds: ["kim-jeeyeon", "jo-wooyong"],
     authorSource: "KCI 포털 원문 (14차 확정표)",
@@ -1056,6 +1098,8 @@ const _KCI = [
   },
   {
     id: "kci-2015-04",
+    methods: ["econometric-model"],
+    methodSource: "제목 명시(경험재에 대한 시계열 분석을 중심으로)",
     title:
       "오프라인과 온라인 채널상의 기존제품과 신제품의 판매 성과: 경험재에 대한 시계열 분석을 중심으로",
     journal: "지식경영연구",
@@ -1205,6 +1249,46 @@ export const BOOKS = [
 // 저널명 옆 ★는 쓰지 않는다. "위에 있다"는 순서 자체가 위상 표현이다.
 // 정렬: rank 오름차순 → 같은 rank 안에서 편수 내림차순 → 가나다/알파벳순
 // 논문의 tier 필드는 카드 배지에서 계속 쓰므로 건드리지 않는다.
+// ---------------------------------------------------------------
+// 방법론 분류 (22차 §3-2)
+// ⚠️ 아래 9개만 사용한다. 새 값을 만들지 말 것.
+// ⚠️ 제목·초록·요약문에 명시된 근거가 있을 때만 부여하고, 근거는 methodSource에 남긴다.
+//    근거가 없으면 빈 배열이 정답이다 — 추측으로 채우지 말 것.
+export const METHODS = [
+  "field-experiment",
+  "causal-inference",
+  "econometric-model",
+  "machine-learning",
+  "text-image-analysis",
+  "log-panel-data",
+  "survey-lab-experiment",
+  "meta-analysis",
+  "case-study",
+];
+
+// 방법론별 편수 — 편수 내림차순, 같으면 taxonomy 순서
+export function methodRows(pubs) {
+  const count = new Map(METHODS.map((m) => [m, 0]));
+  let unclassified = 0;
+  for (const p of pubs) {
+    const ms = p.methods ?? [];
+    if (!ms.length) {
+      unclassified += 1;
+      continue;
+    }
+    for (const m of ms) {
+      if (!count.has(m)) {
+        console.warn(`[methods] 등록되지 않은 방법론: ${m} (${p.id})`);
+        continue;
+      }
+      count.set(m, count.get(m) + 1);
+    }
+  }
+  const rows = METHODS.map((key) => ({ key, count: count.get(key) })).filter((r) => r.count > 0);
+  rows.sort((a, b) => b.count - a.count || METHODS.indexOf(a.key) - METHODS.indexOf(b.key));
+  return { rows, unclassified };
+}
+
 export const JOURNAL_RANK = {
   // SSCI rank 1
   "Journal of Marketing Research": 1,

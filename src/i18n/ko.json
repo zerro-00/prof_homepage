@@ -321,7 +321,12 @@
     "searchResult": "\"{{query}}\" 검색 결과 {{count}}편",
     "noResults": "검색 결과가 없습니다. 다른 단어로 찾아보세요.",
     "clearAllFilters": "필터 전체 해제",
-    "openPaperAria": "{{title}} 원문 보기"
+    "openPaperAria": "{{title}} 원문 보기",
+    "viewMethod": "방법론별 보기",
+    "methodListLabel": "방법론 목록",
+    "pickMethod": "방법론 선택",
+    "methodUnclassified": "분류 예정 {{count}}편",
+    "filterJournal": "저널"
   },
   "keywords": {
     "모바일·앱": "모바일·앱",
@@ -429,5 +434,16 @@
     "kci-2015-03": "이사를 가면 온라인에서 사는 브랜드도 바뀔까? 소비자의 지역 이주가 온라인 브랜드 선호의 변화에 미치는 영향을 분석한 연구.",
     "kci-2015-04": "신제품과 기존제품은 파는 곳(온라인/오프라인)에 따라 성적이 달라진다. 경험재의 시계열 데이터를 분석해 채널별 판매 성과의 차이를 살펴본 연구.",
     "kci-2014-03": "게임을 떠나는 이유는 새 유저와 오래된 유저가 다르다. 온라인 게임에서 고객 유형별로 이탈을 부르는 요인을 분석한 연구."
+  },
+  "methods": {
+    "field-experiment": "현장실험",
+    "causal-inference": "인과추론",
+    "econometric-model": "계량모형·회귀분석",
+    "machine-learning": "머신러닝·예측모형",
+    "text-image-analysis": "텍스트·이미지 분석",
+    "log-panel-data": "로그·패널 데이터 분석",
+    "survey-lab-experiment": "설문·실험실 실험",
+    "meta-analysis": "메타분석",
+    "case-study": "사례연구"
   }
 }
