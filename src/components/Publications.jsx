@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Collapse, Reveal, SectionHeading, useAnchorScroll, useIsMobile } from "./common.jsx";
 import { findPerson } from "../data/alumni.js";
@@ -12,20 +12,74 @@ import {
   keywordRows,
   paperUrl,
   authorsWithLinks,
+  METHODS,
+  methodRows,
 } from "../data/publications.js";
 
 // 논문 → 제자 이동(§5-2)을 카드 깊숙한 곳까지 prop으로 끌고 내려가지 않기 위한 컨텍스트
 const NavContext = createContext(null);
 
+// 검색어(21차 §5) — 카드 안 제목·저자 하이라이트에만 쓴다
+const QueryContext = createContext("");
+
+const normalize = (v) => v.trim().toLowerCase();
+
+/* 매칭 구간만 <mark>로 감싼다. 하이라이트는 제목·저자에만 (요약문에는 하지 않는다). */
+function Highlight({ text }) {
+  const query = normalize(useContext(QueryContext));
+  if (!query || !text) return text;
+  const lower = String(text).toLowerCase();
+  const parts = [];
+  let from = 0;
+  for (;;) {
+    const at = lower.indexOf(query, from);
+    if (at === -1) break;
+    if (at > from) parts.push(String(text).slice(from, at));
+    parts.push(
+      <mark
+        key={`${at}-${parts.length}`}
+        className="rounded-[3px] bg-accent-500/25 text-inherit"
+      >
+        {String(text).slice(at, at + query.length)}
+      </mark>
+    );
+    from = at + query.length;
+  }
+  if (!parts.length) return text;
+  if (from < String(text).length) parts.push(String(text).slice(from));
+  return parts;
+}
+
+/* 검색 대상: 제목 · 저널명 · 저자명(원문 표기 + 제자의 한글·영문 표기) · 키워드(원문·번역) ·
+   연도 · 3줄 요약(번역). 요약을 넣는 이유 — SSCI 논문은 제목이 영문뿐이라
+   한국어 검색어로는 요약 말고 걸릴 데가 없다. 형태소 분석 없이 부분 일치로 충분하다. */
+function haystack(paper, t) {
+  const names = authorsWithLinks(paper).flatMap((a) =>
+    a.person ? [a.name, a.person.nameKo, a.person.nameEn] : [a.name]
+  );
+  return [
+    paper.title,
+    paper.journal,
+    String(paper.year),
+    t(`pubs.${paper.id}`),
+    ...names,
+    ...paper.keywords,
+    ...paper.keywords.map((k) => t(`keywords.${k}`)),
+    ...(paper.methods ?? []),
+    ...(paper.methods ?? []).map((m) => t(`methods.${m}`)),
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+}
+
 /* ---------- SSCI / KCI 타입 태그 ---------- */
+/* 알약 배지를 쓰지 않는다 (22차 §2-5) — 유형 구분은 좌측 3px 바와 이 텍스트로만 한다 */
 function TypeTag({ type }) {
   return (
     <span
-      className="inline-flex items-center rounded-md border px-1.5 py-0.5 font-display text-[10px] font-semibold tracking-wide"
-      style={{
-        color: type === "SSCI" ? "var(--ssci-text)" : "var(--kci-text)",
-        borderColor: type === "SSCI" ? "var(--ssci-bar)" : "var(--kci-bar)",
-      }}
+      className="font-display text-[11px] font-semibold tracking-[0.08em]"
+      style={{ color: type === "SSCI" ? "var(--ssci-text)" : "var(--kci-text)" }}
     >
       {type}
     </span>
@@ -38,25 +92,19 @@ function PaperCard({ paper }) {
   const navigate = useContext(NavContext);
   const authors = authorsWithLinks(paper);
   return (
-    <div className="group relative overflow-hidden rounded-2xl border border-line bg-base-900/70 transition-all hover:border-accent-500/50 hover:shadow-[0_0_20px_var(--glow-soft)]">
+    <div className="group relative overflow-hidden rounded-2xl border border-line bg-surface-2 transition-all hover:border-accent-500/50 hover:shadow-[0_0_20px_var(--glow-soft)]">
       {/* 좌측 SSCI/KCI 구분 바 — 텍스트와 다른 토큰(비텍스트 3:1) */}
       <span
         aria-hidden="true"
-        className="absolute inset-y-0 left-0 w-[3px]"
+        className="absolute inset-y-0 left-0 w-[3px] rounded-r"
         style={{ background: paper.type === "SSCI" ? "var(--ssci-bar)" : "var(--kci-bar)" }}
       />
-      <span
-        aria-hidden="true"
-        className="absolute right-4 top-4 font-display text-sm text-ink-600 opacity-0 transition-all duration-200 group-hover:text-accent-300 group-hover:opacity-100 group-focus-visible:opacity-100"
-      >
-        ↗
-      </span>
       <a
         href={paperUrl(paper)}
         target="_blank"
         rel="noopener noreferrer"
-        aria-label={`${paper.title} — ${t("pubsUI.openLink")}`}
-        className="block p-5 pl-6 focus-visible:outline-2 focus-visible:outline-accent-400 md:p-6 md:pl-7"
+        aria-label={t("pubsUI.openPaperAria", { title: paper.title })}
+        className="block p-6 pl-7 focus-visible:outline-2 focus-visible:outline-accent-400"
       >
       <div className="mb-3 flex flex-wrap items-center gap-2 pr-6">
         <TypeTag type={paper.type} />
@@ -70,16 +118,33 @@ function PaperCard({ paper }) {
         </span>
       </div>
       <h4 className="text-[15px] font-semibold leading-snug text-ink-100 transition-colors group-hover:text-accent-300 md:text-base">
-        {paper.title}
+        <Highlight text={paper.title} />
+        {/* 원문으로 나간다는 표시 — 제목 바로 뒤 12px 아이콘 (21차 §3) */}
+        <svg
+          aria-hidden="true"
+          width="12"
+          height="12"
+          viewBox="0 0 12 12"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.4"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="ml-1.5 inline-block shrink-0 -translate-y-px text-ink-500 transition-colors group-hover:text-accent-300"
+        >
+          <path d="M4.5 1.5h6v6" />
+          <path d="M10.5 1.5 5 7" />
+          <path d="M9 7.5v3H1.5V3h3" />
+        </svg>
       </h4>
-      <p className="mt-3 text-[13px] leading-relaxed text-ink-300 md:text-sm">
+      <p className="mt-3 max-w-[74ch] text-[13px] leading-[1.7] text-ink-500 md:text-sm">
         {t(`pubs.${paper.id}`)}
       </p>
       <div className="mt-4 flex flex-wrap gap-1.5">
         {paper.keywords.map((k) => (
           <span
             key={k}
-            className="rounded-full border border-line bg-base-800/60 px-2.5 py-0.5 text-[11px] text-ink-500"
+            className="rounded-full border border-line bg-surface-3 px-2.5 py-0.5 text-[11px] text-ink-500"
           >
             {t(`keywords.${k}`)}
           </span>
@@ -89,7 +154,7 @@ function PaperCard({ paper }) {
       {/* §5-2 논문 → 제자. 카드 전체가 원문 링크이므로 저자 줄은 <a> 밖에 둔다
           (앵커 안에 버튼을 넣으면 마크업이 깨진다). */}
       {authors.length > 0 && (
-        <p className="px-5 pb-5 pl-6 text-[12px] leading-relaxed text-ink-500 md:px-6 md:pb-6 md:pl-7">
+        <p className="px-6 pb-6 pl-7 text-[12px] leading-relaxed text-ink-500">
           <span className="text-ink-600">{t("pubsUI.authorsLabel")} </span>
           {authors.map((a, i) => (
             <span key={`${a.name}-${i}`}>
@@ -97,14 +162,17 @@ function PaperCard({ paper }) {
               {a.personId ? (
                 <button
                   type="button"
-                  onClick={() => navigate?.("alumni", { person: a.personId })}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    navigate?.("alumni", { person: a.personId });
+                  }}
                   aria-label={t("pubsUI.personAria", { name: a.name })}
                   className="rounded text-accent-400 underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-accent-400"
                 >
-                  {a.name}
+                  <Highlight text={a.name} />
                 </button>
               ) : (
-                a.name
+                <Highlight text={a.name} />
               )}
             </span>
           ))}
@@ -123,7 +191,7 @@ function FilterBtn({ activeState, onClick, children }) {
       className={`shrink-0 rounded-full border px-3.5 py-1.5 text-[13px] transition-colors ${
         activeState
           ? "border-accent-400 bg-accent-500/15 text-accent-300"
-          : "border-line bg-base-800/50 text-ink-500 hover:border-base-600 hover:text-ink-300"
+          : "border-line bg-surface-3 text-ink-500 hover:border-line-strong hover:text-ink-300"
       }`}
     >
       {children}
@@ -140,14 +208,14 @@ function ListRow({ label, count, max, active, onSelect }) {
       type="button"
       onClick={onSelect}
       aria-current={active ? "true" : undefined}
-      className={`group relative block w-full py-2 pl-3 pr-1 text-left transition-colors focus-visible:outline-2 focus-visible:outline-accent-400 ${
-        active ? "text-ink-100" : "text-ink-500 hover:text-ink-300"
+      className={`group relative block w-full rounded-r-lg py-2 pl-3 pr-2 text-left transition-colors focus-visible:outline-2 focus-visible:outline-accent-400 ${
+        active ? "bg-surface-3 text-ink-100" : "text-ink-500 hover:bg-surface-2 hover:text-ink-300"
       }`}
     >
       <span
         aria-hidden="true"
-        className={`absolute bottom-1.5 left-0 top-1.5 w-[2px] rounded-full transition-colors ${
-          active ? "bg-accent-400" : "bg-transparent group-hover:bg-base-600"
+        className={`absolute bottom-0 left-0 top-0 w-[3px] rounded-r transition-colors ${
+          active ? "bg-accent-400" : "bg-transparent group-hover:bg-line-strong"
         }`}
       />
       <span className="flex items-baseline gap-2">
@@ -162,10 +230,10 @@ function ListRow({ label, count, max, active, onSelect }) {
           {count}
         </span>
       </span>
-      <span aria-hidden="true" className="mt-1.5 block h-[3px] w-full rounded-full bg-base-800">
+      <span aria-hidden="true" className="mt-1.5 block h-[3px] w-full rounded-full bg-surface-3">
         <span
           className={`block h-[3px] rounded-full transition-colors ${
-            active ? "bg-accent-400" : "bg-base-600 group-hover:bg-ink-600"
+            active ? "bg-accent-400" : "bg-line-strong group-hover:bg-ink-600"
           }`}
           style={{ width: `${ratio}%` }}
         />
@@ -201,7 +269,7 @@ function DetailHeading({ title, count, onBack, backLabel }) {
         <button
           type="button"
           onClick={onBack}
-          className="rounded-lg border border-line bg-base-800/60 px-3 py-1.5 text-[12px] text-ink-500 transition-colors hover:border-base-600 hover:text-ink-100"
+          className="rounded-lg border border-line bg-surface-3 px-3 py-1.5 text-[12px] text-ink-500 transition-colors hover:border-line-strong hover:text-ink-100"
         >
           {backLabel}
         </button>
@@ -214,10 +282,325 @@ function DetailHeading({ title, count, onBack, backLabel }) {
   );
 }
 
+/* ---------- 서브 필터 (22차 §3-3) ----------
+   세 뷰가 같은 컴포넌트를 쓴다. 뷰마다 다르게 만들지 말 것.
+   좌측 선택이 바뀌면 상위에서 reset()을 불러 초기화한다. */
+function useSubFilter(papers, primaryKind) {
+  const [mode, setMode] = useState(primaryKind);
+  const [pick, setPick] = useState(null);
+  const [range, setRange] = useState(null);
+
+  const options = useMemo(() => {
+    if (primaryKind === "keyword") return KEYWORDS.filter((k) => papers.some((p) => p.keywords.includes(k)));
+    return [...new Set(papers.map((p) => p.journal))].sort((a, b) => a.localeCompare(b, "ko"));
+  }, [papers, primaryKind]);
+
+  const ranges = useMemo(
+    () => YEAR_RANGES.filter((r) => papers.some((p) => p.year >= r.from && p.year <= r.to)),
+    [papers]
+  );
+
+  const filtered = useMemo(() => {
+    if (mode === primaryKind && pick)
+      return papers.filter((p) => (primaryKind === "keyword" ? p.keywords.includes(pick) : p.journal === pick));
+    if (mode === "year" && range) return papers.filter((p) => p.year >= range.from && p.year <= range.to);
+    return papers;
+  }, [papers, mode, pick, range, primaryKind]);
+
+  const reset = useCallback(() => {
+    setPick(null);
+    setRange(null);
+  }, []);
+
+  return { mode, setMode, pick, setPick, range, setRange, options, ranges, filtered, reset, primaryKind };
+}
+
+function SubFilterBar({ st }) {
+  const { t } = useTranslation();
+  const primaryLabel = st.primaryKind === "keyword" ? t("pubsUI.filterKeyword") : t("pubsUI.filterJournal");
+  const tab =
+    "rounded-md px-2.5 py-1 text-xs transition-colors focus-visible:outline-2 focus-visible:outline-accent-400";
+  return (
+    <div className="mb-6 rounded-xl border border-line bg-surface-1 p-4">
+      <div className="mb-3 flex items-center gap-2">
+        <span className="mr-1 font-display text-[11px] uppercase tracking-[0.2em] text-ink-600">
+          Filter
+        </span>
+        <button
+          type="button"
+          onClick={() => {
+            st.setMode(st.primaryKind);
+            st.setRange(null);
+          }}
+          className={`${tab} ${
+            st.mode === st.primaryKind ? "bg-accent-500/15 text-accent-300" : "text-ink-500 hover:text-ink-300"
+          }`}
+        >
+          {primaryLabel}
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            st.setMode("year");
+            st.setPick(null);
+          }}
+          className={`${tab} ${
+            st.mode === "year" ? "bg-accent-500/15 text-accent-300" : "text-ink-500 hover:text-ink-300"
+          }`}
+        >
+          {t("pubsUI.filterYear")}
+        </button>
+      </div>
+      <div className="flex flex-wrap gap-2">
+        {st.mode === "year" ? (
+          <>
+            <FilterBtn activeState={st.range === null} onClick={() => st.setRange(null)}>
+              {t("pubsUI.all")}
+            </FilterBtn>
+            {st.ranges.map((r) => (
+              <FilterBtn key={r.label} activeState={st.range?.label === r.label} onClick={() => st.setRange(r)}>
+                {r.label}
+              </FilterBtn>
+            ))}
+          </>
+        ) : (
+          <>
+            <FilterBtn activeState={st.pick === null} onClick={() => st.setPick(null)}>
+              {t("pubsUI.all")}
+            </FilterBtn>
+            {st.options.map((o) => (
+              <FilterBtn key={o} activeState={st.pick === o} onClick={() => st.setPick(o)}>
+                {st.primaryKind === "keyword" ? t(`keywords.${o}`) : o}
+              </FilterBtn>
+            ))}
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/* ---------- 검색창 (21차 §5) ---------- */
+function SearchBox({ value, onChange }) {
+  const { t } = useTranslation();
+  return (
+    <div className="relative">
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-ink-600"
+      >
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6">
+          <circle cx="7" cy="7" r="4.5" />
+          <path d="M10.5 10.5 14 14" strokeLinecap="round" />
+        </svg>
+      </span>
+      <input
+        type="search"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Escape") {
+            e.preventDefault();
+            onChange("");
+          }
+        }}
+        placeholder={t("pubsUI.searchPlaceholder")}
+        aria-label={t("pubsUI.searchPlaceholder")}
+        className="w-full rounded-xl border border-line bg-surface-2 py-3 pl-10 pr-10 text-[15px] text-ink-100 placeholder:text-ink-600 transition-colors focus:border-accent-400 focus:outline-none"
+      />
+      {value && (
+        <button
+          type="button"
+          onClick={() => onChange("")}
+          aria-label={t("pubsUI.clearSearch")}
+          className="absolute right-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-lg text-ink-500 transition-colors hover:bg-surface-3 hover:text-ink-100 focus-visible:outline-2 focus-visible:outline-accent-400"
+        >
+          ×
+        </button>
+      )}
+    </div>
+  );
+}
+
+/* ---------- 논문 목록 + 페이지네이션 (21차 §4) ----------
+   79편을 한 화면에 쏟으면 아래 저서 영역까지 스크롤하기가 너무 힘들다.
+   한 페이지 5편으로 끊고, 페이지 이동 시 "목록 상단"으로만 부드럽게 이동한다
+   (페이지 최상단으로 튀지 않게). 저서 섹션은 페이지네이션 대상이 아니다. */
+const PAGE_SIZE = 4;
+
+const readViewParam = () => {
+  const v = new URLSearchParams(window.location.search).get("view");
+  return v === "journal" || v === "method" ? v : "keyword";
+};
+
+const readMethodParam = () => {
+  const m = new URLSearchParams(window.location.search).get("method");
+  return METHODS.includes(m) ? m : null;
+};
+
+const writeViewParams = (view, method) => {
+  const url = new URL(window.location.href);
+  if (view && view !== "keyword") url.searchParams.set("view", view);
+  else url.searchParams.delete("view");
+  if (view === "method" && method) url.searchParams.set("method", method);
+  else url.searchParams.delete("method");
+  window.history.replaceState(null, "", url.toString());
+};
+
+const readQueryParam = () => new URLSearchParams(window.location.search).get("q") ?? "";
+
+const writeQueryParam = (q) => {
+  const url = new URL(window.location.href);
+  if (q.trim()) url.searchParams.set("q", q.trim());
+  else url.searchParams.delete("q");
+  window.history.replaceState(null, "", url.toString());
+};
+
+const readPageParam = () => {
+  const n = Number.parseInt(new URLSearchParams(window.location.search).get("page") ?? "1", 10);
+  return Number.isFinite(n) && n > 0 ? n : 1;
+};
+
+const writePageParam = (page) => {
+  const url = new URL(window.location.href);
+  if (page > 1) url.searchParams.set("page", String(page));
+  else url.searchParams.delete("page");
+  window.history.replaceState(null, "", url.toString());
+};
+
+// 현재 페이지 앞뒤 2개 + 첫·마지막은 항상. 사이가 벌어지면 "…"으로 축약.
+// 모바일은 앞뒤 1개만 노출한다.
+function pageItems(current, total, span) {
+  const keep = new Set([1, total]);
+  for (let i = current - span; i <= current + span; i += 1) {
+    if (i >= 1 && i <= total) keep.add(i);
+  }
+  const sorted = [...keep].sort((a, b) => a - b);
+  const out = [];
+  let prev = 0;
+  for (const n of sorted) {
+    if (prev && n - prev > 1) out.push({ gap: true, key: `gap-${prev}` });
+    out.push({ page: n, key: `p-${n}` });
+    prev = n;
+  }
+  return out;
+}
+
+function Pagination({ current, total, onGo }) {
+  const { t } = useTranslation();
+  const isMobile = useIsMobile();
+  if (total <= 1) return null;
+  const items = pageItems(current, total, isMobile ? 1 : 2);
+  const btn =
+    "inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg border px-3 font-display text-[13px] tabular-nums transition-colors focus-visible:outline-2 focus-visible:outline-accent-400";
+  return (
+    <nav
+      aria-label={t("pubsUI.pageNavLabel")}
+      className="mt-8 flex flex-wrap items-center justify-center gap-1.5"
+    >
+      <button
+        type="button"
+        onClick={() => onGo(current - 1)}
+        disabled={current === 1}
+        className={`${btn} border-line text-ink-500 hover:border-line-strong hover:text-ink-100 disabled:opacity-35 disabled:hover:border-line disabled:hover:text-ink-500`}
+      >
+        {t("pubsUI.prevPage")}
+      </button>
+      {items.map((it) =>
+        it.gap ? (
+          <span key={it.key} aria-hidden="true" className="px-1 text-[13px] text-ink-600">
+            …
+          </span>
+        ) : (
+          <button
+            key={it.key}
+            type="button"
+            onClick={() => onGo(it.page)}
+            aria-current={it.page === current ? "page" : undefined}
+            aria-label={t("pubsUI.pageAria", { page: it.page })}
+            className={`${btn} ${
+              it.page === current
+                ? "border-accent-400 bg-accent-500/20 text-accent-300"
+                : "border-line text-ink-500 hover:border-line-strong hover:text-ink-100"
+            }`}
+          >
+            {it.page}
+          </button>
+        )
+      )}
+      <button
+        type="button"
+        onClick={() => onGo(current + 1)}
+        disabled={current === total}
+        className={`${btn} border-line text-ink-500 hover:border-line-strong hover:text-ink-100 disabled:opacity-35 disabled:hover:border-line disabled:hover:text-ink-500`}
+      >
+        {t("pubsUI.nextPage")}
+      </button>
+    </nav>
+  );
+}
+
+/* 논문 카드 목록 — 범위 표시 + 페이지네이션을 한 곳에서 담당한다.
+   resetKey(필터·검색어·보기 조합)가 바뀌면 1페이지로 되돌린다. */
+function PaperList({ papers, resetKey }) {
+  const { t } = useTranslation();
+  const scrollToAnchor = useAnchorScroll();
+  const topRef = useRef(null);
+  const [page, setPage] = useState(readPageParam);
+
+  const total = Math.max(1, Math.ceil(papers.length / PAGE_SIZE));
+  const current = Math.min(Math.max(page, 1), total); // 범위를 벗어나면 끌어당긴다
+
+  // 필터가 바뀌면 1페이지로. 첫 렌더에서는 URL의 page를 존중한다.
+  const mounted = useRef(false);
+  useEffect(() => {
+    if (!mounted.current) {
+      mounted.current = true;
+      return;
+    }
+    setPage(1);
+  }, [resetKey]);
+
+  useEffect(() => {
+    writePageParam(current);
+    if (page !== current) setPage(current);
+  }, [current, page]);
+
+  const start = (current - 1) * PAGE_SIZE;
+  const shown = papers.slice(start, start + PAGE_SIZE);
+
+  const go = (next) => {
+    const clamped = Math.min(Math.max(next, 1), total);
+    if (clamped === current) return;
+    setPage(clamped);
+    requestAnimationFrame(() => scrollToAnchor(topRef));
+  };
+
+  if (papers.length === 0) return null;
+
+  return (
+    <div ref={topRef} className="scroll-mt-24">
+      <p className="mb-3 font-display text-[12px] tabular-nums text-ink-600">
+        {t("pubsUI.pageRange", {
+          from: start + 1,
+          to: start + shown.length,
+          total: papers.length,
+        })}
+      </p>
+      <div className="grid gap-5">
+        {shown.map((p) => (
+          <PaperCard key={p.id} paper={p} />
+        ))}
+      </div>
+      <Pagination current={current} total={total} onGo={go} />
+    </div>
+  );
+}
+
 /* ---------- 키워드별 보기 (§2-1 — 칩 제거, 마스터-디테일) ---------- */
 const ALL_KEY = "__all__";
 
-function KeywordView({ pool }) {
+function KeywordView({ pool, searchKey = "" }) {
   const { t } = useTranslation();
   const isMobile = useIsMobile();
   const scrollToAnchor = useAnchorScroll();
@@ -234,9 +617,11 @@ function KeywordView({ pool }) {
     () => (active === ALL_KEY ? pool : pool.filter((p) => p.keywords.includes(active))),
     [pool, active]
   );
+  const sub = useSubFilter(papers, "journal");
 
   const select = (k) => {
     setKeyword(k);
+    sub.reset();
     if (isMobile) requestAnimationFrame(() => scrollToAnchor(detailRef));
   };
 
@@ -251,7 +636,7 @@ function KeywordView({ pool }) {
           <select
             value={active}
             onChange={(e) => select(e.target.value)}
-            className="w-full rounded-xl border border-line bg-base-850 px-4 py-3 text-[15px] text-ink-100"
+            className="w-full rounded-xl border border-line bg-surface-1 px-4 py-3 text-[15px] text-ink-100"
           >
             <option value={ALL_KEY}>
               {t("pubsUI.allPapers")} ({pool.length})
@@ -265,11 +650,11 @@ function KeywordView({ pool }) {
         </label>
         <div ref={detailRef} className="mt-6 scroll-mt-20">
           <DetailHeading title={title} count={papers.length} />
-          <div className="grid gap-4">
-            {papers.map((p) => (
-              <PaperCard key={p.id} paper={p} />
-            ))}
-          </div>
+          <SubFilterBar st={sub} />
+          <PaperList
+            papers={sub.filtered}
+            resetKey={`kw-${active}-${sub.pick ?? ""}-${sub.range?.label ?? ""}-${searchKey}-${pool.length}`}
+          />
         </div>
       </div>
     );
@@ -304,11 +689,110 @@ function KeywordView({ pool }) {
       }
     >
       <DetailHeading title={title} count={papers.length} />
-      <div className="grid gap-4">
-        {papers.map((p) => (
-          <PaperCard key={p.id} paper={p} />
-        ))}
+      <SubFilterBar st={sub} />
+      <PaperList
+        papers={sub.filtered}
+        resetKey={`kw-${active}-${sub.pick ?? ""}-${sub.range?.label ?? ""}-${searchKey}-${pool.length}`}
+      />
+    </MasterDetail>
+  );
+}
+
+/* ---------- 방법론별 보기 (22차 §3) ----------
+   키워드별·저널별 보기와 레이아웃·간격·행 스타일이 완전히 동일하다.
+   근거 없이 분류된 논문은 없고, 미분류 편수는 목록 맨 아래에 정직하게 노출한다. */
+function MethodView({ pool, searchKey = "", method, onSelectMethod }) {
+  const { t } = useTranslation();
+  const isMobile = useIsMobile();
+  const scrollToAnchor = useAnchorScroll();
+  const listRef = useRef(null);
+  const detailRef = useRef(null);
+
+  const { rows, unclassified } = useMemo(() => methodRows(pool), [pool]);
+  const max = rows.reduce((m, r) => Math.max(m, r.count), 0);
+  const active = rows.some((r) => r.key === method) ? method : (rows[0]?.key ?? null);
+
+  const papers = useMemo(
+    () => (active ? pool.filter((p) => (p.methods ?? []).includes(active)) : []),
+    [pool, active]
+  );
+  const sub = useSubFilter(papers, "keyword");
+
+  const select = (m) => {
+    onSelectMethod(m);
+    sub.reset();
+    if (isMobile) requestAnimationFrame(() => scrollToAnchor(detailRef));
+  };
+
+  const title = active ? t(`methods.${active}`) : t("pubsUI.none");
+
+  const list = (
+    <div className="pt-1">
+      {rows.map((r) => (
+        <ListRow
+          key={r.key}
+          label={t(`methods.${r.key}`)}
+          count={r.count}
+          max={max}
+          active={active === r.key}
+          onSelect={() => select(r.key)}
+        />
+      ))}
+      {unclassified > 0 && (
+        <p className="mt-3 border-t border-line px-3 pt-3 text-[12px] text-ink-600">
+          {t("pubsUI.methodUnclassified", { count: unclassified })}
+        </p>
+      )}
+    </div>
+  );
+
+  if (isMobile) {
+    return (
+      <div>
+        <label className="block">
+          <span className="sr-only">{t("pubsUI.pickMethod")}</span>
+          <select
+            value={active ?? ""}
+            onChange={(e) => select(e.target.value)}
+            className="w-full rounded-xl border border-line bg-surface-1 px-4 py-3 text-[15px] text-ink-100"
+          >
+            {rows.map((r) => (
+              <option key={r.key} value={r.key}>
+                {t(`methods.${r.key}`)} ({r.count})
+              </option>
+            ))}
+          </select>
+        </label>
+        {unclassified > 0 && (
+          <p className="mt-2 text-[12px] text-ink-600">
+            {t("pubsUI.methodUnclassified", { count: unclassified })}
+          </p>
+        )}
+        <div ref={detailRef} className="mt-6 scroll-mt-20">
+          <DetailHeading title={title} count={papers.length} />
+          <SubFilterBar st={sub} />
+          <PaperList
+            papers={sub.filtered}
+            resetKey={`mt-${active}-${sub.pick ?? ""}-${sub.range?.label ?? ""}-${searchKey}-${pool.length}`}
+          />
+        </div>
       </div>
+    );
+  }
+
+  return (
+    <MasterDetail
+      listRef={listRef}
+      detailRef={detailRef}
+      listLabel={t("pubsUI.methodListLabel")}
+      list={list}
+    >
+      <DetailHeading title={title} count={papers.length} />
+      <SubFilterBar st={sub} />
+      <PaperList
+        papers={sub.filtered}
+        resetKey={`mt-${active}-${sub.pick ?? ""}-${sub.range?.label ?? ""}-${searchKey}-${pool.length}`}
+      />
     </MasterDetail>
   );
 }
@@ -408,7 +892,7 @@ function JournalGroup({ group, journal, onSelect, isMobile, open, onToggleGroup 
   );
 }
 
-function JournalView({ pool }) {
+function JournalView({ pool, searchKey = "" }) {
   const { t } = useTranslation();
   const isMobile = useIsMobile();
   const scrollToAnchor = useAnchorScroll();
@@ -423,9 +907,6 @@ function JournalView({ pool }) {
     return allJournals[0]?.journal ?? null; // rank 정렬이므로 첫 항목이 최상위 저널
   });
   const [openGroups, setOpenGroups] = useState(() => new Set());
-  const [subMode, setSubMode] = useState("keyword");
-  const [subKeyword, setSubKeyword] = useState(null);
-  const [subRange, setSubRange] = useState(null);
 
   useEffect(() => {
     syncJournalHash(journal);
@@ -438,27 +919,12 @@ function JournalView({ pool }) {
   );
   const currentPapers = current?.papers ?? [];
 
-  const availableKeywords = useMemo(
-    () => KEYWORDS.filter((k) => currentPapers.some((p) => p.keywords.includes(k))),
-    [currentPapers]
-  );
-  const availableRanges = useMemo(
-    () => YEAR_RANGES.filter((r) => currentPapers.some((p) => p.year >= r.from && p.year <= r.to)),
-    [currentPapers]
-  );
-
-  const filtered = useMemo(() => {
-    if (subMode === "keyword" && subKeyword)
-      return currentPapers.filter((p) => p.keywords.includes(subKeyword));
-    if (subMode === "year" && subRange)
-      return currentPapers.filter((p) => p.year >= subRange.from && p.year <= subRange.to);
-    return currentPapers;
-  }, [currentPapers, subMode, subKeyword, subRange]);
+  const sub = useSubFilter(currentPapers, "keyword");
+  const filtered = sub.filtered;
 
   const selectJournal = (j) => {
     setJournal(j);
-    setSubKeyword(null);
-    setSubRange(null);
+    sub.reset();
     if (isMobile) {
       setOpenGroups(new Set());
       requestAnimationFrame(() => scrollToAnchor(detailRef));
@@ -504,76 +970,12 @@ function JournalView({ pool }) {
         backLabel={t("pubsUI.backToJournals")}
       />
 
-      <div className="mb-6 rounded-xl border border-line bg-base-850/60 p-4">
-        <div className="mb-3 flex items-center gap-2">
-          <span className="mr-1 font-display text-[11px] uppercase tracking-[0.2em] text-ink-600">
-            Filter
-          </span>
-          <button
-            type="button"
-            onClick={() => {
-              setSubMode("keyword");
-              setSubRange(null);
-            }}
-            className={`rounded-md px-2.5 py-1 text-xs transition-colors ${
-              subMode === "keyword"
-                ? "bg-accent-500/15 text-accent-300"
-                : "text-ink-500 hover:text-ink-300"
-            }`}
-          >
-            {t("pubsUI.filterKeyword")}
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              setSubMode("year");
-              setSubKeyword(null);
-            }}
-            className={`rounded-md px-2.5 py-1 text-xs transition-colors ${
-              subMode === "year"
-                ? "bg-accent-500/15 text-accent-300"
-                : "text-ink-500 hover:text-ink-300"
-            }`}
-          >
-            {t("pubsUI.filterYear")}
-          </button>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          {subMode === "keyword" ? (
-            <>
-              <FilterBtn activeState={subKeyword === null} onClick={() => setSubKeyword(null)}>
-                {t("pubsUI.all")}
-              </FilterBtn>
-              {availableKeywords.map((k) => (
-                <FilterBtn key={k} activeState={subKeyword === k} onClick={() => setSubKeyword(k)}>
-                  {t(`keywords.${k}`)}
-                </FilterBtn>
-              ))}
-            </>
-          ) : (
-            <>
-              <FilterBtn activeState={subRange === null} onClick={() => setSubRange(null)}>
-                {t("pubsUI.all")}
-              </FilterBtn>
-              {availableRanges.map((r) => (
-                <FilterBtn
-                  key={r.label}
-                  activeState={subRange?.label === r.label}
-                  onClick={() => setSubRange(r)}
-                >
-                  {r.label}
-                </FilterBtn>
-              ))}
-            </>
-          )}
-        </div>
-      </div>
+      <SubFilterBar st={sub} />
 
-      <div className="grid gap-4">
-        {filtered.map((p) => (
-          <PaperCard key={p.id} paper={p} />
-        ))}
-      </div>
+      <PaperList
+        papers={filtered}
+        resetKey={`jn-${journal}-${sub.pick ?? ""}-${sub.range?.label ?? ""}-${searchKey}-${pool.length}`}
+      />
       {filtered.length === 0 && (
         <p className="py-8 text-center text-sm text-ink-600">{t("pubsUI.none")}</p>
       )}
@@ -589,7 +991,7 @@ function KciAndBooks({ studentId = null }) {
   return (
     <div className="mt-14 grid gap-4 md:grid-cols-2 md:gap-5">
       <Reveal>
-        <div className="h-full rounded-2xl border border-line bg-base-900/70 p-6">
+        <div className="h-full rounded-2xl border border-line bg-surface-2 p-6">
           <div className="mb-2 flex items-baseline gap-3">
             <span className="font-display text-3xl font-bold text-ink-100">{KCI_COUNT_LABEL}</span>
             <h3 className="text-sm font-semibold text-ink-300">{t("pubsUI.kciTitle")}</h3>
@@ -599,7 +1001,7 @@ function KciAndBooks({ studentId = null }) {
       </Reveal>
 
       <Reveal delay={70}>
-        <div className="h-full rounded-2xl border border-line bg-base-900/70 p-6">
+        <div className="h-full rounded-2xl border border-line bg-surface-2 p-6">
           <h3 className="mb-4 font-display text-xs uppercase tracking-[0.25em] text-accent-400">
             {t("pubsUI.booksTitle")}
           </h3>
@@ -645,7 +1047,11 @@ function KciAndBooks({ studentId = null }) {
 export default function Publications({ focus = null, studentFilter = null, onClearStudent, navigate }) {
   const { t, i18n } = useTranslation();
   const lng = i18n.language;
-  const [mode, setMode] = useState("keyword");
+  const [mode, setMode] = useState(readViewParam);
+  const [method, setMethod] = useState(readMethodParam);
+  // 검색 (21차 §5) — 입력은 즉시 반영하고, 실제 필터링은 200ms 디바운스
+  const [searchInput, setSearchInput] = useState(readQueryParam);
+  const [query, setQuery] = useState(() => readQueryParam().trim());
   const [typeFilter, setTypeFilter] = useState(
     focus === "kci" ? "KCI" : focus === "ssci" ? "SSCI" : "ALL"
   );
@@ -655,6 +1061,19 @@ export default function Publications({ focus = null, studentFilter = null, onCle
     if (studentFilter?.type) setTypeFilter(studentFilter.type);
   }, [studentFilter]);
 
+  useEffect(() => {
+    writeViewParams(mode, method);
+  }, [mode, method]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const next = searchInput.trim();
+      setQuery(next);
+      writeQueryParam(next);
+    }, 200);
+    return () => clearTimeout(timer);
+  }, [searchInput]);
+
   const person = studentFilter?.student ? findPerson(studentFilter.student) : null;
   const personName = person
     ? lng === "ko"
@@ -662,13 +1081,22 @@ export default function Publications({ focus = null, studentFilter = null, onCle
       : (person.nameEn ?? person.nameKo)
     : null;
 
+  // 검색어는 기존 필터와 AND로 함께 걸린다
   const pool = useMemo(() => {
     let list = ALL_PUBLICATIONS;
     if (studentFilter?.student)
       list = list.filter((p) => p.studentIds?.includes(studentFilter.student));
     if (typeFilter !== "ALL") list = list.filter((p) => p.type === typeFilter);
+    const q = normalize(query);
+    if (q) list = list.filter((p) => haystack(p, t).includes(q));
     return list;
-  }, [typeFilter, studentFilter]);
+  }, [typeFilter, studentFilter, query, t]);
+
+  const clearAll = () => {
+    setSearchInput("");
+    setTypeFilter("ALL");
+    if (studentFilter?.student) onClearStudent?.();
+  };
 
   return (
     <section id="publications" data-surface="paper" className="relative mx-auto max-w-6xl px-5 py-20 md:px-8 md:py-28">
@@ -680,25 +1108,45 @@ export default function Publications({ focus = null, studentFilter = null, onCle
       />
 
       {person && (
-        <div className="mb-6 flex flex-wrap items-center gap-3 rounded-xl border border-accent-400/40 bg-base-850/70 px-4 py-3">
+        <div className="mb-6 flex flex-wrap items-center gap-3 rounded-xl border border-accent-400/40 bg-surface-1 px-4 py-3">
           <span className="text-[14px] text-ink-100">
             {t("pubsUI.studentFilter", { name: personName, count: pool.length })}
           </span>
           <button
             type="button"
             onClick={onClearStudent}
-            className="rounded-lg border border-line px-3 py-1.5 text-[13px] text-ink-500 transition-colors hover:border-base-600 hover:text-ink-100"
+            className="rounded-lg border border-line px-3 py-1.5 text-[13px] text-ink-500 transition-colors hover:border-line-strong hover:text-ink-100"
           >
             {t("pubsUI.clearFilter")}
           </button>
         </div>
       )}
 
+      <Reveal className="mb-5">
+        <SearchBox value={searchInput} onChange={setSearchInput} />
+      </Reveal>
+
+      {query && (
+        <div className="mb-6 flex flex-wrap items-center gap-3 rounded-xl border border-accent-400/40 bg-surface-1 px-4 py-3">
+          <span className="text-[14px] text-ink-100">
+            {t("pubsUI.searchResult", { query, count: pool.length })}
+          </span>
+          <button
+            type="button"
+            onClick={() => setSearchInput("")}
+            className="rounded-lg border border-line px-3 py-1.5 text-[13px] text-ink-500 transition-colors hover:border-line-strong hover:text-ink-100"
+          >
+            {t("pubsUI.clearSearch")}
+          </button>
+        </div>
+      )}
+
       <Reveal className="mb-8 flex flex-wrap items-center gap-3">
-        <div className="inline-flex rounded-xl border border-line bg-base-850/80 p-1">
+        <div className="inline-flex rounded-xl border border-line bg-surface-1 p-1">
           {[
             { key: "keyword", label: t("pubsUI.viewKeyword") },
             { key: "journal", label: t("pubsUI.viewJournal") },
+            { key: "method", label: t("pubsUI.viewMethod") },
           ].map((m) => (
             <button
               key={m.key}
@@ -712,7 +1160,7 @@ export default function Publications({ focus = null, studentFilter = null, onCle
             </button>
           ))}
         </div>
-        <div className="inline-flex rounded-xl border border-line bg-base-850/80 p-1">
+        <div className="inline-flex rounded-xl border border-line bg-surface-1 p-1">
           {[
             { key: "ALL", label: t("pubsUI.all") },
             { key: "SSCI", label: "SSCI" },
@@ -735,13 +1183,34 @@ export default function Publications({ focus = null, studentFilter = null, onCle
       </Reveal>
 
       <NavContext.Provider value={navigate}>
-        {mode === "keyword" ? (
-          <KeywordView key={typeFilter} pool={pool} />
-        ) : (
-          <JournalView key={typeFilter} pool={pool} />
-        )}
+        <QueryContext.Provider value={query}>
+          {pool.length === 0 ? (
+            <div className="rounded-2xl border border-line bg-surface-2 px-6 py-14 text-center">
+              <p className="text-[15px] text-ink-300">{t("pubsUI.noResults")}</p>
+              <button
+                type="button"
+                onClick={clearAll}
+                className="mt-5 rounded-lg border border-line px-4 py-2 text-[13px] text-ink-500 transition-colors hover:border-line-strong hover:text-ink-100"
+              >
+                {t("pubsUI.clearAllFilters")}
+              </button>
+            </div>
+          ) : mode === "keyword" ? (
+            <KeywordView key={typeFilter} pool={pool} searchKey={query} />
+          ) : mode === "journal" ? (
+            <JournalView key={typeFilter} pool={pool} searchKey={query} />
+          ) : (
+            <MethodView
+              key={typeFilter}
+              pool={pool}
+              searchKey={query}
+              method={method}
+              onSelectMethod={setMethod}
+            />
+          )}
 
-        <KciAndBooks studentId={studentFilter?.student ?? null} />
+          <KciAndBooks studentId={studentFilter?.student ?? null} />
+        </QueryContext.Provider>
       </NavContext.Provider>
 
       {/* §5-2 안내 + §10② 저자 확인 범위 각주 */}

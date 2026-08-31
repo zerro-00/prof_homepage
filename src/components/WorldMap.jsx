@@ -116,7 +116,7 @@ function EntryLinks({ entry, lng }) {
           href={entry.subLink}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex min-h-11 items-center rounded-lg border border-line px-3 text-[13px] text-ink-300 transition-colors hover:border-base-600 hover:text-ink-100"
+          className="inline-flex min-h-11 items-center rounded-lg border border-line px-3 text-[13px] text-ink-300 transition-colors hover:border-line-strong hover:text-ink-100"
           onClick={(e) => e.stopPropagation()}
         >
           {localizeField(entry, "subLinkLabel", lng) ?? "Link →"}
@@ -159,7 +159,7 @@ export function PinCard({ pin, lng, onClose }) {
   const { t } = useTranslation();
   return (
     <div
-      className="thin-scroll max-h-full overflow-y-auto rounded-xl border border-accent-400/40 bg-base-850/95 p-4 backdrop-blur"
+      className="thin-scroll max-h-full overflow-y-auto rounded-xl border border-accent-400/40 bg-surface-3 p-4 backdrop-blur"
     >
       <div className="mb-2 flex items-baseline justify-between gap-3">
         <p className="font-semibold text-ink-100">
@@ -234,7 +234,7 @@ export default function WorldMap({
   return (
     <div>
       <div
-        className={`relative overflow-hidden rounded-2xl border border-line bg-base-900/70 ${
+        className={`relative overflow-hidden rounded-2xl border border-line bg-surface-2 ${
           compact ? "" : "flex items-center xl:min-h-[620px] [@media(min-width:1440px)]:min-h-[720px]"
         }`}
         onMouseLeave={() => onHoverPin(null)}

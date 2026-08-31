@@ -28,7 +28,6 @@
       "ssci": "SSCI Publications",
       "kci": "KCI Publications",
       "alumni": "Ph.D. & Master's Alumni",
-      "alumniSub": "2 Ph.D. · 11 Master's",
       "awards": "Awards"
     },
     "suffix": {
@@ -279,8 +278,8 @@
     "clearFocus": "Clear highlight"
   },
   "pubsUI": {
-    "viewKeyword": "By Keyword",
-    "viewJournal": "By Journal",
+    "viewKeyword": "By keyword",
+    "viewJournal": "By journal",
     "allPapers": "All publications",
     "studentFilter": "{{count}} papers co-authored by {{name}}",
     "clearFilter": "× Clear filter",
@@ -311,7 +310,23 @@
     "authorsLabel": "Authors",
     "authorHint": "Click an author’s name to see where that alumnus went on to.",
     "authorNote": "Student co-authorship is shown only for papers whose authorship was verified against the original source.",
-    "personAria": "View placement of {{name}}"
+    "personAria": "View placement of {{name}}",
+    "pageNavLabel": "Publication list pages",
+    "prevPage": "← Prev",
+    "nextPage": "Next →",
+    "pageAria": "Go to page {{page}}",
+    "pageRange": "{{total}} publications · showing {{from}}–{{to}}",
+    "searchPlaceholder": "Search by title, author, or keyword",
+    "clearSearch": "× Clear search",
+    "searchResult": "{{count}} results for “{{query}}”",
+    "noResults": "No results. Try a different word.",
+    "clearAllFilters": "Clear all filters",
+    "openPaperAria": "Open the original of {{title}}",
+    "viewMethod": "By method",
+    "methodListLabel": "Method list",
+    "pickMethod": "Select a method",
+    "methodUnclassified": "{{count}} to be classified",
+    "filterJournal": "Journal"
   },
   "keywords": {
     "모바일·앱": "Mobile & Apps",
@@ -419,5 +434,16 @@
     "kci-2015-03": "Moving to a new region can change the brands people buy online. Analyzes how consumers' regional migration affects shifts in online brand preference.",
     "kci-2015-04": "New and existing products post different numbers depending on the channel. Analyzes time-series data on experience goods to compare sales performance offline and online.",
     "kci-2014-03": "New players and long-time players leave a game for different reasons. Analyzes churn drivers among online game customers by customer type."
+  },
+  "methods": {
+    "field-experiment": "Field Experiment",
+    "causal-inference": "Causal Inference",
+    "econometric-model": "Econometric Modeling",
+    "machine-learning": "Machine Learning",
+    "text-image-analysis": "Text & Image Analysis",
+    "log-panel-data": "Log & Panel Data",
+    "survey-lab-experiment": "Survey & Lab Experiment",
+    "meta-analysis": "Meta-analysis",
+    "case-study": "Case Study"
   }
 }

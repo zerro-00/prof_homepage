@@ -90,7 +90,7 @@ export function SectionHeading({ index, label, title, desc }) {
 
 export function Chip({ children, tone = "default" }) {
   const tones = {
-    default: "border-line bg-base-800/60 text-ink-300",
+    default: "border-line bg-surface-3 text-ink-300",
     accent: "border-accent-500/30 bg-accent-500/10 text-accent-300",
     gold: "border-gold-500/30 bg-gold-500/10 text-gold-300",
     mint: "border-mint-400/30 bg-mint-400/10 text-mint-400",

@@ -28,7 +28,6 @@
       "ssci": "SSCI论文",
       "kci": "KCI论文",
       "alumni": "指导博士·硕士毕业生",
-      "alumniSub": "博士 2 · 硕士 11",
       "awards": "获奖"
     },
     "suffix": {
@@ -279,8 +278,8 @@
     "clearFocus": "取消高亮"
   },
   "pubsUI": {
-    "viewKeyword": "按关键词浏览",
-    "viewJournal": "按期刊浏览",
+    "viewKeyword": "按关键词",
+    "viewJournal": "按期刊",
     "allPapers": "全部论文",
     "studentFilter": "{{name}} 合著论文 {{count}} 篇",
     "clearFilter": "× 清除筛选",
@@ -311,7 +310,23 @@
     "authorsLabel": "作者",
     "authorHint": "点击作者姓名即可查看该毕业生的去向信息。",
     "authorNote": "仅对已在原文中核实作者信息的论文标注毕业生合著。",
-    "personAria": "查看{{name}}的去向信息"
+    "personAria": "查看{{name}}的去向信息",
+    "pageNavLabel": "论文列表分页",
+    "prevPage": "← 上一页",
+    "nextPage": "下一页 →",
+    "pageAria": "转到第 {{page}} 页",
+    "pageRange": "共 {{total}} 篇 · 显示 {{from}}–{{to}}",
+    "searchPlaceholder": "按标题、作者或关键词搜索",
+    "clearSearch": "× 清除搜索",
+    "searchResult": "“{{query}}” 的搜索结果 {{count}} 篇",
+    "noResults": "没有找到结果。请尝试其他关键词。",
+    "clearAllFilters": "清除全部筛选",
+    "openPaperAria": "查看 {{title}} 原文",
+    "viewMethod": "按研究方法",
+    "methodListLabel": "研究方法列表",
+    "pickMethod": "选择研究方法",
+    "methodUnclassified": "待分类 {{count}} 篇",
+    "filterJournal": "期刊"
   },
   "keywords": {
     "모바일·앱": "移动·应用",
@@ -419,5 +434,16 @@
     "kci-2015-03": "搬了家，网上买的品牌也会跟着变吗？研究分析消费者的地区迁移对在线品牌偏好变化的影响。",
     "kci-2015-04": "新产品与既有产品，在不同渠道上的成绩并不一样。这项研究通过经验品的时间序列分析，考察线下与线上渠道的销售业绩差异。",
     "kci-2014-03": "新玩家与老玩家离开游戏的理由并不相同。研究按客户类型分析网络游戏用户流失的驱动因素。"
+  },
+  "methods": {
+    "field-experiment": "实地实验",
+    "causal-inference": "因果推断",
+    "econometric-model": "计量模型·回归分析",
+    "machine-learning": "机器学习·预测模型",
+    "text-image-analysis": "文本·图像分析",
+    "log-panel-data": "日志·面板数据分析",
+    "survey-lab-experiment": "问卷·实验室实验",
+    "meta-analysis": "元分析",
+    "case-study": "案例研究"
   }
 }

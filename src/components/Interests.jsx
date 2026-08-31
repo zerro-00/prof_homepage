@@ -42,7 +42,7 @@ export default function Interests() {
       />
 
       {/* 세로 스택 — 블록 사이 48px, 1px 구분선 (§2-4) */}
-      <div className="rounded-2xl border border-line bg-base-900/70 p-6 md:p-8">
+      <div className="rounded-2xl border border-line bg-surface-2 p-6 md:p-8">
         <Block title={t("interests.teachingTitle")}>
           {teaching.map((tc) => (
             <Row key={tc.level} label={tc.level} items={tc.courses} />

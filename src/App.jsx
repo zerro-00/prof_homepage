@@ -110,7 +110,7 @@ function LangSwitcher() {
         aria-haspopup="menu"
         aria-expanded={open}
         aria-label={`Language: ${LANG_NAMES[current.code]}`}
-        className="inline-flex items-center gap-1.5 rounded-lg px-2 py-1.5 text-ink-500 transition-colors hover:bg-base-800/70 hover:text-ink-100 focus-visible:outline-2 focus-visible:outline-accent-400"
+        className="inline-flex items-center gap-1.5 rounded-lg px-2 py-1.5 text-ink-500 transition-colors hover:bg-surface-3 hover:text-ink-100 focus-visible:outline-2 focus-visible:outline-accent-400"
       >
         <Globe size={15} strokeWidth={1.8} aria-hidden="true" />
         <span className="font-display text-[10px] font-semibold tracking-wide">
@@ -122,7 +122,7 @@ function LangSwitcher() {
           role="menu"
           aria-label={`Language: ${LANG_NAMES[current.code]}`}
           onKeyDown={onMenuKeyDown}
-          className="absolute right-0 top-full mt-2 w-36 rounded-xl border border-line bg-base-850/95 backdrop-blur p-1 shadow-2xl shadow-black/50"
+          className="absolute right-0 top-full mt-2 w-36 rounded-xl border border-line bg-surface-3 backdrop-blur p-1 shadow-2xl shadow-black/50"
         >
           {LANGS.map((l, i) => {
             const isCurrent = i18n.language === l.code;
@@ -138,7 +138,7 @@ function LangSwitcher() {
                 className={`flex w-full items-center justify-between rounded-lg px-3 py-2 text-[13px] transition-colors ${
                   isCurrent
                     ? "text-accent-300 bg-accent-500/10"
-                    : "text-ink-300 hover:bg-base-800/80 hover:text-ink-100"
+                    : "text-ink-300 hover:bg-surface-3 hover:text-ink-100"
                 }`}
               >
                 {LANG_NAMES[l.code]}
@@ -261,7 +261,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <nav className="fixed top-0 inset-x-0 z-50 border-b border-line/60 bg-base-950/92 backdrop-blur-md">
+      <nav className="fixed top-0 inset-x-0 z-50 border-b border-line/60 bg-surface-0/92 backdrop-blur-md">
         <div className="mx-auto max-w-6xl px-5 md:px-8 h-14 flex items-center justify-between gap-3">
           <button
             type="button"
@@ -283,7 +283,7 @@ export default function App() {
                   className={`relative shrink-0 rounded-lg px-2.5 md:px-3 py-1.5 text-[13px] transition-colors ${
                     isActive
                       ? "text-ink-100"
-                      : "text-ink-500 hover:text-ink-100 hover:bg-base-800/70"
+                      : "text-ink-500 hover:text-ink-100 hover:bg-surface-3"
                   }`}
                 >
                   {t(`nav.${id}`)}

@@ -28,7 +28,6 @@
       "ssci": "SSCI 論文",
       "kci": "KCI 論文",
       "alumni": "指導博士・修士の輩出",
-      "alumniSub": "博士 2 · 修士 11",
       "awards": "受賞"
     },
     "suffix": {
@@ -279,8 +278,8 @@
     "clearFocus": "強調を解除"
   },
   "pubsUI": {
-    "viewKeyword": "キーワード別に見る",
-    "viewJournal": "ジャーナル別に見る",
+    "viewKeyword": "キーワード別",
+    "viewJournal": "学術誌別",
     "allPapers": "すべての論文",
     "studentFilter": "{{name}} 共著論文 {{count}} 本",
     "clearFilter": "× フィルター解除",
@@ -311,7 +310,23 @@
     "authorsLabel": "著者",
     "authorHint": "著者名をクリックすると、その修了生の進路情報を表示します。",
     "authorNote": "修了生の共著表記は、原典で著者を確認できた論文に限ります。",
-    "personAria": "{{name}}の進路情報を見る"
+    "personAria": "{{name}}の進路情報を見る",
+    "pageNavLabel": "論文一覧のページ",
+    "prevPage": "← 前へ",
+    "nextPage": "次へ →",
+    "pageAria": "{{page}}ページへ移動",
+    "pageRange": "全 {{total}} 件 · {{from}}–{{to}} を表示中",
+    "searchPlaceholder": "タイトル・著者・キーワードで検索",
+    "clearSearch": "× 検索を解除",
+    "searchResult": "「{{query}}」の検索結果 {{count}}件",
+    "noResults": "検索結果がありません。別の語で試してください。",
+    "clearAllFilters": "絞り込みをすべて解除",
+    "openPaperAria": "{{title}} の原文を見る",
+    "viewMethod": "研究手法別",
+    "methodListLabel": "研究手法一覧",
+    "pickMethod": "研究手法を選択",
+    "methodUnclassified": "分類予定 {{count}}件",
+    "filterJournal": "学術誌"
   },
   "keywords": {
     "모바일·앱": "モバイル・アプリ",
@@ -419,5 +434,16 @@
     "kci-2015-03": "引っ越すとオンラインで買うブランドも変わるのか。消費者の地域移住がオンラインブランド選好の変化に与える影響を分析した研究。",
     "kci-2015-04": "新製品と既存製品は売る場所（オンライン/オフライン）によって成績が変わる。経験財の時系列データを分析し、チャネル別販売成果の違いを検討した研究。",
     "kci-2014-03": "ゲームを去る理由は新規ユーザーと古参ユーザーで異なる。オンラインゲームにおける顧客タイプ別の離脱要因を分析した研究。"
+  },
+  "methods": {
+    "field-experiment": "フィールド実験",
+    "causal-inference": "因果推論",
+    "econometric-model": "計量モデル・回帰分析",
+    "machine-learning": "機械学習・予測モデル",
+    "text-image-analysis": "テキスト・画像分析",
+    "log-panel-data": "ログ・パネルデータ分析",
+    "survey-lab-experiment": "調査・実験室実験",
+    "meta-analysis": "メタ分析",
+    "case-study": "事例研究"
   }
 }
