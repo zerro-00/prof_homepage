@@ -346,59 +346,24 @@ src/
 `Publications`(paper) · `Awards`(field) · `footer`(deep)에 `data-surface` 속성이 있다.
 **v1에서는 아무 스타일도 붙지 않아 겉모습에 영향이 없다.** v3가 이 훅만으로 면을 칠한다.
 
-## ⚠️ 이 브랜치는 `design-v3` — Yonsei Blue Field
+## ⚠️ 이 브랜치는 `design-v3` — 흰 배경 (19차 §2)
 
 `main`에서 분기했다. **레이아웃·기능은 main과 100% 동일하고 색만 다르다.**
-`git diff main design-v3 --stat` = `src/index.css` 한 파일이어야 한다.
+`git diff main design-v3 --stat` = `src/index.css` + `CLAUDE.md` 두 파일이어야 한다.
 
-- **컴포넌트를 건드리지 말 것.** 면 교대(FIELD/PAPER)는 main이 심어 둔
-  `data-surface` 훅(`field` / `paper` / `deep`)만 보고 **CSS로만** 구현했다.
-  기능 변경이 필요하면 main에서 하고 v3로 머지한다.
-- **`--field`를 더 어둡게 만들지 말 것** — 검정에 가까워지면 v1과 구별되지 않는다.
-- 면 경계는 그라디언트 없이 1px 골드 헤어라인, 섹션 전환 시 배경 220ms 크로스페이드.
-- 히어로 그리드·글로우는 `#profile > [aria-hidden="true"]`와 `.blur-md`를 숨겨 끈다.
-
-### 면 배치
-
-| 섹션 | 면 | 훅 |
-|---|---|---|
-| 히어로 | FIELD | `#profile[data-surface="field"]` |
-| 프로필 상세 | PAPER | `#profile [data-surface="paper"]` (풀블리드) |
-| 관심분야 | PAPER | `#interests` |
-| 제자 진출 | FIELD | `#alumni` |
-| 논문·저서 | PAPER | `#publications` |
-| 수상·연구비 | FIELD | `#awards` |
-| 푸터 | FIELD-3 | `footer[data-surface="deep"]` |
-
-### 팔레트와 대비 실측값 (§10)
-
-| 토큰 | 값 | 대비 |
-|---|---|---|
-| `--field` | `#00295C` | 메인 배경 |
-| `--field-2` | `#003876` | 연세 블루 원색 · paper 위 링크 **10.27:1** |
-| `--field-3` | `#0A1E42` | 푸터 |
-| `--paper` / `--paper-2` | `#F5F2EA` / `#E9E4D8` | 웜 아이보리 |
-| `--ink` | `#10203C` | paper 위 본문 **14.51:1** |
-| `--ink-2` | `#46536B` | paper 위 보조 **6.93:1** |
-| `--ivory` | `#F5F2EA` | field 위 본문 **12.75:1** |
-| `--ivory-2` | `#B9C6DE` | field 위 보조 **8.29:1** |
-| `--gold` | `#C9A96E` | field 위 골드 **6.38:1** |
-| `--gold-ink` | `#7A5F2F` | paper 위 골드 **5.35:1** |
-| `--sky` | `#7FA8E0` | field 위 링크·활성 **5.83:1** |
-
-파생 보조색 — field `#A5B6D4`(6.96) · `#8EA2C4`(5.51) · KCI `#DCC28C`(8.25) /
-paper `#5C6880`(5.01) · `#616C85`(4.70).
-
-**지령서와 다른 값 1건**: `--gold-ink`를 `#8A6E3A`(실측 4.29:1, 본문 기준 미달) 대신
-`#7A5F2F`(5.35:1)로 낮췄다. 나머지는 지령서 값 그대로다.
-**골드는 교수 임용 핀 · 탑저널 ★ · 국제 수상 ★ + 면 경계 헤어라인 외 사용 금지.**
-
-### ⚠️ 면별 토큰 재선언 (빠지기 쉬운 함정)
-
-Tailwind의 `--color-*`는 **선언된 곳에서 값이 확정**된다. 면 선택자에서 입력 변수만
-바꾸면 `:root`에서 이미 확정된 값이 그대로 상속돼 아무것도 바뀌지 않는다.
-그래서 `[data-surface="field"]` / `[data-surface="paper"]` 각각에 `--color-*` 전체를
-다시 선언해 뒀다. 색을 추가할 때 두 블록을 모두 갱신할 것.
+- **컴포넌트를 건드리지 말 것.** 기능 변경이 필요하면 main에서 하고 v3로 머지한다.
+- **본문 배경은 흰색이다. 파랑은 상단 네비와 하단 푸터(`--band #002855`)에만.**
+  본문 중간에 파란 띠를 넣지 말 것. 섹션 리듬은 `#FFFFFF` / `#F5F7FA` 교대
+  (`data-surface="field"` / `"paper"` 훅)로만 만든다.
+- **흰 배경에 `#C6A15B` 골드 사용 금지** (약 2.4:1) → 반드시 `#7A6031`.
+  골드는 교수 임용 핀 · 수상 ★ 전용.
+- 발광·글로우는 전부 껐다. 카드는 면색 대신 1px `#D6DEE8` 괘선 +
+  `0 1px 2px rgba(38,50,56,.06)`.
+  히어로의 그리드·큰 블러 원은 `#profile > [aria-hidden="true"]`와 `.blur-md`를 숨겨 끈다.
+- 히어로 사진 테두리는 v1의 골드 30% 대신 1px 괘선(`[class~="border-gold-400/30"]` 오버라이드).
+- main과 **같은 토큰 이름을 쓰고 값만 뒤집는다.** 새 토큰 이름을 만들지 말 것 —
+  컴포넌트가 main과 같은 클래스를 쓰기 때문이다.
+- 대비 실측값 표는 아래 「v3 (design-v3) — 흰 배경」 절에 있다.
 
 ## 색 토큰 규칙
 
