@@ -229,7 +229,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <nav className="fixed top-0 inset-x-0 z-50 border-b border-line/60 bg-base-950/80 backdrop-blur-md">
+      <nav className="fixed top-0 inset-x-0 z-50 border-b border-line/60 bg-base-950/92 backdrop-blur-md">
         <div className="mx-auto max-w-6xl px-5 md:px-8 h-14 flex items-center justify-between gap-3">
           <button
             type="button"
