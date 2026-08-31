@@ -1,6 +1,9 @@
 {
   "meta": {
-    "htmlLang": "ja"
+    "htmlLang": "ja",
+    "title": "Jeonghye Choi | 延世大学経営大学 マーケティング",
+    "description": "人々がオンラインとオフラインで残したデータを手がかりに、市場の動きを研究しています。",
+    "ogLocale": "ja_JP"
   },
   "nav": {
     "brand": "Jeonghye Choi Lab",

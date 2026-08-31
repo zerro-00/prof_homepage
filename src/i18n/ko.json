@@ -1,6 +1,9 @@
 {
   "meta": {
-    "htmlLang": "ko"
+    "htmlLang": "ko",
+    "title": "최정혜 | 연세대학교 경영대학 마케팅",
+    "description": "사람들이 온라인과 오프라인에서 남긴 데이터를 들여다보며, 시장이 어떻게 움직이는지 연구합니다.",
+    "ogLocale": "ko_KR"
   },
   "nav": {
     "brand": "Jeonghye Choi Lab",

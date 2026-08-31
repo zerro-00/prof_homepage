@@ -71,10 +71,35 @@ export async function ensureLanguage(lng) {
 const initial = detectInitialLang();
 if (initial !== "ko") ensureLanguage(initial);
 
+const SITE_URL = "https://prof-homepage.vercel.app";
+
+// 공유 미리보기 메타를 현재 언어에 맞춰 갱신한다 (§10-①).
+// index.html에 한국어 값이 정적으로 들어 있고, 언어를 바꾸면 여기서 덮어쓴다.
+function setMeta(selector, attr, value) {
+  const el = document.head.querySelector(selector);
+  if (el) el.setAttribute(attr, value);
+}
+
+function syncMeta(lng) {
+  const title = i18n.t("meta.title");
+  const desc = i18n.t("meta.description");
+  const canonical = `${SITE_URL}/?lang=${lng}`;
+  document.title = title;
+  setMeta('meta[name="description"]', "content", desc);
+  setMeta('meta[property="og:title"]', "content", title);
+  setMeta('meta[property="og:description"]', "content", desc);
+  setMeta('meta[property="og:url"]', "content", canonical);
+  setMeta('meta[property="og:locale"]', "content", i18n.t("meta.ogLocale"));
+  setMeta('meta[name="twitter:title"]', "content", title);
+  setMeta('meta[name="twitter:description"]', "content", desc);
+  setMeta('link[rel="canonical"]', "href", canonical);
+}
+
 // 언어 변경 시 <html lang> 속성과 URL 쿼리(?lang=) 동기화
 function syncLang(lng) {
   const htmlLang = i18n.t("meta.htmlLang");
   document.documentElement.lang = htmlLang;
+  syncMeta(lng);
   const url = new URL(window.location.href);
   url.searchParams.set("lang", lng);
   window.history.replaceState(null, "", url.toString());

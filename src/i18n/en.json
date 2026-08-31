@@ -1,6 +1,9 @@
 {
   "meta": {
-    "htmlLang": "en"
+    "htmlLang": "en",
+    "title": "Jeonghye Choi | Marketing, Yonsei School of Business",
+    "description": "I study how markets move, by looking closely at the data people leave online and off.",
+    "ogLocale": "en_US"
   },
   "nav": {
     "brand": "Jeonghye Choi Lab",

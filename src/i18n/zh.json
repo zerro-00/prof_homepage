@@ -1,6 +1,9 @@
 {
   "meta": {
-    "htmlLang": "zh-CN"
+    "htmlLang": "zh-CN",
+    "title": "Jeonghye Choi | 延世大学商学院 市场营销",
+    "description": "通过人们在线上与线下留下的数据，研究市场如何运转。",
+    "ogLocale": "zh_CN"
   },
   "nav": {
     "brand": "Jeonghye Choi Lab",

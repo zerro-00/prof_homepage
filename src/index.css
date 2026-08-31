@@ -323,3 +323,77 @@ html[lang="ja"] body {
     transition: none;
   }
 }
+
+/* ---- 인쇄 (§10-③) ----
+   교수님이 브라우저에서 PDF로 저장하실 수 있게 한다.
+   배경·발광을 걷어내고 검정 텍스트로, 네비·버튼·지도는 숨기고,
+   접혀 있던 목록은 전부 펼치고, 링크 뒤에 URL을 표시한다. */
+@media print {
+  :root {
+    --map-label: #000;
+  }
+  html,
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+  body * {
+    background-image: none !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    filter: none !important;
+  }
+  /* 화면용 면·발광 제거 — 카드는 얇은 괘선만 남긴다 */
+  [class*="bg-base-"],
+  [class*="bg-accent-"],
+  [class*="bg-gold-"] {
+    background-color: transparent !important;
+  }
+  [class*="border-"] {
+    border-color: #bbb !important;
+  }
+  [class*="text-"],
+  h1,
+  h2,
+  h3,
+  h4,
+  p,
+  span,
+  li,
+  a {
+    color: #000 !important;
+  }
+  /* 네비·언어 선택·필터 버튼·지도는 인쇄하지 않는다 */
+  nav,
+  footer,
+  button,
+  svg.rsm-svg,
+  .hud-grid {
+    display: none !important;
+  }
+  /* 접힘 영역은 전부 펼친 상태로 */
+  .collapse-region {
+    max-height: none !important;
+    visibility: visible !important;
+    overflow: visible !important;
+  }
+  .reveal,
+  .section-enter {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+  }
+  section {
+    padding: 0 !important;
+    margin: 0 0 24px !important;
+    max-width: none !important;
+    break-inside: avoid;
+  }
+  /* 링크 뒤에 실제 URL을 표시 (내부 앵커는 제외) */
+  a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 10px;
+    color: #555 !important;
+    word-break: break-all;
+  }
+}
