@@ -2,7 +2,6 @@ import { Suspense, lazy, useCallback, useEffect, useRef, useState } from "react"
 import { usePrefersReducedMotion } from "./components/common.jsx";
 import { useTranslation } from "react-i18next";
 import { Globe, Check } from "lucide-react";
-import Lenis from "lenis";
 import { LANGS, ensureLanguage } from "./i18n/index.js";
 import Hero from "./components/Hero.jsx";
 
@@ -35,6 +34,16 @@ const writeStudentFilter = (filter) => {
     url.searchParams.delete("student");
     url.searchParams.delete("type");
   }
+  window.history.replaceState(null, "", url.toString());
+};
+
+// 논문 → 제자 (§5-2). ?person=li-yiling#alumni 형태로 남겨 새로고침·공유해도 강조가 유지된다.
+const readPersonFocus = () => new URLSearchParams(window.location.search).get("person");
+
+const writePersonFocus = (personId) => {
+  const url = new URL(window.location.href);
+  if (personId) url.searchParams.set("person", personId);
+  else url.searchParams.delete("person");
   window.history.replaceState(null, "", url.toString());
 };
 
@@ -143,25 +152,12 @@ function LangSwitcher() {
   );
 }
 
-// 휠 스크롤 부드럽게 — prefers-reduced-motion이면 초기화하지 않는다(=브라우저 기본 스크롤).
-// window.__lenis로 노출해 섹션 전환(instant)·앵커 이동(smooth)이 같은 엔진을 쓰게 한다.
-function useSmoothScroll(disabled) {
-  useEffect(() => {
-    if (disabled) return;
-    const lenis = new Lenis({ lerp: 0.1, smoothWheel: true, autoRaf: true });
-    window.__lenis = lenis;
-    return () => {
-      lenis.destroy();
-      delete window.__lenis;
-    };
-  }, [disabled]);
-}
-
 export default function App() {
   const { t } = useTranslation();
   const [section, setSection] = useState(getSectionFromHash);
   const [payload, setPayload] = useState(null);
   const [studentFilter, setStudentFilter] = useState(readStudentFilter);
+  const [personFocus, setPersonFocus] = useState(readPersonFocus);
   const payloadRef = useRef(null);
   const reduced = usePrefersReducedMotion();
   // 화면에 실제로 그려지는 섹션 — 나가는 애니메이션이 끝난 뒤 교체한다
@@ -181,7 +177,6 @@ export default function App() {
     }, 250);
     return () => clearTimeout(timer);
   }, [section, shown, reduced]);
-  useSmoothScroll(reduced);
 
   const navigate = useCallback((id, pl = null) => {
     if (id === "publications") {
@@ -191,6 +186,14 @@ export default function App() {
         writeStudentFilter(next);
       }
     }
+    // §5-2: 논문 카드의 저자 이름 → 제자 진출 섹션 강조
+    if (id === "alumni") {
+      setPersonFocus(pl?.person ?? null);
+      writePersonFocus(pl?.person ?? null);
+    } else if (personFocus) {
+      setPersonFocus(null);
+      writePersonFocus(null);
+    }
     payloadRef.current = pl;
     // 현재 해시에 ?journal= 같은 쿼리가 붙어 있어도 섹션이 같으면 해시를 다시 쓰지 않는다.
     if (window.location.hash.replace(/^#/, "").split("?")[0] !== id) {
@@ -199,7 +202,7 @@ export default function App() {
       payloadRef.current = null;
       setPayload(pl);
     }
-  }, []);
+  }, [personFocus]);
 
   useEffect(() => {
     const onHash = () => {
@@ -215,25 +218,38 @@ export default function App() {
   useEffect(() => {
     if (readStudentFilter() && getSectionFromHash() !== "publications") {
       window.location.hash = "publications";
+    } else if (readPersonFocus() && getSectionFromHash() !== "alumni") {
+      window.location.hash = "alumni";
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // 섹션 전환 시 최상단 이동은 즉시(instant) — 전환 애니메이션과 겹치지 않게 한다.
   // 섹션 "내부" 앵커 이동만 smooth (common.jsx의 useAnchorScroll).
+  // §4: 관성 스크롤 라이브러리를 쓰지 않는다. 브라우저 기본 스크롤 + scroll-behavior만.
   useEffect(() => {
-    window.__lenis?.scrollTo(0, { immediate: true });
     window.scrollTo({ top: 0, behavior: "instant" });
   }, [shown]);
 
   const content = {
     profile: <Hero navigate={navigate} />,
     interests: <Interests />,
-    alumni: <StudentsSection focus={payload?.focus} navigate={navigate} />,
+    alumni: (
+      <StudentsSection
+        focus={payload?.focus}
+        personFocus={personFocus}
+        onClearPerson={() => {
+          setPersonFocus(null);
+          writePersonFocus(null);
+        }}
+        navigate={navigate}
+      />
+    ),
     publications: (
       <Publications
         focus={payload?.focus}
         studentFilter={studentFilter}
+        navigate={navigate}
         onClearStudent={() => {
           setStudentFilter(null);
           writeStudentFilter(null);
@@ -245,7 +261,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <nav className="fixed top-0 inset-x-0 z-50 border-b border-line/60 bg-base-950/80 backdrop-blur-md">
+      <nav className="fixed top-0 inset-x-0 z-50 border-b border-line/60 bg-base-950/92 backdrop-blur-md">
         <div className="mx-auto max-w-6xl px-5 md:px-8 h-14 flex items-center justify-between gap-3">
           <button
             type="button"

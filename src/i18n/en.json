@@ -1,6 +1,9 @@
 {
   "meta": {
-    "htmlLang": "en"
+    "htmlLang": "en",
+    "title": "Jeonghye Choi | Marketing, Yonsei School of Business",
+    "description": "I study how markets move, by looking closely at the data people leave online and off.",
+    "ogLocale": "en_US"
   },
   "nav": {
     "brand": "Jeonghye Choi Lab",
@@ -271,7 +274,9 @@
     "book": "Book",
     "topJournal": "Top-tier journal",
     "phdHeading": "Ph.D. Placements",
-    "industryHeading": "Industry Placements"
+    "industryHeading": "Industry Placements",
+    "personFocus": "Placement of {{name}}",
+    "clearFocus": "Clear highlight"
   },
   "pubsUI": {
     "viewKeyword": "By Keyword",
@@ -302,7 +307,11 @@
     "booksTitle": "Books",
     "badgeStudentCoauthor": "Co-authored with students",
     "topJournalBadge": "★ Top Journal",
-    "openLink": "Open publication in new tab"
+    "openLink": "Open publication in new tab",
+    "authorsLabel": "Authors",
+    "authorHint": "Click an author’s name to see where that alumnus went on to.",
+    "authorNote": "Student co-authorship is shown only for papers whose authorship was verified against the original source.",
+    "personAria": "View placement of {{name}}"
   },
   "keywords": {
     "모바일·앱": "Mobile & Apps",

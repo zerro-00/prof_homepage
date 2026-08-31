@@ -1,3 +1,4 @@
+import { findPerson } from "./alumni.js";
 // 논문 데이터 스키마: { id, title, journal, year, keywords: [], summary, tier }
 // tier: "top"  → ★ Top Journal 배지 표시
 // summary: 비전공자도 이해할 수 있는 쉬운 한국어 요약 (제목·저널에서 합리적으로 유추 가능한 수준까지만 서술)
@@ -22,6 +23,13 @@ const _SSCI = [
   // ---------- 2026 ----------
   {
     id: "ssci-2026-01",
+    // 저자 확인 (19차 §7-5): Crossref 출판사 예치 메타데이터에서 full name 4인 확인.
+    // 'Y Kwak'(Google Scholar 이니셜 표기)의 정체가 Youshin Kwak(곽유신)으로 확정됐다.
+    // ⚠️ 'Jikyung (Jeanne) Kim'은 IE University 소속 외부 공동연구자 — 김지연(kim-jeeyeon)이 아니다.
+    authors: ["Chang Hee Park", "Jikyung (Jeanne) Kim", "Youshin Kwak", "Jeonghye Choi"],
+    studentIds: ["kwak-yushin"],
+    authorSource: "Crossref 출판사 메타데이터 (DOI 10.1016/j.jbusres.2026.116256, 2026.09.01 확인)",
+    doi: "10.1016/j.jbusres.2026.116256",
     title:
       "Free Versus Paid Over-the-Top Video Streaming Services and the Influence of Social Media",
     journal: "Journal of Business Research",
@@ -1109,6 +1117,32 @@ export function worksForStudent(studentId) {
     top: false,
   }));
   return [...papers, ...books].sort((a, b) => b.year - a.year);
+}
+
+// 논문 카드의 저자 목록 → 제자 링크 (§5-2)
+// ⚠️ 이름 문자열로 추론하지 않는다. 이미 확정된 studentIds에 든 인물에 한해,
+//    그 인물의 확정 표기(nameKo/nameEn, 영문은 성-이름 순서 뒤바뀐 표기까지)와
+//    정확히 일치하는 저자 문자열만 링크로 만든다. 외부 공동연구자는 항상 일반 텍스트.
+export function authorsWithLinks(paper) {
+  const authors = paper.authors ?? [];
+  if (!authors.length) return [];
+  const ids = paper.studentIds ?? [];
+  const table = ids
+    .map((id) => {
+      const person = findPerson(id);
+      if (!person) return null;
+      const forms = [person.nameKo, person.nameEn].filter(Boolean);
+      const swapped = forms.flatMap((n) => {
+        const parts = n.split(" ");
+        return parts.length === 2 ? [`${parts[1]} ${parts[0]}`] : [];
+      });
+      return { id, person, forms: new Set([...forms, ...swapped]) };
+    })
+    .filter(Boolean);
+  return authors.map((name) => {
+    const hit = table.find((e) => e.forms.has(name));
+    return { name, personId: hit ? hit.id : null, person: hit ? hit.person : null };
+  });
 }
 
 // 논문 원문 링크 — DOI가 있으면 doi.org, 없으면 검색 폴백 (DOI 추측 생성 금지)

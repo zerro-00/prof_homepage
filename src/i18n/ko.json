@@ -1,6 +1,9 @@
 {
   "meta": {
-    "htmlLang": "ko"
+    "htmlLang": "ko",
+    "title": "최정혜 | 연세대학교 경영대학 마케팅",
+    "description": "사람들이 온라인과 오프라인에서 남긴 데이터를 들여다보며, 시장이 어떻게 움직이는지 연구합니다.",
+    "ogLocale": "ko_KR"
   },
   "nav": {
     "brand": "Jeonghye Choi Lab",
@@ -271,7 +274,9 @@
     "book": "저서",
     "topJournal": "최상위 저널",
     "phdHeading": "Ph.D. · 박사과정 진학",
-    "industryHeading": "Industry · 기업 진출"
+    "industryHeading": "Industry · 기업 진출",
+    "personFocus": "{{name}} 진출 정보",
+    "clearFocus": "강조 해제"
   },
   "pubsUI": {
     "viewKeyword": "키워드별 보기",
@@ -302,7 +307,11 @@
     "booksTitle": "Books · 저서/역서",
     "badgeStudentCoauthor": "제자 공저",
     "topJournalBadge": "★ Top Journal",
-    "openLink": "논문 원문 새 탭에서 열기"
+    "openLink": "논문 원문 새 탭에서 열기",
+    "authorsLabel": "저자",
+    "authorHint": "저자 이름을 클릭하면 해당 제자의 진출 정보를 볼 수 있습니다.",
+    "authorNote": "제자 공저 표기는 원문에서 저자가 확인된 논문에 한합니다.",
+    "personAria": "{{name}} 진출 정보 보기"
   },
   "keywords": {
     "모바일·앱": "모바일·앱",

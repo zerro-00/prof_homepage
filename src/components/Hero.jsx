@@ -98,8 +98,8 @@ export default function Hero({ navigate }) {
           {/* 프로필 사진 — 항상 밝은 원본 컬러 유지 */}
           <Reveal delay={60} className="justify-self-center md:justify-self-start">
             <div className="group relative transition-transform duration-300 hover:-translate-y-0.5">
-              <div className="absolute -inset-2 rounded-3xl bg-gradient-to-br from-accent-500/35 via-transparent to-mint-400/20 blur-md opacity-70 transition-opacity duration-300 group-hover:opacity-100" />
-              <div className="relative h-64 w-52 md:h-80 md:w-60 overflow-hidden rounded-2xl border border-accent-500/25">
+              <div className="absolute -inset-2 rounded-3xl bg-gradient-to-br from-accent-500/30 via-transparent to-gold-400/15 blur-md opacity-70 transition-opacity duration-300 group-hover:opacity-100" />
+              <div className="relative h-64 w-52 md:h-80 md:w-60 overflow-hidden rounded-2xl border border-gold-400/30">
                 <picture>
                   {/* 모바일에서는 208~256px로만 표시되므로 작은 소스를 따로 준다 */}
                   <source
