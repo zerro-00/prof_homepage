@@ -319,9 +319,10 @@
     "viewMethod": "방법론별 보기",
     "methodListLabel": "방법론 목록",
     "pickMethod": "방법론 선택",
-    "methodUnclassified": "분류 예정 {{count}}편",
+    "methodUnclassified": "방법론 미표기 {{count}}편",
     "filterJournal": "저널",
-    "clearOneFilter": "{{name}} 필터 해제"
+    "clearOneFilter": "{{name}} 필터 해제",
+    "methodUnclassifiedNote": "논문 원문에서 방법론이 명시된 경우에만 분류했습니다."
   },
   "keywords": {
     "모바일·앱": "모바일·앱",

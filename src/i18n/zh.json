@@ -319,9 +319,10 @@
     "viewMethod": "按研究方法",
     "methodListLabel": "研究方法列表",
     "pickMethod": "选择研究方法",
-    "methodUnclassified": "待分类 {{count}} 篇",
+    "methodUnclassified": "未标注研究方法 {{count}} 篇",
     "filterJournal": "期刊",
-    "clearOneFilter": "清除筛选：{{name}}"
+    "clearOneFilter": "清除筛选：{{name}}",
+    "methodUnclassifiedNote": "仅在论文原文明确说明研究方法时才进行分类。"
   },
   "keywords": {
     "모바일·앱": "移动·应用",

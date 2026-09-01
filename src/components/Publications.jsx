@@ -845,9 +845,14 @@ function MethodView({ pool, searchKey = "", method, onSelectMethod }) {
         />
       ))}
       {unclassified > 0 && (
-        <p className="mt-3 border-t border-line px-3 pt-3 text-[12px] text-ink-600">
-          {t("pubsUI.methodUnclassified", { count: unclassified })}
-        </p>
+        <div className="mt-3 border-t border-line px-3 pt-3">
+          <p className="text-[12px] text-ink-600">
+            {t("pubsUI.methodUnclassified", { count: unclassified })}
+          </p>
+          <p className="mt-1 text-[11px] leading-relaxed text-ink-600">
+            {t("pubsUI.methodUnclassifiedNote")}
+          </p>
+        </div>
       )}
     </div>
   );
@@ -872,6 +877,8 @@ function MethodView({ pool, searchKey = "", method, onSelectMethod }) {
         {unclassified > 0 && (
           <p className="mt-2 text-[12px] text-ink-600">
             {t("pubsUI.methodUnclassified", { count: unclassified })}
+            <br />
+            <span className="text-[11px]">{t("pubsUI.methodUnclassifiedNote")}</span>
           </p>
         )}
         <div ref={detailRef} className="mt-6 scroll-mt-20">

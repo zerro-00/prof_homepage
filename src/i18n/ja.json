@@ -319,9 +319,10 @@
     "viewMethod": "研究手法別",
     "methodListLabel": "研究手法一覧",
     "pickMethod": "研究手法を選択",
-    "methodUnclassified": "分類予定 {{count}}件",
+    "methodUnclassified": "研究手法の記載なし {{count}}件",
     "filterJournal": "学術誌",
-    "clearOneFilter": "{{name}} の絞り込みを解除"
+    "clearOneFilter": "{{name}} の絞り込みを解除",
+    "methodUnclassifiedNote": "論文の原典に研究手法が明記されている場合にのみ分類しました。"
   },
   "keywords": {
     "모바일·앱": "モバイル・アプリ",

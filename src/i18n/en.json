@@ -319,9 +319,10 @@
     "viewMethod": "By method",
     "methodListLabel": "Method list",
     "pickMethod": "Select a method",
-    "methodUnclassified": "{{count}} to be classified",
+    "methodUnclassified": "{{count}} without a stated method",
     "filterJournal": "Journal",
-    "clearOneFilter": "Clear filter: {{name}}"
+    "clearOneFilter": "Clear filter: {{name}}",
+    "methodUnclassifiedNote": "Methods are assigned only where the original paper states them."
   },
   "keywords": {
     "모바일·앱": "Mobile & Apps",
