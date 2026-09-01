@@ -3,8 +3,8 @@ import { useTranslation } from "react-i18next";
 import { Reveal, CountUp } from "./common.jsx";
 import { BASIC_INFO, HERO_STATS } from "../data/profile.js";
 
-/* 스탯 카드 — 4개가 폭·높이·내부 구조 완전히 동일 (§3-2).
-   부제(`해외 4 · 국내 1`)는 다른 카드에 없어 일관성을 위해 뺐다. */
+/* 스탯 카드 — 4개가 폭·높이·내부 구조 완전히 동일.
+   ⚠️ 부제 슬롯을 두지 말 것 (25차 §3) — 한 카드에만 부제가 붙으면 높이가 어긋난다. */
 function StatCard({ stat, delay, navigate }) {
   const { t } = useTranslation();
   return (

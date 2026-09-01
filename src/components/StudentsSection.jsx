@@ -524,14 +524,16 @@ export default function StudentsSection({ focus = null, personFocus = null, onCl
         </div>
       </div>
 
-      {/* 요약 배지 — 클릭 시 해당 탭으로 */}
-      <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
+      {/* 요약 배지 — 클릭 시 해당 탭으로.
+          ⚠️ 부제 슬롯을 두지 말 것 (25차 §3) — 한 카드에만 부제가 붙어 높이가 어긋난다.
+          4개 카드는 숫자 + 라벨 + 우하단 화살표로 완전히 동일한 구조를 유지한다. */}
+      <div className="mt-6 grid grid-cols-2 items-stretch gap-3 sm:grid-cols-4">
         {badges.map((b, i) => (
-          <Reveal key={b.label} delay={i * 70}>
+          <Reveal key={b.label} delay={i * 70} className="h-full">
             <button
               type="button"
               onClick={() => (badgeTabs[i] ? setTab(badgeTabs[i]) : scrollTo(mapRef))}
-              className="group relative w-full cursor-pointer rounded-xl border border-line bg-surface-2 px-5 py-4 text-left transition-all duration-200 hover:-translate-y-1 hover:border-accent-400/60 hover:bg-surface-3 focus-visible:outline-2 focus-visible:outline-accent-400"
+              className="group relative h-full w-full cursor-pointer rounded-xl border border-line bg-surface-2 px-5 pb-9 pt-4 text-left transition-all duration-200 hover:-translate-y-1 hover:border-accent-400/60 hover:bg-surface-3 focus-visible:outline-2 focus-visible:outline-accent-400"
             >
               <span className="flex items-baseline gap-3">
                 <span className="font-display text-2xl font-bold tabular-nums text-accent-300">
@@ -539,7 +541,6 @@ export default function StudentsSection({ focus = null, personFocus = null, onCl
                 </span>
                 <span className="text-sm text-ink-500">{b.label}</span>
               </span>
-              {b.sub ? <span className="mt-0.5 block text-[11px] text-ink-600">{b.sub}</span> : null}
               <span
                 aria-hidden="true"
                 className="absolute bottom-3 right-4 font-display text-sm text-ink-600 transition-all duration-200 group-hover:translate-x-0.5 group-hover:text-accent-300"
