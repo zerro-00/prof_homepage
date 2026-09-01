@@ -310,53 +310,185 @@ function useSubFilter(papers, primaryKind) {
   return { pick, setPick, range, setRange, options, ranges, filtered, reset, primaryKind, total: papers.length };
 }
 
-/* 서브 필터 — 드롭다운 2개 한 줄 (24차 §6).
-   알약 나열은 항목이 30개를 넘으면 화면을 뒤덮어 정보 전달을 방해한다.
+/* ---------- 커스텀 드롭다운 (27차 §2) ----------
+   ⚠️ 네이티브 <select>를 쓰지 말 것 — 펼치면 OS 기본 메뉴가 떠서 사이트와 따로 논다.
+   <button> + role="listbox" 로 만들고, 선택 항목 표현은 좌측 목록의 선택 행과 똑같이
+   (배경 --brand-weak + 좌측 3px 브랜드 바 + 브랜드 텍스트) 맞춘다. */
+function Dropdown({ label, value, options, onSelect, allLabel }) {
+  const [open, setOpen] = useState(false);
+  const [cursor, setCursor] = useState(0);
+  const rootRef = useRef(null);
+  const listRef = useRef(null);
+
+  const items = useMemo(() => [{ key: null, label: allLabel, count: null }, ...options], [options, allLabel]);
+  const activeIdx = Math.max(
+    0,
+    items.findIndex((it) => it.key === value)
+  );
+  const current = items[activeIdx];
+
+  // 바깥 클릭 시 닫힘
+  useEffect(() => {
+    if (!open) return;
+    const onDown = (e) => {
+      if (!rootRef.current?.contains(e.target)) setOpen(false);
+    };
+    document.addEventListener("mousedown", onDown);
+    return () => document.removeEventListener("mousedown", onDown);
+  }, [open]);
+
+  // 열 때 현재 선택 항목에 커서를 두고 보이게 스크롤
+  useEffect(() => {
+    if (!open) return;
+    setCursor(activeIdx);
+    requestAnimationFrame(() => {
+      listRef.current?.querySelector('[data-cursor="true"]')?.scrollIntoView({ block: "nearest" });
+    });
+  }, [open, activeIdx]);
+
+  const choose = (key) => {
+    onSelect(key);
+    setOpen(false);
+  };
+
+  const onKeyDown = (e) => {
+    if (!open) {
+      if (e.key === "Enter" || e.key === " " || e.key === "ArrowDown") {
+        e.preventDefault();
+        setOpen(true);
+      }
+      return;
+    }
+    if (e.key === "Escape") {
+      e.preventDefault();
+      setOpen(false);
+      return;
+    }
+    if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+      e.preventDefault();
+      setCursor((c) => {
+        const next = e.key === "ArrowDown" ? Math.min(c + 1, items.length - 1) : Math.max(c - 1, 0);
+        requestAnimationFrame(() => {
+          listRef.current?.querySelector('[data-cursor="true"]')?.scrollIntoView({ block: "nearest" });
+        });
+        return next;
+      });
+      return;
+    }
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      choose(items[cursor]?.key ?? null);
+    }
+  };
+
+  return (
+    <div ref={rootRef} className="relative">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        onKeyDown={onKeyDown}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        className="flex h-10 min-w-[11rem] max-w-[18rem] items-center gap-2 rounded-lg border border-line bg-surface-2 px-3 text-left transition-colors hover:border-line-strong focus-visible:border-accent-400 focus-visible:outline-2 focus-visible:outline-accent-400"
+      >
+        <span className="truncate text-[14px] text-ink-100">
+          {label} · {current?.label}
+          {current?.count !== null && current?.count !== undefined && (
+            <span className="ml-1 text-ink-500">({current.count})</span>
+          )}
+        </span>
+        <svg
+          aria-hidden="true"
+          width="16"
+          height="16"
+          viewBox="0 0 16 16"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className={`ml-auto shrink-0 text-ink-500 transition-transform duration-150 ${open ? "rotate-180" : ""}`}
+        >
+          <path d="M4 6.5 8 10.5 12 6.5" />
+        </svg>
+      </button>
+
+      {open && (
+        <ul
+          ref={listRef}
+          role="listbox"
+          aria-label={label}
+          onKeyDown={onKeyDown}
+          tabIndex={-1}
+          className="dropdown-panel thin-scroll absolute left-0 top-full z-30 mt-1.5 max-h-[320px] w-max min-w-full max-w-[22rem] overflow-y-auto rounded-[10px] border border-line bg-surface-2 py-1 shadow-[0_4px_16px_rgba(26,26,26,.10)]"
+        >
+          {items.map((it, i) => {
+            const selected = it.key === value || (it.key === null && value === null);
+            return (
+              <li key={it.key ?? "__all__"}>
+                <button
+                  type="button"
+                  role="option"
+                  aria-selected={selected}
+                  data-cursor={i === cursor ? "true" : undefined}
+                  onMouseEnter={() => setCursor(i)}
+                  onClick={() => choose(it.key)}
+                  className={`relative flex h-[38px] w-full items-center gap-2 px-3.5 text-left text-[14px] transition-colors md:h-[38px] ${
+                    selected
+                      ? "bg-accent-600 text-accent-300"
+                      : i === cursor
+                        ? "bg-surface-3 text-ink-100"
+                        : "text-ink-100"
+                  }`}
+                >
+                  {selected && (
+                    <span
+                      aria-hidden="true"
+                      className="absolute inset-y-0 left-0 w-[3px] bg-accent-400"
+                    />
+                  )}
+                  <span className="truncate">{it.label}</span>
+                  {it.count !== null && it.count !== undefined && (
+                    <span className={`ml-auto shrink-0 ${selected ? "text-accent-300" : "text-ink-500"}`}>
+                      ({it.count})
+                    </span>
+                  )}
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      )}
+    </div>
+  );
+}
+
+/* 서브 필터 — 커스텀 드롭다운 2개 한 줄 (27차 §2).
+   ⚠️ 알약 나열로 되돌리지 말 것 — 저널이 30개라 화면을 뒤덮는다.
    세 뷰(키워드·저널·방법론)가 이 컴포넌트를 그대로 공유한다. */
 function SubFilterBar({ st }) {
   const { t } = useTranslation();
   const primaryLabel = st.primaryKind === "keyword" ? t("pubsUI.filterKeyword") : t("pubsUI.filterJournal");
-  const selectCls =
-    "h-10 max-w-[16rem] rounded-lg border border-line bg-surface-2 px-3 text-[13px] text-ink-100 transition-colors focus:border-accent-400 focus:outline-none";
+  const pickLabel = (key) => (st.primaryKind === "keyword" ? t(`keywords.${key}`) : key);
   const chipCls =
     "inline-flex h-8 items-center gap-1.5 rounded-full border border-line bg-surface-3 pl-3 pr-2 text-[12px] text-ink-500";
 
-  const pickLabel = (key) => (st.primaryKind === "keyword" ? t(`keywords.${key}`) : key);
-
   return (
     <div className="mb-6 flex flex-wrap items-center gap-2">
-      <label className="contents">
-        <span className="sr-only">{primaryLabel}</span>
-        <select
-          value={st.pick ?? ""}
-          onChange={(e) => st.setPick(e.target.value || null)}
-          className={selectCls}
-          aria-label={primaryLabel}
-        >
-          <option value="">{`${primaryLabel} · ${t("pubsUI.all")} (${st.total})`}</option>
-          {st.options.map((o) => (
-            <option key={o.key} value={o.key}>
-              {`${pickLabel(o.key)} (${o.count})`}
-            </option>
-          ))}
-        </select>
-      </label>
-      <label className="contents">
-        <span className="sr-only">{t("pubsUI.filterYear")}</span>
-        <select
-          value={st.range ?? ""}
-          onChange={(e) => st.setRange(e.target.value || null)}
-          className={selectCls}
-          aria-label={t("pubsUI.filterYear")}
-        >
-          <option value="">{`${t("pubsUI.filterYear")} · ${t("pubsUI.all")} (${st.total})`}</option>
-          {st.ranges.map((r) => (
-            <option key={r.label} value={r.label}>
-              {`${r.label} (${r.count})`}
-            </option>
-          ))}
-        </select>
-      </label>
+      <Dropdown
+        label={primaryLabel}
+        value={st.pick}
+        allLabel={`${t("pubsUI.all")} (${st.total})`}
+        options={st.options.map((o) => ({ key: o.key, label: pickLabel(o.key), count: o.count }))}
+        onSelect={st.setPick}
+      />
+      <Dropdown
+        label={t("pubsUI.filterYear")}
+        value={st.range}
+        allLabel={`${t("pubsUI.all")} (${st.total})`}
+        options={st.ranges.map((r) => ({ key: r.label, label: r.label, count: r.count }))}
+        onSelect={st.setRange}
+      />
 
       {st.pick && (
         <span className={chipCls}>
@@ -383,48 +515,6 @@ function SubFilterBar({ st }) {
             ×
           </button>
         </span>
-      )}
-    </div>
-  );
-}
-
-/* ---------- 검색창 (21차 §5) ---------- */
-function SearchBox({ value, onChange }) {
-  const { t } = useTranslation();
-  return (
-    <div className="relative">
-      <span
-        aria-hidden="true"
-        className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-ink-600"
-      >
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6">
-          <circle cx="7" cy="7" r="4.5" />
-          <path d="M10.5 10.5 14 14" strokeLinecap="round" />
-        </svg>
-      </span>
-      <input
-        type="search"
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        onKeyDown={(e) => {
-          if (e.key === "Escape") {
-            e.preventDefault();
-            onChange("");
-          }
-        }}
-        placeholder={t("pubsUI.searchPlaceholder")}
-        aria-label={t("pubsUI.searchPlaceholder")}
-        className="w-full rounded-xl border border-line bg-surface-2 py-3 pl-10 pr-10 text-[15px] text-ink-100 placeholder:text-ink-600 transition-colors focus:border-accent-400 focus:outline-none"
-      />
-      {value && (
-        <button
-          type="button"
-          onClick={() => onChange("")}
-          aria-label={t("pubsUI.clearSearch")}
-          className="absolute right-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-lg text-ink-500 transition-colors hover:bg-surface-3 hover:text-ink-100 focus-visible:outline-2 focus-visible:outline-accent-400"
-        >
-          ×
-        </button>
       )}
     </div>
   );
