@@ -12,7 +12,7 @@ function StatCard({ stat, delay, navigate }) {
       <button
         type="button"
         onClick={() => navigate(stat.section, stat.focus ? { focus: stat.focus } : null)}
-        className="group relative flex h-full w-full cursor-pointer flex-col justify-between rounded-xl border border-line bg-surface-1 px-5 pb-9 pt-4 text-left backdrop-blur transition-all duration-200 hover:-translate-y-1 hover:border-accent-400/60 hover:shadow-[0_0_24px_var(--glow-strong)] focus-visible:outline-2 focus-visible:outline-accent-400"
+        className="group relative flex h-full w-full cursor-pointer flex-col justify-between rounded-xl border border-line bg-surface-1 px-5 pb-9 pt-4 text-left backdrop-blur transition-all duration-200 hover:-translate-y-1 hover:border-accent-400/60 hover:bg-surface-3 focus-visible:outline-2 focus-visible:outline-accent-400"
         aria-label={`${t(`hero.stats.${stat.key}`)} — ${t("hero.statAria")}`}
       >
         <span

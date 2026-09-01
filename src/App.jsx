@@ -122,7 +122,7 @@ function LangSwitcher() {
           role="menu"
           aria-label={`Language: ${LANG_NAMES[current.code]}`}
           onKeyDown={onMenuKeyDown}
-          className="absolute right-0 top-full mt-2 w-36 rounded-xl border border-line bg-surface-3 backdrop-blur p-1 shadow-2xl shadow-black/50"
+          className="absolute right-0 top-full mt-2 w-36 rounded-xl border border-line bg-surface-3 backdrop-blur p-1 shadow-lg shadow-black/10"
         >
           {LANGS.map((l, i) => {
             const isCurrent = i18n.language === l.code;

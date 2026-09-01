@@ -92,7 +92,7 @@ function PaperCard({ paper }) {
   const navigate = useContext(NavContext);
   const authors = authorsWithLinks(paper);
   return (
-    <div className="group relative overflow-hidden rounded-2xl border border-line bg-surface-2 transition-all hover:border-accent-500/50 hover:shadow-[0_0_20px_var(--glow-soft)]">
+    <div className="group relative overflow-hidden rounded-2xl border border-line bg-surface-2 transition-all hover:border-accent-500/50 hover:bg-surface-3">
       {/* 좌측 SSCI/KCI 구분 바 — 텍스트와 다른 토큰(비텍스트 3:1) */}
       <span
         aria-hidden="true"
