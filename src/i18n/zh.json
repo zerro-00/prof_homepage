@@ -247,7 +247,7 @@
         "label": "在读学生"
       }
     ],
-    "note": "将鼠标悬停或点按图钉即可查看去向详情。姓名未确认的毕业生以匿名处理。"
+    "note": "将鼠标移到图钉上或点击即可查看去向详情。"
   },
   "students": {
     "tabFaculty": "教授任职",
@@ -255,8 +255,6 @@
     "tabIndustry": "企业",
     "tabMembers": "在读学生",
     "tabAll": "全部",
-    "rosterTitle": "毕业生名单",
-    "rosterHint": "将鼠标移到姓名上即可在地图上高亮对应位置。",
     "worksHint": "点击成果数量即可查看该毕业生的合著论文。",
     "facultyHeading": "Faculty Placements · 教授任职",
     "membersTitle": "Active Members",

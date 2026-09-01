@@ -247,7 +247,7 @@
         "label": "Current members"
       }
     ],
-    "note": "Hover or tap a pin to see placement details. Alumni whose names could not be confirmed remain anonymous."
+    "note": "Hover or tap a pin to see placement details."
   },
   "students": {
     "tabFaculty": "Faculty",
@@ -255,8 +255,6 @@
     "tabIndustry": "Industry",
     "tabMembers": "Students",
     "tabAll": "All",
-    "rosterTitle": "Roster",
-    "rosterHint": "Hover a name to highlight its pin on the map.",
     "worksHint": "Click a publication count to see the papers that person co-authored.",
     "facultyHeading": "Faculty Placements",
     "membersTitle": "Active Members",

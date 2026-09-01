@@ -247,7 +247,7 @@
         "label": "在学生"
       }
     ],
-    "note": "ピンにマウスを乗せるかタップすると進路の詳細が表示されます。氏名が確認できていない修了生は匿名にしています。"
+    "note": "ピンにマウスを合わせるかタップすると、進路の詳細を表示します。"
   },
   "students": {
     "tabFaculty": "教授就任",
@@ -255,8 +255,6 @@
     "tabIndustry": "企業",
     "tabMembers": "在学生",
     "tabAll": "すべて",
-    "rosterTitle": "修了生一覧",
-    "rosterHint": "名前にマウスを合わせると地図上の位置が強調されます。",
     "worksHint": "実績の数字をクリックすると、その修了生の共著論文を表示します。",
     "facultyHeading": "Faculty Placements · 教授就任",
     "membersTitle": "Active Members",

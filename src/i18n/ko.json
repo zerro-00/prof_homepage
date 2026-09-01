@@ -247,7 +247,7 @@
         "label": "재학생"
       }
     ],
-    "note": "핀에 마우스를 올리거나 탭하면 진출 상세를 볼 수 있습니다. 이름이 확인되지 않은 졸업생은 익명 처리되었습니다."
+    "note": "핀에 마우스를 올리거나 탭하면 진출 상세를 볼 수 있습니다."
   },
   "students": {
     "tabFaculty": "교수 임용",
@@ -255,8 +255,6 @@
     "tabIndustry": "기업",
     "tabMembers": "재학생",
     "tabAll": "전체",
-    "rosterTitle": "제자 명단",
-    "rosterHint": "이름에 마우스를 올리면 지도에서 위치가 강조됩니다.",
     "worksHint": "실적을 클릭하면 해당 제자가 공저한 논문을 볼 수 있습니다.",
     "facultyHeading": "Faculty Placements · 교수 임용",
     "membersTitle": "Active Members",

@@ -119,65 +119,6 @@ function WorksAccordion({ works }) {
 }
 
 /* 명단 패널의 한 줄 — 지도 핀과 양방향으로 이어진다 */
-function RosterRow({ person, lng, hot, onHover, onSelect, rowRef, navigate }) {
-  const name = displayName(person, lng);
-  const works = worksForStudent(person.personId);
-  const isFaculty = !!person.isFaculty;
-  return (
-    <li ref={rowRef}>
-      <button
-        type="button"
-        onMouseEnter={onHover ? () => onHover(person) : undefined}
-        onFocus={onHover ? () => onHover(person) : undefined}
-        onClick={onSelect ? () => onSelect(person) : undefined}
-        aria-current={hot ? "true" : undefined}
-        onMouseLeave={(e) => {
-          if (!hot) e.currentTarget.style.background = "";
-        }}
-        onMouseOver={(e) => {
-          if (!hot) e.currentTarget.style.background = "var(--roster-hover)";
-        }}
-        style={hot ? { background: "var(--roster-hot)" } : undefined}
-        className="relative flex w-full items-start gap-2.5 rounded-lg px-2.5 py-2 text-left transition-colors focus-visible:outline-2 focus-visible:outline-accent-400"
-      >
-        {/* 활성 표시는 좌측 바 하나로만 */}
-        <span
-          aria-hidden="true"
-          className="absolute bottom-1 left-0 top-1 w-[2px] rounded-full transition-opacity"
-          style={{ background: "var(--pin-active)", opacity: hot ? 1 : 0 }}
-        />
-        <span
-          aria-hidden="true"
-          className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full"
-          style={{ background: isFaculty ? "var(--pin-faculty)" : "var(--pin)" }}
-        />
-        <span className="min-w-0 flex-1">
-          {/* 패널이 260px로 좁아졌으므로(§3) 이름 줄은 접지 않고 잘라낸다 */}
-          <span className="flex min-w-0 items-baseline gap-x-1.5">
-            <span
-              className={`shrink-0 text-[13px] font-medium ${hot ? "text-ink-100" : "text-ink-300"}`}
-            >
-              {name.main}
-            </span>
-            {name.sub && (
-              <span className="truncate text-[11px] text-ink-600">({name.sub})</span>
-            )}
-          </span>
-          <span className="mt-0.5 block truncate text-[12px] text-ink-500">
-            {shortAffiliation(localizeField(person, "affiliation", lng)) || person._city || ""}
-          </span>
-        </span>
-        <WorksBadge
-          works={works}
-          personId={person.personId}
-          name={name.sub ? `${name.main} (${name.sub})` : name.main}
-          navigate={navigate}
-        />
-      </button>
-    </li>
-  );
-}
-
 function AlumniCard({ entry, lng, faculty = false, navigate }) {
   const name = displayName(entry, lng);
   const works = worksForStudent(entry.personId);
@@ -259,8 +200,6 @@ export default function StudentsSection({ focus = null, personFocus = null, onCl
   const lng = i18n.language;
   const scrollTo = useAnchorScroll();
   const mapRef = useRef(null);
-  const rowRefs = useRef({});
-  const personRowRefs = useRef({});
 
   const [tab, setTab] = useState(() => (TAB_KEYS.includes(focus) ? focus : "all"));
   const [hoverPin, setHoverPin] = useState(null);
@@ -322,8 +261,7 @@ export default function StudentsSection({ focus = null, personFocus = null, onCl
     setTab("all");
     setPinnedPin(focusedPerson._pinId ?? null);
     const timer = setTimeout(() => {
-      const row = personRowRefs.current[focusedPerson.personId];
-      (row ?? mapRef.current)?.scrollIntoView?.({ behavior: "smooth", block: "center" });
+      mapRef.current?.scrollIntoView?.({ behavior: "smooth", block: "center" });
     }, 80);
     return () => clearTimeout(timer);
   }, [focusedPerson]);
@@ -342,13 +280,7 @@ export default function StudentsSection({ focus = null, personFocus = null, onCl
     return () => window.removeEventListener("keydown", onKey);
   }, [pinnedPin]);
 
-  const onHoverPin = useCallback((id) => {
-    setHoverPin(id);
-    if (!id) return;
-    // 핀 → 명단 방향: 필요하면 해당 행으로 스크롤
-    const row = rowRefs.current[id];
-    row?.scrollIntoView?.({ block: "nearest" });
-  }, []);
+  const onHoverPin = useCallback((id) => setHoverPin(id), []);
 
   const onSelectPin = useCallback((id) => setPinnedPin((cur) => (cur === id ? null : id)), []);
 
@@ -434,94 +366,42 @@ export default function StudentsSection({ focus = null, personFocus = null, onCl
         </div>
       )}
 
+      {/* 지도 — 섹션 전체 폭 (25차 §2).
+          ⚠️ 좌측 명단 패널을 되살리지 말 것 — 260px에서 이름·소속이 잘려 지저분했고,
+          지도 아래 제자 카드 그리드가 이미 전원을 담고 있어 중복이었다. */}
       <div ref={mapRef} className="scroll-mt-20 xl:mx-[calc(50%-50vw)] xl:px-8">
-        <div className="lg:grid lg:grid-cols-[260px_minmax(0,1fr)] lg:gap-6">
-        <div className="order-2 mt-6 lg:order-1 lg:mt-0">
-          <div className="rounded-2xl border border-line bg-surface-2 p-4">
-            <div className="mb-2 flex items-baseline justify-between gap-2">
-              <h3 className="font-display text-[11px] uppercase tracking-[0.2em] text-ink-500">
-                {t("students.rosterTitle")}
-              </h3>
-              <span className="font-display text-[12px] tabular-nums text-ink-600">
-                {current.length}
-              </span>
+        <Suspense
+          fallback={
+            <div className="flex h-64 items-center justify-center rounded-2xl border border-line bg-surface-2 text-sm text-ink-600">
+              …
             </div>
-            <ul
-              className="thin-scroll -mx-1 max-h-[380px] overflow-y-auto px-1 lg:max-h-[460px] xl:max-h-[520px]"
-            >
-              {(tab === "all" ? ORDER : [tab]).map((g) => (
-                <li key={g}>
-                  {tab === "all" && (
-                    <p className="mb-1 mt-3 px-2.5 font-display text-[10px] uppercase tracking-[0.18em] text-ink-600 first:mt-0">
-                      {t(`students.tab${g[0].toUpperCase()}${g.slice(1)}`)}
-                    </p>
-                  )}
-                  <ul>
-                    {groups[g].map((p) => (
-                      <RosterRow
-                        key={p.personId}
-                        person={p}
-                        lng={lng}
-                        hot={
-                          p.personId === personFocus ||
-                          (!!p._pinId && highlightPinId === p._pinId)
-                        }
-                        onHover={p._pinId ? (x) => setHoverPin(x._pinId) : undefined}
-                        onSelect={p._pinId ? (x) => onSelectPin(x._pinId) : undefined}
-                        navigate={navigate}
-                        rowRef={(el) => {
-                          if (p._pinId && !rowRefs.current[p._pinId]) rowRefs.current[p._pinId] = el;
-                          personRowRefs.current[p.personId] = el;
-                        }}
-                      />
-                    ))}
-                  </ul>
-                </li>
-              ))}
-            </ul>
-            <p className="mt-2 hidden px-2.5 text-[11px] leading-relaxed text-ink-600 lg:block">
-              {t("students.rosterHint")}
-              <br />
-              {t("students.worksHint")}
-            </p>
-          </div>
-        </div>
-
-        <div className="order-1 lg:order-2">
-          <Suspense
-            fallback={
-              <div className="flex h-64 items-center justify-center rounded-2xl border border-line bg-surface-2 text-sm text-ink-600">
-                …
-              </div>
-            }
-          >
-            <div className="relative">
-              <WorldMap
-                activePinIds={activePinIds}
-                highlightPinId={highlightPinId}
-                onHoverPin={onHoverPin}
-                onSelectPin={onSelectPin}
-              />
-              {/* 데스크톱: 지도 위에 카드 오버레이 */}
-              {shownPin && (
-                <div className="pointer-events-none absolute inset-0 hidden lg:block">
-                  <div className="pointer-events-auto absolute bottom-14 right-4 max-h-[70%] w-[26rem]">
-                    <PinCard pin={shownPin} lng={lng} onClose={() => setPinnedPin(null)} />
-                  </div>
+          }
+        >
+          <div className="relative">
+            <WorldMap
+              activePinIds={activePinIds}
+              highlightPinId={highlightPinId}
+              onHoverPin={onHoverPin}
+              onSelectPin={onSelectPin}
+            />
+            {/* 데스크톱: 지도 위에 카드 오버레이 */}
+            {shownPin && (
+              <div className="pointer-events-none absolute inset-0 hidden lg:block">
+                <div className="pointer-events-auto absolute bottom-14 right-4 max-h-[70%] w-[26rem]">
+                  <PinCard pin={shownPin} lng={lng} onClose={() => setPinnedPin(null)} />
                 </div>
-              )}
-            </div>
-          </Suspense>
-          {/* 모바일: 카드가 지도 아래에 열림 */}
-          {shownPin && (
-            <div className="mt-3 lg:hidden">
-              <Suspense fallback={null}>
-                <PinCard pin={shownPin} lng={lng} onClose={() => setPinnedPin(null)} />
-              </Suspense>
-            </div>
-          )}
-        </div>
-        </div>
+              </div>
+            )}
+          </div>
+        </Suspense>
+        {/* 모바일: 카드가 지도 아래에 열림 */}
+        {shownPin && (
+          <div className="mt-3 lg:hidden">
+            <Suspense fallback={null}>
+              <PinCard pin={shownPin} lng={lng} onClose={() => setPinnedPin(null)} />
+            </Suspense>
+          </div>
+        )}
       </div>
 
       {/* 요약 배지 — 클릭 시 해당 탭으로.
@@ -552,8 +432,10 @@ export default function StudentsSection({ focus = null, personFocus = null, onCl
         ))}
       </div>
 
-      {/* 선택 탭의 상세 카드 목록 */}
+      {/* 선택 탭의 상세 카드 목록 — 명단 패널이 사라져 이 그리드가 유일한 명단이다.
+          ⚠️ 삭제하지 말 것 (25차 §2). */}
       <div className="mt-10">
+        <p className="mb-4 text-[13px] text-ink-500">{t("students.worksHint")}</p>
         {tab === "members" && (
           <p className="mb-4 text-[13px] text-ink-500">
             {t("students.membersDesc", { n: CURRENT_MEMBERS.length })}
