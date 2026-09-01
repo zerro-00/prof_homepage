@@ -1185,8 +1185,24 @@ export function authorsWithLinks(paper) {
     .filter(Boolean);
   return authors.map((name) => {
     const hit = table.find((e) => e.forms.has(name));
-    return { name, personId: hit ? hit.id : null, person: hit ? hit.person : null };
+    if (hit) return { name, personId: hit.id, person: hit.person, isProfessor: false };
+    return { name, personId: null, person: null, isProfessor: PROFESSOR_FORMS.has(name) };
   });
+}
+
+// 교수님 표기 — CLAUDE.md의 확정 사실이며, 화면 표시용 변환에만 쓴다(데이터는 원문 유지).
+// 한국어 화면에서 "황인서, 이예령, Jeonghye Choi"처럼 표기가 섞이지 않게 한다.
+const PROFESSOR_FORMS = new Set(["최정혜", "Jeonghye Choi"]);
+export const PROFESSOR_NAME = { ko: "최정혜", en: "Jeonghye Choi" };
+
+// 저자 한 명의 화면 표시 이름 (27차 §5)
+// ⚠️ 데이터의 authors 배열은 검증 근거이므로 수정하지 않는다. 표시만 바꾼다.
+// 대응표에 없는 외부 공동연구자는 원문 표기 그대로 노출한다.
+export function authorDisplayName(entry, lng) {
+  const ko = lng === "ko";
+  if (entry.person) return (ko ? entry.person.nameKo : entry.person.nameEn) ?? entry.person.nameKo;
+  if (entry.isProfessor) return ko ? PROFESSOR_NAME.ko : PROFESSOR_NAME.en;
+  return entry.name;
 }
 
 // 논문 원문 링크 — DOI가 있으면 doi.org, 없으면 검색 폴백 (DOI 추측 생성 금지)

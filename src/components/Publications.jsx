@@ -14,6 +14,7 @@ import {
   METHODS,
   methodRows,
   journalRank,
+  authorDisplayName,
 } from "../data/publications.js";
 
 // 논문 → 제자 이동(§5-2)을 카드 깊숙한 곳까지 prop으로 끌고 내려가지 않기 위한 컨텍스트
@@ -88,7 +89,8 @@ function TypeTag({ type }) {
 
 /* ---------- 논문 카드 — 전체가 원문 링크 (DOI 또는 검색 폴백) ---------- */
 function PaperCard({ paper }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const lng = i18n.language;
   const navigate = useContext(NavContext);
   const authors = authorsWithLinks(paper);
   return (
@@ -171,13 +173,13 @@ function PaperCard({ paper }) {
                     e.stopPropagation();
                     navigate?.("alumni", { person: a.personId });
                   }}
-                  aria-label={t("pubsUI.personAria", { name: a.name })}
+                  aria-label={t("pubsUI.personAria", { name: authorDisplayName(a, lng) })}
                   className="rounded text-accent-400 underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-accent-400"
                 >
-                  <Highlight text={a.name} />
+                  <Highlight text={authorDisplayName(a, lng)} />
                 </button>
               ) : (
-                <Highlight text={a.name} />
+                <Highlight text={authorDisplayName(a, lng)} />
               )}
             </span>
           ))}
