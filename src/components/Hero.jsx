@@ -3,8 +3,8 @@ import { useTranslation } from "react-i18next";
 import { Reveal, CountUp } from "./common.jsx";
 import { BASIC_INFO, HERO_STATS } from "../data/profile.js";
 
-/* 스탯 카드 — 4개가 폭·높이·내부 구조 완전히 동일 (§3-2).
-   부제(`해외 4 · 국내 1`)는 다른 카드에 없어 일관성을 위해 뺐다. */
+/* 스탯 카드 — 4개가 폭·높이·내부 구조 완전히 동일.
+   ⚠️ 부제 슬롯을 두지 말 것 (25차 §3) — 한 카드에만 부제가 붙으면 높이가 어긋난다. */
 function StatCard({ stat, delay, navigate }) {
   const { t } = useTranslation();
   return (
@@ -12,7 +12,7 @@ function StatCard({ stat, delay, navigate }) {
       <button
         type="button"
         onClick={() => navigate(stat.section, stat.focus ? { focus: stat.focus } : null)}
-        className="group relative flex h-full w-full cursor-pointer flex-col justify-between rounded-xl border border-line bg-surface-1 px-5 pb-9 pt-4 text-left backdrop-blur transition-all duration-200 hover:-translate-y-1 hover:border-accent-400/60 hover:shadow-[0_0_24px_var(--glow-strong)] focus-visible:outline-2 focus-visible:outline-accent-400"
+        className="group relative flex h-full w-full cursor-pointer flex-col justify-between rounded-xl border border-line bg-surface-1 px-5 pb-9 pt-4 text-left backdrop-blur transition-all duration-200 hover:-translate-y-1 hover:border-accent-400/60 hover:bg-surface-3 focus-visible:outline-2 focus-visible:outline-accent-400"
         aria-label={`${t(`hero.stats.${stat.key}`)} — ${t("hero.statAria")}`}
       >
         <span

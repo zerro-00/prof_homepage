@@ -232,26 +232,22 @@
     "badges": [
       {
         "value": "5",
-        "label": "Faculty appointments",
-        "sub": "4 overseas · 1 domestic"
+        "label": "Faculty appointments"
       },
       {
         "value": "7",
-        "label": "Ph.D. placements abroad",
-        "sub": ""
+        "label": "Ph.D. placements abroad"
       },
       {
         "value": "4",
-        "label": "Continents reached",
-        "sub": ""
+        "label": "Continents reached"
       },
       {
         "value": "4",
-        "label": "Current members",
-        "sub": ""
+        "label": "Current members"
       }
     ],
-    "note": "Hover or tap a pin to see placement details. Alumni whose names could not be confirmed remain anonymous."
+    "note": "Hover or tap a pin to see placement details."
   },
   "students": {
     "tabFaculty": "Faculty",
@@ -259,8 +255,6 @@
     "tabIndustry": "Industry",
     "tabMembers": "Students",
     "tabAll": "All",
-    "rosterTitle": "Roster",
-    "rosterHint": "Hover a name to highlight its pin on the map.",
     "worksHint": "Click a publication count to see the papers that person co-authored.",
     "facultyHeading": "Faculty Placements",
     "membersTitle": "Active Members",
@@ -326,7 +320,8 @@
     "methodListLabel": "Method list",
     "pickMethod": "Select a method",
     "methodUnclassified": "{{count}} to be classified",
-    "filterJournal": "Journal"
+    "filterJournal": "Journal",
+    "clearOneFilter": "Clear filter: {{name}}"
   },
   "keywords": {
     "모바일·앱": "Mobile & Apps",

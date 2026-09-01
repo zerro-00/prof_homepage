@@ -6,7 +6,6 @@ import {
   ALL_PUBLICATIONS,
   KCI_COUNT_LABEL,
   BOOKS,
-  KEYWORDS,
   YEAR_RANGES,
   groupJournalsByType,
   keywordRows,
@@ -92,7 +91,7 @@ function PaperCard({ paper }) {
   const navigate = useContext(NavContext);
   const authors = authorsWithLinks(paper);
   return (
-    <div className="group relative overflow-hidden rounded-2xl border border-line bg-surface-2 transition-all hover:border-accent-500/50 hover:shadow-[0_0_20px_var(--glow-soft)]">
+    <div className="group relative overflow-hidden rounded-2xl border border-line bg-surface-2 transition-all hover:border-accent-500/50 hover:bg-surface-3">
       {/* 좌측 SSCI/KCI 구분 바 — 텍스트와 다른 토큰(비텍스트 3:1) */}
       <span
         aria-hidden="true"
@@ -182,25 +181,6 @@ function PaperCard({ paper }) {
   );
 }
 
-/* ---------- 필터 버튼 (연도/키워드 하위 필터 전용) ---------- */
-function FilterBtn({ activeState, onClick, children }) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={`shrink-0 rounded-full border px-3.5 py-1.5 text-[13px] transition-colors ${
-        activeState
-          ? "border-accent-400 bg-accent-500/15 text-accent-300"
-          : "border-line bg-surface-3 text-ink-500 hover:border-line-strong hover:text-ink-300"
-      }`}
-    >
-      {children}
-    </button>
-  );
-}
-
-/* ---------- 좌측 목록 행 — 키워드별/저널별 보기가 같은 컴포넌트를 쓴다 ----------
-   저널명 옆 ★ 없음, 선택 행의 편수에 밑줄 없음 (§2-2) */
 function ListRow({ label, count, max, active, onSelect }) {
   const ratio = max > 0 ? Math.max(8, Math.round((count / max) * 100)) : 0;
   return (
@@ -286,96 +266,124 @@ function DetailHeading({ title, count, onBack, backLabel }) {
    세 뷰가 같은 컴포넌트를 쓴다. 뷰마다 다르게 만들지 말 것.
    좌측 선택이 바뀌면 상위에서 reset()을 불러 초기화한다. */
 function useSubFilter(papers, primaryKind) {
-  const [mode, setMode] = useState(primaryKind);
-  const [pick, setPick] = useState(null);
-  const [range, setRange] = useState(null);
+  // 두 필터는 서로 독립이고 AND로 함께 걸린다
+  const [pick, setPick] = useState(null); // 저널명 또는 키워드
+  const [range, setRange] = useState(null); // YEAR_RANGES 항목의 label
 
+  // 항목마다 편수를 붙인다. 저널·키워드는 편수 내림차순, 연도는 최신순.
   const options = useMemo(() => {
-    if (primaryKind === "keyword") return KEYWORDS.filter((k) => papers.some((p) => p.keywords.includes(k)));
-    return [...new Set(papers.map((p) => p.journal))].sort((a, b) => a.localeCompare(b, "ko"));
+    const count = new Map();
+    for (const p of papers) {
+      const keys = primaryKind === "keyword" ? p.keywords : [p.journal];
+      for (const k of keys) count.set(k, (count.get(k) ?? 0) + 1);
+    }
+    return [...count.entries()]
+      .map(([key, n]) => ({ key, count: n }))
+      .sort((a, b) => b.count - a.count || a.key.localeCompare(b.key, "ko"));
   }, [papers, primaryKind]);
 
   const ranges = useMemo(
-    () => YEAR_RANGES.filter((r) => papers.some((p) => p.year >= r.from && p.year <= r.to)),
+    () =>
+      YEAR_RANGES.map((r) => ({
+        ...r,
+        count: papers.filter((p) => p.year >= r.from && p.year <= r.to).length,
+      }))
+        .filter((r) => r.count > 0)
+        .reverse(), // 최신순
     [papers]
   );
 
   const filtered = useMemo(() => {
-    if (mode === primaryKind && pick)
-      return papers.filter((p) => (primaryKind === "keyword" ? p.keywords.includes(pick) : p.journal === pick));
-    if (mode === "year" && range) return papers.filter((p) => p.year >= range.from && p.year <= range.to);
-    return papers;
-  }, [papers, mode, pick, range, primaryKind]);
+    let list = papers;
+    if (pick)
+      list = list.filter((p) => (primaryKind === "keyword" ? p.keywords.includes(pick) : p.journal === pick));
+    const r = ranges.find((x) => x.label === range);
+    if (r) list = list.filter((p) => p.year >= r.from && p.year <= r.to);
+    return list;
+  }, [papers, pick, range, ranges, primaryKind]);
 
   const reset = useCallback(() => {
     setPick(null);
     setRange(null);
   }, []);
 
-  return { mode, setMode, pick, setPick, range, setRange, options, ranges, filtered, reset, primaryKind };
+  return { pick, setPick, range, setRange, options, ranges, filtered, reset, primaryKind, total: papers.length };
 }
 
+/* 서브 필터 — 드롭다운 2개 한 줄 (24차 §6).
+   알약 나열은 항목이 30개를 넘으면 화면을 뒤덮어 정보 전달을 방해한다.
+   세 뷰(키워드·저널·방법론)가 이 컴포넌트를 그대로 공유한다. */
 function SubFilterBar({ st }) {
   const { t } = useTranslation();
   const primaryLabel = st.primaryKind === "keyword" ? t("pubsUI.filterKeyword") : t("pubsUI.filterJournal");
-  const tab =
-    "rounded-md px-2.5 py-1 text-xs transition-colors focus-visible:outline-2 focus-visible:outline-accent-400";
+  const selectCls =
+    "h-10 max-w-[16rem] rounded-lg border border-line bg-surface-2 px-3 text-[13px] text-ink-100 transition-colors focus:border-accent-400 focus:outline-none";
+  const chipCls =
+    "inline-flex h-8 items-center gap-1.5 rounded-full border border-line bg-surface-3 pl-3 pr-2 text-[12px] text-ink-500";
+
+  const pickLabel = (key) => (st.primaryKind === "keyword" ? t(`keywords.${key}`) : key);
+
   return (
-    <div className="mb-6 rounded-xl border border-line bg-surface-1 p-4">
-      <div className="mb-3 flex items-center gap-2">
-        <span className="mr-1 font-display text-[11px] uppercase tracking-[0.2em] text-ink-600">
-          Filter
+    <div className="mb-6 flex flex-wrap items-center gap-2">
+      <label className="contents">
+        <span className="sr-only">{primaryLabel}</span>
+        <select
+          value={st.pick ?? ""}
+          onChange={(e) => st.setPick(e.target.value || null)}
+          className={selectCls}
+          aria-label={primaryLabel}
+        >
+          <option value="">{`${primaryLabel} · ${t("pubsUI.all")} (${st.total})`}</option>
+          {st.options.map((o) => (
+            <option key={o.key} value={o.key}>
+              {`${pickLabel(o.key)} (${o.count})`}
+            </option>
+          ))}
+        </select>
+      </label>
+      <label className="contents">
+        <span className="sr-only">{t("pubsUI.filterYear")}</span>
+        <select
+          value={st.range ?? ""}
+          onChange={(e) => st.setRange(e.target.value || null)}
+          className={selectCls}
+          aria-label={t("pubsUI.filterYear")}
+        >
+          <option value="">{`${t("pubsUI.filterYear")} · ${t("pubsUI.all")} (${st.total})`}</option>
+          {st.ranges.map((r) => (
+            <option key={r.label} value={r.label}>
+              {`${r.label} (${r.count})`}
+            </option>
+          ))}
+        </select>
+      </label>
+
+      {st.pick && (
+        <span className={chipCls}>
+          {`${primaryLabel}: ${pickLabel(st.pick)}`}
+          <button
+            type="button"
+            onClick={() => st.setPick(null)}
+            aria-label={t("pubsUI.clearOneFilter", { name: pickLabel(st.pick) })}
+            className="flex h-5 w-5 items-center justify-center rounded-full text-ink-500 transition-colors hover:bg-surface-0 hover:text-ink-100"
+          >
+            ×
+          </button>
         </span>
-        <button
-          type="button"
-          onClick={() => {
-            st.setMode(st.primaryKind);
-            st.setRange(null);
-          }}
-          className={`${tab} ${
-            st.mode === st.primaryKind ? "bg-accent-500/15 text-accent-300" : "text-ink-500 hover:text-ink-300"
-          }`}
-        >
-          {primaryLabel}
-        </button>
-        <button
-          type="button"
-          onClick={() => {
-            st.setMode("year");
-            st.setPick(null);
-          }}
-          className={`${tab} ${
-            st.mode === "year" ? "bg-accent-500/15 text-accent-300" : "text-ink-500 hover:text-ink-300"
-          }`}
-        >
-          {t("pubsUI.filterYear")}
-        </button>
-      </div>
-      <div className="flex flex-wrap gap-2">
-        {st.mode === "year" ? (
-          <>
-            <FilterBtn activeState={st.range === null} onClick={() => st.setRange(null)}>
-              {t("pubsUI.all")}
-            </FilterBtn>
-            {st.ranges.map((r) => (
-              <FilterBtn key={r.label} activeState={st.range?.label === r.label} onClick={() => st.setRange(r)}>
-                {r.label}
-              </FilterBtn>
-            ))}
-          </>
-        ) : (
-          <>
-            <FilterBtn activeState={st.pick === null} onClick={() => st.setPick(null)}>
-              {t("pubsUI.all")}
-            </FilterBtn>
-            {st.options.map((o) => (
-              <FilterBtn key={o} activeState={st.pick === o} onClick={() => st.setPick(o)}>
-                {st.primaryKind === "keyword" ? t(`keywords.${o}`) : o}
-              </FilterBtn>
-            ))}
-          </>
-        )}
-      </div>
+      )}
+      {st.range && (
+        <span className={chipCls}>
+          {`${t("pubsUI.filterYear")}: ${st.range}`}
+          <button
+            type="button"
+            onClick={() => st.setRange(null)}
+            aria-label={t("pubsUI.clearOneFilter", { name: st.range })}
+            className="flex h-5 w-5 items-center justify-center rounded-full text-ink-500 transition-colors hover:bg-surface-0 hover:text-ink-100"
+          >
+            ×
+          </button>
+        </span>
+      )}
     </div>
   );
 }
@@ -653,7 +661,7 @@ function KeywordView({ pool, searchKey = "" }) {
           <SubFilterBar st={sub} />
           <PaperList
             papers={sub.filtered}
-            resetKey={`kw-${active}-${sub.pick ?? ""}-${sub.range?.label ?? ""}-${searchKey}-${pool.length}`}
+            resetKey={`kw-${active}-${sub.pick ?? ""}-${sub.range ?? ""}-${searchKey}-${pool.length}`}
           />
         </div>
       </div>
@@ -692,7 +700,7 @@ function KeywordView({ pool, searchKey = "" }) {
       <SubFilterBar st={sub} />
       <PaperList
         papers={sub.filtered}
-        resetKey={`kw-${active}-${sub.pick ?? ""}-${sub.range?.label ?? ""}-${searchKey}-${pool.length}`}
+        resetKey={`kw-${active}-${sub.pick ?? ""}-${sub.range ?? ""}-${searchKey}-${pool.length}`}
       />
     </MasterDetail>
   );
@@ -773,7 +781,7 @@ function MethodView({ pool, searchKey = "", method, onSelectMethod }) {
           <SubFilterBar st={sub} />
           <PaperList
             papers={sub.filtered}
-            resetKey={`mt-${active}-${sub.pick ?? ""}-${sub.range?.label ?? ""}-${searchKey}-${pool.length}`}
+            resetKey={`mt-${active}-${sub.pick ?? ""}-${sub.range ?? ""}-${searchKey}-${pool.length}`}
           />
         </div>
       </div>
@@ -791,7 +799,7 @@ function MethodView({ pool, searchKey = "", method, onSelectMethod }) {
       <SubFilterBar st={sub} />
       <PaperList
         papers={sub.filtered}
-        resetKey={`mt-${active}-${sub.pick ?? ""}-${sub.range?.label ?? ""}-${searchKey}-${pool.length}`}
+        resetKey={`mt-${active}-${sub.pick ?? ""}-${sub.range ?? ""}-${searchKey}-${pool.length}`}
       />
     </MasterDetail>
   );
@@ -974,7 +982,7 @@ function JournalView({ pool, searchKey = "" }) {
 
       <PaperList
         papers={filtered}
-        resetKey={`jn-${journal}-${sub.pick ?? ""}-${sub.range?.label ?? ""}-${searchKey}-${pool.length}`}
+        resetKey={`jn-${journal}-${sub.pick ?? ""}-${sub.range ?? ""}-${searchKey}-${pool.length}`}
       />
       {filtered.length === 0 && (
         <p className="py-8 text-center text-sm text-ink-600">{t("pubsUI.none")}</p>
