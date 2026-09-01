@@ -528,6 +528,48 @@ function SubFilterBar({ st }) {
   );
 }
 
+/* ---------- 검색창 (21차 §5) ---------- */
+function SearchBox({ value, onChange }) {
+  const { t } = useTranslation();
+  return (
+    <div className="relative">
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-ink-600"
+      >
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6">
+          <circle cx="7" cy="7" r="4.5" />
+          <path d="M10.5 10.5 14 14" strokeLinecap="round" />
+        </svg>
+      </span>
+      <input
+        type="search"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Escape") {
+            e.preventDefault();
+            onChange("");
+          }
+        }}
+        placeholder={t("pubsUI.searchPlaceholder")}
+        aria-label={t("pubsUI.searchPlaceholder")}
+        className="w-full rounded-xl border border-line bg-surface-2 py-3 pl-10 pr-10 text-[15px] text-ink-100 placeholder:text-ink-600 transition-colors focus:border-accent-400 focus:outline-none"
+      />
+      {value && (
+        <button
+          type="button"
+          onClick={() => onChange("")}
+          aria-label={t("pubsUI.clearSearch")}
+          className="absolute right-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-lg text-ink-500 transition-colors hover:bg-surface-3 hover:text-ink-100 focus-visible:outline-2 focus-visible:outline-accent-400"
+        >
+          ×
+        </button>
+      )}
+    </div>
+  );
+}
+
 /* ---------- 논문 목록 + 페이지네이션 (21차 §4) ----------
    79편을 한 화면에 쏟으면 아래 저서 영역까지 스크롤하기가 너무 힘들다.
    한 페이지 5편으로 끊고, 페이지 이동 시 "목록 상단"으로만 부드럽게 이동한다
