@@ -13,6 +13,7 @@ import {
   authorsWithLinks,
   METHODS,
   methodRows,
+  journalRank,
 } from "../data/publications.js";
 
 // 논문 → 제자 이동(§5-2)을 카드 깊숙한 곳까지 prop으로 끌고 내려가지 않기 위한 컨텍스트
@@ -107,8 +108,13 @@ function PaperCard({ paper }) {
       >
       <div className="mb-3 flex flex-wrap items-center gap-2 pr-6">
         <TypeTag type={paper.type} />
-        {paper.tier === "top" && (
-          <span className="inline-flex items-center gap-1 rounded-md border border-gold-500/40 bg-gold-500/10 px-2 py-0.5 font-display text-[11px] font-semibold tracking-wide text-gold-300">
+        {/* Top Journal 배지 (27차 §4) — rank 1 SSCI 저널 6종에만
+            (JMR · Marketing Science · JCR · Management Science · IJRM · JIBS).
+            JOURNAL_RANK에는 KCI 최상위지(마케팅연구 등)도 rank 1로 들어 있어 type으로 한 번 더 거른다.
+            ⚠️ 그 외 저널에 붙이지 말 것. 좌측 저널 목록에는 넣지 않는다(순서로 이미 표현). */}
+        {paper.type === "SSCI" && journalRank(paper.journal) === 1 && (
+          <span className="inline-flex items-center gap-1 rounded border border-[#E5DCC8] bg-[#F5F1E8] px-2 py-0.5 text-[12px] font-medium text-gold-400">
+            <span aria-hidden="true">★</span>
             {t("pubsUI.topJournalBadge")}
           </span>
         )}
