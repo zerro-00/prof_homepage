@@ -326,7 +326,8 @@
     "methodListLabel": "Method list",
     "pickMethod": "Select a method",
     "methodUnclassified": "{{count}} to be classified",
-    "filterJournal": "Journal"
+    "filterJournal": "Journal",
+    "clearOneFilter": "Clear filter: {{name}}"
   },
   "keywords": {
     "모바일·앱": "Mobile & Apps",

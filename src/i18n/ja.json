@@ -326,7 +326,8 @@
     "methodListLabel": "研究手法一覧",
     "pickMethod": "研究手法を選択",
     "methodUnclassified": "分類予定 {{count}}件",
-    "filterJournal": "学術誌"
+    "filterJournal": "学術誌",
+    "clearOneFilter": "{{name}} の絞り込みを解除"
   },
   "keywords": {
     "모바일·앱": "モバイル・アプリ",

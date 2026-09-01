@@ -326,7 +326,8 @@
     "methodListLabel": "방법론 목록",
     "pickMethod": "방법론 선택",
     "methodUnclassified": "분류 예정 {{count}}편",
-    "filterJournal": "저널"
+    "filterJournal": "저널",
+    "clearOneFilter": "{{name}} 필터 해제"
   },
   "keywords": {
     "모바일·앱": "모바일·앱",
