@@ -118,6 +118,56 @@ function WorksAccordion({ works }) {
   );
 }
 
+/* 연구실 합류 전 연구 (28차 §2)
+   ⚠️ 최정혜 교수님 공저가 아니다. alumni.js의 priorWorks에만 있고
+   publications.js(교수님 논문 79편)와는 완전히 분리돼 있다 —
+   논문 섹션의 목록·검색·필터에 나타나지 않고 실적 배지에도 합산되지 않는다.
+   연구실 공저 실적과는 색·아이콘이 아니라 라벨 문구로 구분한다. */
+function PriorWorksAccordion({ priorWorks }) {
+  const { t } = useTranslation();
+  const [open, setOpen] = useState(false);
+  if (!priorWorks || priorWorks.length === 0) return null;
+  return (
+    <div className="mt-2">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className="inline-flex items-center gap-1.5 text-xs text-ink-500 transition-colors hover:text-accent-300"
+        aria-expanded={open}
+      >
+        <span aria-hidden="true" className={`inline-block transition-transform ${open ? "rotate-90" : ""}`}>
+          ▸
+        </span>
+        {open
+          ? t("students.priorWorksHide", { count: priorWorks.length })
+          : t("students.priorWorksShow", { count: priorWorks.length })}
+      </button>
+      <Collapse open={open}>
+        <div className="mt-2.5 border-l border-line pl-3">
+          <p className="text-[11px] leading-snug text-ink-600">{t("students.priorWorksNote")}</p>
+          <ul className="mt-2 space-y-2">
+            {priorWorks.map((w, i) => (
+              <li key={i} className="text-[12px] leading-snug">
+                <a
+                  href={w.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-ink-300 underline-offset-2 transition-colors hover:text-accent-300 hover:underline"
+                >
+                  {w.title}
+                </a>
+                <p className="mt-0.5 text-ink-600">
+                  {w.journal} · {w.year}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </Collapse>
+    </div>
+  );
+}
+
 /* 명단 패널의 한 줄 — 지도 핀과 양방향으로 이어진다 */
 function AlumniCard({ entry, lng, faculty = false, navigate }) {
   const name = displayName(entry, lng);
@@ -471,6 +521,7 @@ export default function StudentsSection({ focus = null, personFocus = null, onCl
                     />
                   </div>
                   <WorksAccordion works={worksForStudent(e.personId)} />
+                  <PriorWorksAccordion priorWorks={e.priorWorks} />
                 </div>
               ) : (
                 <AlumniCard entry={e} lng={lng} faculty={!!e.isFaculty} navigate={navigate} />

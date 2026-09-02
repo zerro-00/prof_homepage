@@ -11,6 +11,7 @@
 //     (이예령 Li Yiling과 혼동 방지 — 두 사람은 완전히 다른 인물)
 //  7. 그룹 합계 = 졸업생 총원 (교수 임용 5 + 박사과정 7 + 기업 1 = 13)
 //     지도 배지 숫자와 실제 명단이 어긋나는 것을 기계적으로 차단한다
+//  8. priorWorks(연구실 합류 전 연구)가 교수님 논문 목록(79편)에 섞이지 않을 것
 
 import { CITY_PINS, CURRENT_MEMBERS } from "../src/data/alumni.js";
 import {
@@ -137,11 +138,35 @@ if (CURRENT_MEMBERS.length !== GROUPS.members)
 if (facultyN + phdN + industryN !== alumni.length)
   fail(`그룹 합계(${facultyN + phdN + industryN}) ≠ 졸업생 총원(${alumni.length})`);
 
+// 8. priorWorks(연구실 합류 전 연구)는 교수님 논문 목록과 완전히 분리돼 있어야 한다 (28차 §2).
+//    최정혜 교수님 공저가 아니므로 ALL_PUBLICATIONS에 섞이면 안 되고,
+//    제자 실적 편수(위 규칙 2)에도 합산되지 않아야 한다.
+const norm = (x) => x.replace(/\s+/g, " ").trim().toLowerCase();
+const pubTitles = new Set(EVERYTHING.map((p) => norm(p.title)));
+const everyone = [...CITY_PINS.flatMap((p) => p.entries), ...CURRENT_MEMBERS];
+let priorN = 0;
+for (const person of everyone) {
+  for (const w of person.priorWorks ?? []) {
+    priorN += 1;
+    if (pubTitles.has(norm(w.title)))
+      fail(`priorWorks가 교수님 논문 목록과 중복: ${person.nameKo} — ${w.title}`);
+    if (!w.url || !w.source)
+      fail(`priorWorks에 url/source 없음: ${person.nameKo} — ${w.title}`);
+  }
+}
+// priorWorks는 studentIds 기반 집계와 무관하다 — 논문 총 편수 79(SSCI 37 + KCI 42)와
+// 저서 4권이 그대로여야 한다.
+const paperN = SSCI_PUBLICATIONS.length + KCI_PUBLICATIONS.length;
+if (paperN !== 79)
+  fail(`교수님 논문 총 편수: ${paperN} (기대 79 — priorWorks를 섞지 말 것)`);
+if (BOOKS.length !== 4) fail(`저서: ${BOOKS.length} (기대 4)`);
+
 if (failed) process.exit(1);
 
 const sourced = EVERYTHING.filter((p) => p.authorSource).length;
 console.log(
   `✓ authorship OK — SSCI ${SSCI_PUBLICATIONS.length} · KCI ${KCI_PUBLICATIONS.length} · 저서 ${BOOKS.length}, ` +
     `저자 확정 ${sourced}건, ${Object.keys(EXPECTED).length}명 편수 검증 통과, ` +
-    `그룹 ${facultyN}+${phdN}+${industryN}=${alumni.length} · 재학생 ${CURRENT_MEMBERS.length}`
+    `그룹 ${facultyN}+${phdN}+${industryN}=${alumni.length} · 재학생 ${CURRENT_MEMBERS.length}, ` +
+    `합류 전 연구 ${priorN}편(목록 미포함)`
 );

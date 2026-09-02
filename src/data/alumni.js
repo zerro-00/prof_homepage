@@ -343,8 +343,43 @@ export const CURRENT_MEMBERS = [
   { personId: "hwang-inseo", nameKo: "황인서", nameEn: "Inseo Hwang" },
   { personId: "wu-jialing", nameKo: "오가령", nameEn: "Wu Jialing" },
   // TODO: 김연정 본인 KCI 연구자번호(KRI) 또는 CV 확보 후 교수님과의 공저 논문만 추가.
-  //       동명이인이 매우 많아 웹 검색으로 특정 불가 → 현재 배정 논문 0편.
-  { personId: "kim-yeonjeong", nameKo: "김연정", nameEn: null },
+  //       동명이인이 매우 많아 웹 검색으로 특정 불가 → 교수님 공저 논문은 현재 0편.
+  //
+  // ⚠️ priorWorks는 "연구실 합류 전" 논문이다 — 최정혜 교수님 공저가 아니다 (28차 §2).
+  //    publications.js(교수님 논문 79편)에 절대 넣지 않는다. 논문 섹션의 목록·검색·필터·
+  //    페이지네이션 어디에도 나타나지 않고, 제자 실적 배지(SSCI n · KCI n)에도 합산하지 않는다.
+  //    check-authorship.mjs 규칙 8이 이 분리를 기계적으로 강제한다.
+  {
+    personId: "kim-yeonjeong",
+    nameKo: "김연정",
+    nameEn: "Yeonjeong Kim", // DBpia 저자 표기로 확인 (저자 ID 385227137, 두 논문 동일 → 동일인)
+    priorWorks: [
+      {
+        title:
+          "How Medical Language Shapes Viewer Engagement: NLP-Based Analysis of Health-Related YouTube Videos",
+        journal: "지능정보연구",
+        volume: "32(2)",
+        pages: "187-208",
+        year: 2026,
+        authors: ["Yeonjeong Kim", "Junwoo Lee", "Hong Joo Lee"],
+        doi: "10.13088/jiis.2026.32.2.187",
+        url: "https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE12892387",
+        source: "DBpia 원문(2026.09.02 확인)",
+      },
+      {
+        title:
+          "Exploring Trends in Healthcare Open Source Software on GitHub: LLM-Based Topic Augmentation and Network Analysis",
+        journal: "지능정보연구",
+        volume: "31(3)",
+        pages: "273-292",
+        year: 2025,
+        authors: ["Yeonjeong Kim", "Hong Joo Lee"],
+        doi: "10.13088/jiis.2025.31.16.273",
+        url: "https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE12415250",
+        source: "DBpia 원문(2026.09.02 확인)",
+      },
+    ],
+  },
 ];
 
 // 재학생은 연세대(신촌) 위치에 중공(hollow) 원으로 표시한다 (§4-3).
