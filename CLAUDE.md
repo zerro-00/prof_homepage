@@ -242,6 +242,32 @@ src/
 | 윤여홍 | Yeohong Yoon | `yoon-yeohong` | 윤여림 | Yeo Lim Yoon | `yoon-yeolim` |
 | **김연정** (재학생) | 미확인 | `kim-yeonjeong` | | | |
 
+### `priorWorks` — 연구실 합류 전 연구 (28차 §2)
+
+**교수님 공저가 아닌 논문**을 제자 카드에만 보여주기 위한 필드다. `alumni.js`의 인물(entry)에 둔다.
+
+- ⚠️ **`publications.js`에 절대 넣지 않는다.** 그 파일은 최정혜 교수님 논문 목록이며
+  SSCI 37 · KCI 42 · 저서 4 · **논문 총 79편**이 불변이다.
+- 논문 섹션의 목록·검색·필터·페이지네이션 어디에도 나타나지 않는다.
+- **제자 실적 배지(`SSCI n · KCI n`)와 `worksForStudent()` 집계에 합산하지 않는다.**
+  `check-authorship.mjs`의 EXPECTED도 그대로 둔다 (김연정은 SSCI 0 · KCI 0 · 저서 0).
+- 화면에서는 기존 `연구실 공저 실적 N편 보기` 아래 **별도 접힘 항목**
+  `연구실 합류 전 연구 N편 보기`로 나온다 (`PriorWorksAccordion`).
+  구분은 **색·아이콘이 아니라 라벨 문구**로 한다. 펼치면 "최정혜 교수 공저가 아닙니다" 각주가 붙는다.
+- `priorWorks`가 없는 제자에게는 항목 자체를 렌더링하지 않는다.
+- 4개 국어 키: `students.priorWorksShow/Hide/Note`.
+- **다른 제자에게 추측으로 만들어 넣지 말 것.** 원문(`url`)과 확인 출처(`source`)가 있을 때만.
+  `authors`는 출처 표기 그대로 두고 수정하지 않는다.
+
+필드: `title · journal · volume · pages · year · authors[] · doi · url · source`.
+
+현재 등록: **김연정(`kim-yeonjeong`) 2편** — 지능정보연구 2026 32(2) / 2025 31(3),
+가톨릭대 이홍주 교수 공저. DBpia 저자 ID 385227137이 두 논문에서 동일해 동일인으로 확인(2026.09.02).
+
+`check-authorship.mjs` **규칙 8**이 다음을 강제한다:
+`priorWorks` 제목이 교수님 논문 목록과 겹치면 실패 / `url`·`source`가 없으면 실패 /
+논문 총 편수가 79가 아니면 실패.
+
 ### 학생 실적 연결 원칙 (중요)
 
 **학생 실적은 `publications.js`의 논문별 `authors` 배열 + `studentIds`(id 매칭)로만 연결한다. 이름 문자열 추론 절대 금지.**
@@ -257,29 +283,36 @@ src/
      (→ `Jikyung (Jeanne) Kim`을 김지연으로 배정하는 등 동명이인 오배정이 기계적으로 차단됨)
   6. `wu-jialing`(오가령) 배정 논문에는 반드시 `오가령`/`Wu Jialing` 표기가 있을 것
 
-#### 학생별 확정 편수 (14차 §3-6 + 15차 명단 정리 — 임의 변경 금지)
+#### 학생별 확정 편수 (27차 §9 Crossref 반영 — 임의 변경 금지)
+
+⚠️ **보류 2건 (표기 미등록 — 확인 전까지 배정 금지)**
+- `kwak-yushin` ↔ JoCA 2021 `Understanding Digital Consumers' Well-being`: Crossref 표기 `Youshin Kwak`.
+  같은 표기가 JBR 2026 OTT 논문에도 있고 `PERSON_NAMES`에도 이미 등록돼 있으나, 27차 지시로 이 논문만 보류했다.
+- `lee-jiyeon` ↔ 유통연구 2020 `날씨불쾌감…`: Crossref 표기 `Jiyeon Lee`.
+  `PERSON_NAMES["lee-jiyeon"]`에 영문 표기가 없어(한글 `이지연`뿐) 규칙 5를 통과하지 못한다.
+- 두 건 모두 코드에 `// TODO:`로 남아 있다. 해제하면 곽유신 SSCI 1→2, 이지연 KCI 0→1이 된다.
 
 | 학생 | id | SSCI | KCI | 저서 | 합계 |
 |---|---|---|---|---|---|
-| 이예령 | `li-yiling` | 4 | 10 | 0 | 14 |
-| 김지연 | `kim-jeeyeon` | 5 | 4 | 1 | 10 |
-| 조우용 | `jo-wooyong` | 5 | 3 | 0 | 8 |
+| 김지연 | `kim-jeeyeon` | 9 | 6 | 1 | 16 |
+| 이예령 | `li-yiling` | 4 | 11 | 0 | 15 |
+| 조우용 | `jo-wooyong` | 7 | 6 | 0 | 13 |
+| 김민경 | `kim-mingyung` | 3 | 3 | 1 | 7 |
+| 김혜정 | `kim-hyejeong` | 2 | 4 | 0 | 6 |
+| 윤여홍 | `yoon-yeohong` | 4 | 2 | 0 | 6 |
 | 김상화 | `kim-sanghwa` | 2 | 3 | 0 | 5 |
-| 김민경 | `kim-mingyung` | 2 | 2 | 1 | 5 |
-| 김혜정 | `kim-hyejeong` | 1 | 4 | 0 | 5 |
+| 정현우 | `jung-hyunwoo` | 1 | 4 | 0 | 5 |
 | 황인서 (재학생) | `hwang-inseo` | 1 | 3 | 0 | 4 |
-| 김우경 (재학생) | `kim-wookyoung` | 1 | 2 | 0 | 3 |
-| 정현우 | `jung-hyunwoo` | 0 | 3 | 0 | 3 |
-| 윤여홍 | `yoon-yeohong` | 3 | 0 | 0 | 3 |
-| 윤여림 | `yoon-yeolim` | 1 | 2 | 0 | 3 |
-| 곽유신 | `kwak-yushin` | 0 | 2 | 0 | 2 |
+| 김우경 (재학생) | `kim-wookyoung` | 1 | 3 | 0 | 4 |
+| 윤여림 | `yoon-yeolim` | 1 | 3 | 0 | 4 |
+| 곽유신 | `kwak-yushin` | 1 | 2 | 0 | 3 |
 | 장연 | `jiang-yan` | 1 | 1 | 0 | 2 |
 | 송혜신 | `song-hyeasinn` | 1 | 0 | 0 | 1 |
 | 오가령 (재학생) | `wu-jialing` | 0 | 1 | 0 | 1 |
 | 이지연 | `lee-jiyeon` | 0 | 0 | 0 | 0 |
 | 김연정 (재학생) | `kim-yeonjeong` | 0 | 0 | 0 | 0 |
 
-저자 확정 논문은 총 55건(SSCI 28 · KCI 26 · 저서 1). 나머지는 저자 미확인 → 배정 금지.
+저자 확정 논문은 총 69건. 나머지는 저자 미확인 → 배정 금지.
 
 ### 수상·연구비 (확정)
 
@@ -610,6 +643,18 @@ src/
 
 `index.css`의 `@media print` — 배경·발광 제거, 검정 텍스트, 네비/푸터/버튼/지도 숨김,
 접힘 영역 전체 펼침, 외부 링크 뒤에 URL 표기.
+
+## 빌드 게이트 (27차 조건 4)
+
+`npm run build` = **`lint` → `check-i18n` → `check-authorship` → `vite build`** 순서다.
+
+- `eslint.config.js`는 **`no-undef`와 `react/jsx-no-undef` 두 규칙만** 켠다.
+  목적은 하나 — **정의되지 않은 컴포넌트 참조를 빌드에서 잡는 것.**
+  27차에 `SearchBox` 정의가 지워졌는데 호출부가 남아 논문 섹션이 흰 화면으로 배포된 사고가 있었고,
+  당시 build는 이를 잡지 못했다.
+- **스타일·포매팅 규칙을 추가하지 말 것.** 켜는 순간 기존 코드 전체가 걸려 빌드가 막힌다.
+- `react-hooks` 플러그인은 **등록만 하고 규칙은 켜지 않는다** —
+  코드에 남아 있는 `eslint-disable` 주석의 규칙 이름을 해석하기 위해서다.
 
 ## 새 논문 추가 체크리스트 (19차 §10-⑤)
 
