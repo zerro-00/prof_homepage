@@ -41,6 +41,9 @@ const _SSCI = [
   },
   {
     id: "ssci-2026-02",
+    authors: ["Hyunwoo Jung", "Wooyong Jo", "Jeonghye Choi"],
+    studentIds: ["jung-hyunwoo", "jo-wooyong"],
+    authorSource: "Crossref DOI 10.1177/10949968251385583",
     title:
       "The Price of Prestige: When Do Price Premiums Drive or Deter Demand on Luxury Resale Platforms?",
     journal: "Journal of Interactive Marketing",
@@ -52,11 +55,11 @@ const _SSCI = [
   },
   {
     id: "ssci-2026-03",
+    authors: ["Yiling Li", "Jeonghye Choi", "Jeeyeon Kim"],
+    studentIds: ["li-yiling", "kim-jeeyeon"],
+    authorSource: "Crossref DOI 10.1108/JRIM-04-2025-0234",
     methods: ["log-panel-data"],
     methodSource: "요약 명시(공간·날씨와 앱 사용 데이터 분석)",
-    authors: ["Yiling Li", "Jeonghye Choi", "J. Kim"],
-    studentIds: ["li-yiling"],
-    authorSource: "출판사 원문 (14차 확정표)",
     doi: "10.1108/JRIM-04-2025-0234",
     title:
       "Weathering the Digital Shift: How Interaction Spaces and Weather Conditions Shape Mobile App Engagement",
@@ -120,9 +123,9 @@ const _SSCI = [
   },
   {
     id: "ssci-2025-02",
-    authors: ["Y. Yoon", "H. Kim", "Jeonghye Choi", "H. Cho"],
-    studentIds: [],
-    authorSource: "출판사 원문 (14차 확정표)",
+    authors: ["Yeohong Yoon", "Hyejeong Kim", "Jeonghye Choi", "Hyewon Cho"],
+    studentIds: ["yoon-yeohong", "kim-hyejeong"],
+    authorSource: "Crossref DOI 10.1080/02650487.2024.2444857",
     doi: "10.1080/02650487.2024.2444857",
     title:
       "Click, Sign-up and Purchase: Consumer Responses to Real-Time Mobile Offers along the Consumer Decision Journey",
@@ -302,6 +305,9 @@ const _SSCI = [
   },
   {
     id: "ssci-2022-05",
+    authors: ["Wooyong Jo", "Hyoryung Nam", "Jeonghye Choi"],
+    studentIds: ["jo-wooyong"],
+    authorSource: "Crossref DOI 10.1016/j.ijresmar.2021.10.001",
     title:
       "Opening up OTC Drug Market: Incumbent Firms' Performance and Responses to Market Deregulation",
     journal: "International Journal of Research in Marketing",
@@ -313,6 +319,10 @@ const _SSCI = [
   },
   {
     id: "ssci-2021-01",
+    // TODO: Youshin Kwak = 곽유신 여부 확인 필요 (27차 조건 1 — 확인 전까지 kwak-yushin 배정 보류)
+    authors: ["Youshin Kwak", "Jeeyeon Kim", "Yeolib Kim", "Jeonghye Choi"],
+    studentIds: ["kim-jeeyeon"],
+    authorSource: "Crossref DOI 10.1111/joca.12389",
     title:
       "Understanding Digital Consumers' Well-being in Asia: The Moderating Roles of Digital Natives and Privacy Concern",
     journal: "Journal of Consumer Affairs",
@@ -386,9 +396,9 @@ const _SSCI = [
   },
   {
     id: "ssci-2020-02",
-    authors: ["Yan Jiang", "J. Kim", "Jeonghye Choi", "M. Y. Kang"],
-    studentIds: ["jiang-yan"],
-    authorSource: "출판사 원문 (14차 확정표)",
+    authors: ["Yan Jiang", "Jeeyeon Kim", "Jeonghye Choi", "Moon Young Kang"],
+    studentIds: ["jiang-yan", "kim-jeeyeon"],
+    authorSource: "Crossref DOI 10.1016/j.jbusres.2019.08.025",
     title:
       "From Clicks to Bricks: The Impact of Product Launches in Offline Stores for Digital Retailers",
     journal: "Journal of Business Research",
@@ -442,6 +452,9 @@ const _SSCI = [
   },
   {
     id: "ssci-2019-03",
+    authors: ["Jeeyeon Kim", "Mingyung Kim", "Jeonghye Choi", "Minakshi Trivedi"],
+    studentIds: ["kim-jeeyeon", "kim-mingyung"],
+    authorSource: "Crossref DOI 10.1016/j.jbusres.2017.09.022",
     title:
       "Offline Social Interactions and Online Shopping Demand: Does the Degree of Social Interactions Matter?",
     journal: "Journal of Business Research",
@@ -609,6 +622,9 @@ const _KCI = [
   // ---------- 2025 ----------
   {
     id: "kci-2025-01",
+    authors: ["Wookyoung Kim", "Hyunwoo Jung", "Jeonghye Choi"],
+    studentIds: ["kim-wookyoung", "jung-hyunwoo"],
+    authorSource: "Crossref DOI 10.37202/kmmr.2025.30.3.1",
     title: "음식 배달 앱 수용에 대한 사회적 영향력 분석",
     journal: "마케팅관리연구",
     year: 2025,
@@ -619,6 +635,9 @@ const _KCI = [
   },
   {
     id: "kci-2025-02",
+    authors: ["Yiling Li", "Jeeyeon Kim", "Jeonghye Cho"],
+    studentIds: ["li-yiling", "kim-jeeyeon"],
+    authorSource: "Crossref DOI 10.56352/smj.2025.18.1.10",
     title: "메타버스 마케팅과 소비자의 브랜드 참여: 럭셔리 패션 브랜드를 중심으로",
     journal: "서비스마케팅저널",
     year: 2025,
@@ -833,6 +852,10 @@ const _KCI = [
   },
   {
     id: "kci-2022-07",
+    // 'Hye-jin Kim'은 배정 금지 표기다 — 김혜정으로 연결하지 말 것.
+    authors: ["Boram Do", "Yeo Lim Yoon", "Hye-jin Kim", "Jeonghye Choi"],
+    studentIds: ["yoon-yeolim"],
+    authorSource: "Crossref DOI 10.37674/ceoms.25.4.1",
     methods: ["log-panel-data"],
     methodSource: "요약 명시(온라인 구직 행동 데이터)",
     title:
@@ -907,6 +930,10 @@ const _KCI = [
   },
   {
     id: "kci-2020-03",
+    // TODO: 'Jiyeon Lee' = 이지연 여부 확인 필요 — PERSON_NAMES에 영문 표기가 없어 lee-jiyeon 배정 보류
+    authors: ["Jiyeon Lee", "Yeohong Yoon", "Jeonghye Choi", "Yerim Chung"],
+    studentIds: ["yoon-yeohong"],
+    authorSource: "Crossref DOI 10.17657/jcr.2020.01.31.1",
     title: "날씨불쾌감과 쇼핑선호도가 소매점 선택에 미치는 영향",
     journal: "유통연구",
     year: 2020,
@@ -1046,6 +1073,9 @@ const _KCI = [
   },
   {
     id: "kci-2016-03",
+    authors: ["Yeohong Yoon", "Wooyong Jo", "Jeonghye Choi", "Yerim Chung"],
+    studentIds: ["yoon-yeohong", "jo-wooyong"],
+    authorSource: "Crossref DOI 10.5392/jkca.2016.16.11.223",
     title:
       "온라인 게임 규제와 청소년의 시선: 규제 대상자들의 반발심과 또래문화를 중심으로",
     journal: "한국콘텐츠학회논문지",
@@ -1067,6 +1097,9 @@ const _KCI = [
   },
   {
     id: "kci-2016-05",
+    authors: ["Jeeyeon Kim", "Jeonghye Choi", "Yerim Chung"],
+    studentIds: ["kim-jeeyeon"],
+    authorSource: "Crossref DOI 10.17657/jcr.2016.07.31.2",
     title: "매장 내·외부 환경과 지역 시장 환경이 매장 성과에 미치는 영향",
     journal: "유통연구",
     year: 2016,
@@ -1077,6 +1110,9 @@ const _KCI = [
   },
   {
     id: "kci-2016-06",
+    authors: ["Wooyong Jo", "Jeonghye Choi"],
+    studentIds: ["jo-wooyong"],
+    authorSource: "Crossref DOI 10.5392/jkca.2016.16.02.295",
     title:
       "게임 머니와 캐시 머니 소비에 관한 실증 연구: 경험, 성취, 지역적 격차를 중심으로",
     journal: "한국콘텐츠학회논문지",
@@ -1088,6 +1124,9 @@ const _KCI = [
   },
   {
     id: "kci-2015-03",
+    authors: ["Jungmin Son", "Mingyung Kim", "Jeonghye Choi"],
+    studentIds: ["kim-mingyung"],
+    authorSource: "Crossref DOI 10.17287/kmr.2015.44.6.1609",
     title: "소비자의 지역 이주가 온라인 브랜드 선호변화차이에 미치는 영향",
     journal: "경영학연구",
     year: 2015,
@@ -1111,6 +1150,9 @@ const _KCI = [
   },
   {
     id: "kci-2014-03",
+    authors: ["Jungmin Son", "Wooyong Jo", "Jeonghye Choi"],
+    studentIds: ["jo-wooyong"],
+    authorSource: "Crossref DOI 10.7737/jkorms.2014.39.4.115",
     title: "온라인 게임의 고객 유형별 이탈 요인: 신규 고객과 기존 고객을 중심으로",
     journal: "한국경영과학회지",
     year: 2014,
