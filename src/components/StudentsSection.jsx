@@ -400,7 +400,8 @@ export default function StudentsSection({ focus = null, personFocus = null, onCl
       {/* 지도 — 섹션 전체 폭 (25차 §2).
           ⚠️ 좌측 명단 패널을 되살리지 말 것 — 260px에서 이름·소속이 잘려 지저분했고,
           지도 아래 제자 카드 그리드가 이미 전원을 담고 있어 중복이었다. */}
-      <div ref={mapRef} className="scroll-mt-20 xl:mx-[calc(50%-50vw)] xl:px-8">
+      {/* 29차 §3 — full-bleed 해제. 지도는 본문 컨테이너 폭 안에 둔다. */}
+      <div ref={mapRef} className="scroll-mt-20">
         <Suspense
           fallback={
             <div className="flex h-64 items-center justify-center rounded-2xl border border-line bg-surface-2 text-sm text-ink-600">

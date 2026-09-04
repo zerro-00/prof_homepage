@@ -8,7 +8,7 @@ import { worksForStudent } from "../data/publications.js";
 import geoData from "../data/countries-110m.json";
 
 // §3 지도 확대 — full-bleed 폭을 전부 쓰고, 남극을 잘라내 북반구를 크게 잡는다.
-// viewBox 1120×650(비 0.58)은 1440px 화면의 full-bleed 폭에서 자연 높이가 620px을 넘긴다.
+// 29차 §3에서 full-bleed를 해제하고 높이를 420px(1440px 이상 480px)로 줄였다.
 // scale 240 / center [15, 12]에서 모든 핀(휴스턴 x172 ~ 멜버른 x998, y185~536)이 여백 안에 든다.
 const MAP_W = 1120;
 const MAP_H = 650;
@@ -22,9 +22,9 @@ const PROJECTION = geoNaturalEarth1()
   .center(PROJECTION_CONFIG.center)
   .translate([MAP_W / 2, MAP_H / 2]);
 
-// 핀이 커진 만큼(5→7px) 겹침 판정·분리 거리도 비례해서 키운다
-const OVERLAP_PX = 11;
-const SPREAD_PX = 8;
+// 핀 축소(7→5px)에 맞춰 겹침 판정·분리 거리도 같은 비율로 줄인다 (29차 §3)
+const OVERLAP_PX = 8;
+const SPREAD_PX = 6;
 
 function layoutPins(pins) {
   const pts = pins.map((pin) => ({ pin, xy: PROJECTION(pin.coordinates) ?? [0, 0], dx: 0, dy: 0 }));
@@ -235,10 +235,10 @@ export default function WorldMap({
     <div>
       <div
         className={`relative overflow-hidden rounded-2xl border border-line bg-surface-2 ${
-          compact ? "" : "flex items-center xl:min-h-[620px] [@media(min-width:1440px)]:min-h-[720px]"
+          compact ? "" : "flex items-center xl:min-h-[420px] [@media(min-width:1440px)]:min-h-[480px]"
         }`}
         onMouseLeave={() => onHoverPin(null)}
-        style={compact ? { height: 340 } : undefined}
+        style={compact ? { height: 300 } : undefined}
       >
         <div
           className="pointer-events-none absolute inset-0"
@@ -288,14 +288,14 @@ export default function WorldMap({
             {arcs.map((a, i) => {
               const dim = highlightPinId && highlightPinId !== a.id;
               const lit = highlightPinId === a.id;
-              const base = a.faculty ? 0.36 : 0.28;
+              const base = a.faculty ? 0.28 : 0.22; // 29차 §3 — 지도 축소에 맞춰 호를 옅게
               return (
                 <path
                   key={a.id}
                   className={`arc-line${instant ? " is-instant" : ""}`}
                   d={a.d}
                   pathLength="1"
-                  strokeWidth={1.2}
+                  strokeWidth={0.8}
                   strokeDasharray="1"
                   style={{
                     stroke: a.faculty ? "var(--arc-faculty)" : "var(--arc)",
@@ -316,7 +316,7 @@ export default function WorldMap({
             const core = isFaculty ? "var(--pin-faculty)" : "var(--pin)";
             const coreActive = isFaculty ? "var(--pin-faculty-active)" : "var(--pin-active)";
             const ring = isFaculty ? "var(--pin-faculty-active)" : "var(--pin-ring)";
-            const r = isHot ? 9.5 : isFaculty ? 8 : 7;
+            const r = isHot ? 7 : isFaculty ? 6 : 5;
             const spread = dx !== 0 || dy !== 0;
             return (
               <Marker
@@ -347,9 +347,9 @@ export default function WorldMap({
                     {/* 호가 도착하면 핀 팝인 */}
                     {(isHot || (isFaculty && !isMembers)) && (
                       <circle
-                        r={11}
+                        r={8.5}
                         fill="none"
-                        strokeWidth={1.6}
+                        strokeWidth={1.4}
                         className="pin-pulse"
                         style={{ stroke: ring }}
                       />
@@ -412,7 +412,7 @@ export default function WorldMap({
                     className="pointer-events-none hidden select-none md:block"
                     style={{
                       fontFamily: "'Space Grotesk', sans-serif",
-                      fontSize: 15,
+                      fontSize: 13,
                       fontWeight: isHot ? 700 : 500,
                       letterSpacing: "0.08em",
                       fill: isHot ? "var(--pin-active)" : "var(--map-label)",
