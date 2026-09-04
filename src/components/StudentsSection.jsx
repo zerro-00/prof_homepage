@@ -67,10 +67,26 @@ function WorksBadge({ works, personId, name, navigate }) {
   );
 }
 
-function WorksAccordion({ works }) {
+/* 제자 연구 실적 — 라벨 하나로 통일한다 (29차 §2)
+   교수님 공저 논문(worksForStudent)과 alumni.js의 priorWorks를 화면에서만 한 목록으로 합쳐
+   `연구 실적 N편 보기`로 보여준다. 화면에 `공저`·`합류 전` 같은 구분 문구를 두지 않는다.
+   ⚠️ 집계 규칙은 그대로다 — priorWorks는 publications.js(교수님 논문 79편)와 분리돼 있고
+   논문 섹션의 목록·검색·필터에도, 실적 배지(SSCI n · KCI n)에도 합산되지 않는다. */
+function WorksAccordion({ works, priorWorks }) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
-  if (!works || works.length === 0) return null;
+  const items = [
+    ...(works || []),
+    ...(priorWorks || []).map((w) => ({
+      title: w.title,
+      journal: w.journal,
+      year: w.year,
+      url: w.url,
+      type: null,
+      top: false,
+    })),
+  ].sort((a, b) => (b.year || 0) - (a.year || 0));
+  if (items.length === 0) return null;
   return (
     <div className="mt-3">
       <button
@@ -83,86 +99,51 @@ function WorksAccordion({ works }) {
           ▸
         </span>
         {open
-          ? t("students.worksHide", { count: works.length })
-          : t("students.worksShow", { count: works.length })}
+          ? t("students.worksHide", { count: items.length })
+          : t("students.worksShow", { count: items.length })}
       </button>
       <Collapse open={open}>
         <ul className="mt-2.5 space-y-2 border-l border-line pl-3">
-          {works.map((w, i) => (
+          {items.map((w, i) => (
             <li key={i} className="text-[12px] leading-snug">
               <p className="text-ink-300">
                 {w.top && <TopStar className="mr-1" title={t("students.topJournal")} />}
-                {w.title}
+                {w.url ? (
+                  <a
+                    href={w.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline-offset-2 transition-colors hover:text-accent-300 hover:underline"
+                  >
+                    {w.title}
+                  </a>
+                ) : (
+                  w.title
+                )}
               </p>
               <p className="mt-0.5 text-ink-600">
-                <span
-                  style={{
-                    color:
-                      w.type === "SSCI"
-                        ? "var(--ssci-text)"
-                        : w.type === "KCI"
-                          ? "var(--kci-text)"
-                          : "var(--color-gold-300)",
-                  }}
-                >
-                  {w.type === "BOOK" ? t("students.book") : w.type}
-                </span>
-                <span className="mx-1.5">·</span>
+                {w.type && (
+                  <>
+                    <span
+                      style={{
+                        color:
+                          w.type === "SSCI"
+                            ? "var(--ssci-text)"
+                            : w.type === "KCI"
+                              ? "var(--kci-text)"
+                              : "var(--color-gold-300)",
+                      }}
+                    >
+                      {w.type === "BOOK" ? t("students.book") : w.type}
+                    </span>
+                    <span className="mx-1.5">·</span>
+                  </>
+                )}
                 {w.journal} · {w.year}
               </p>
             </li>
           ))}
         </ul>
-      </Collapse>
-    </div>
-  );
-}
-
-/* 연구실 합류 전 연구 (28차 §2)
-   ⚠️ 최정혜 교수님 공저가 아니다. alumni.js의 priorWorks에만 있고
-   publications.js(교수님 논문 79편)와는 완전히 분리돼 있다 —
-   논문 섹션의 목록·검색·필터에 나타나지 않고 실적 배지에도 합산되지 않는다.
-   연구실 공저 실적과는 색·아이콘이 아니라 라벨 문구로 구분한다. */
-function PriorWorksAccordion({ priorWorks }) {
-  const { t } = useTranslation();
-  const [open, setOpen] = useState(false);
-  if (!priorWorks || priorWorks.length === 0) return null;
-  return (
-    <div className="mt-2">
-      <button
-        type="button"
-        onClick={() => setOpen((v) => !v)}
-        className="inline-flex items-center gap-1.5 text-xs text-ink-500 transition-colors hover:text-accent-300"
-        aria-expanded={open}
-      >
-        <span aria-hidden="true" className={`inline-block transition-transform ${open ? "rotate-90" : ""}`}>
-          ▸
-        </span>
-        {open
-          ? t("students.priorWorksHide", { count: priorWorks.length })
-          : t("students.priorWorksShow", { count: priorWorks.length })}
-      </button>
-      <Collapse open={open}>
-        <div className="mt-2.5 border-l border-line pl-3">
-          <p className="text-[11px] leading-snug text-ink-600">{t("students.priorWorksNote")}</p>
-          <ul className="mt-2 space-y-2">
-            {priorWorks.map((w, i) => (
-              <li key={i} className="text-[12px] leading-snug">
-                <a
-                  href={w.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-ink-300 underline-offset-2 transition-colors hover:text-accent-300 hover:underline"
-                >
-                  {w.title}
-                </a>
-                <p className="mt-0.5 text-ink-600">
-                  {w.journal} · {w.year}
-                </p>
-              </li>
-            ))}
-          </ul>
-        </div>
       </Collapse>
     </div>
   );
@@ -235,7 +216,7 @@ function AlumniCard({ entry, lng, faculty = false, navigate }) {
           </div>
         </>
       )}
-      <WorksAccordion works={works} />
+      <WorksAccordion works={works} priorWorks={entry.priorWorks} />
     </div>
   );
 }
@@ -520,8 +501,7 @@ export default function StudentsSection({ focus = null, personFocus = null, onCl
                       navigate={navigate}
                     />
                   </div>
-                  <WorksAccordion works={worksForStudent(e.personId)} />
-                  <PriorWorksAccordion priorWorks={e.priorWorks} />
+                  <WorksAccordion works={worksForStudent(e.personId)} priorWorks={e.priorWorks} />
                 </div>
               ) : (
                 <AlumniCard entry={e} lng={lng} faculty={!!e.isFaculty} navigate={navigate} />
