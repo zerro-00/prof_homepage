@@ -11,7 +11,10 @@ const StudentsSection = lazy(() => import("./components/StudentsSection.jsx"));
 const Publications = lazy(() => import("./components/Publications.jsx"));
 const Awards = lazy(() => import("./components/Awards.jsx"));
 
-const SECTION_IDS = ["profile", "interests", "alumni", "publications", "awards"];
+// 순서는 학교 공식 페이지(ysb.yonsei.ac.kr)를 따른다 (30차 §2):
+// 학력·경력 → 강의/연구관심분야 → 논문·저서 → 학술활동·수상 → 기타(제자)
+// 해시 문자열(#profile #interests #publications #awards #alumni)은 그대로 두고 순서만 바꾼다.
+const SECTION_IDS = ["profile", "interests", "publications", "awards", "alumni"];
 
 // 해시는 "#publications?journal=..." 형태를 가질 수 있다 (논문 섹션의 저널 선택 유지).
 // 섹션 판정은 "?" 앞부분만 본다.

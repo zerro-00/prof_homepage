@@ -1256,7 +1256,7 @@ export default function Publications({ focus = null, studentFilter = null, onCle
   return (
     <section id="publications" data-surface="paper" className="relative mx-auto max-w-6xl px-5 py-20 md:px-8 md:py-28">
       <SectionHeading
-        index="04"
+        index="03"
         label={t("sections.publications.label")}
         title={t("sections.publications.title")}
         desc={t("sections.publications.desc")}

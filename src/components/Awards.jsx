@@ -36,7 +36,7 @@ export default function Awards() {
   return (
     <section id="awards" data-surface="field" className="relative mx-auto max-w-6xl px-5 md:px-8 py-20 md:py-28">
       <SectionHeading
-        index="05"
+        index="04"
         label={t("sections.awards.label")}
         title={t("sections.awards.title")}
         desc={t("sections.awards.desc")}
