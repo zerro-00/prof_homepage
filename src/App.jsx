@@ -283,7 +283,7 @@ export default function App() {
                   type="button"
                   onClick={() => navigate(id)}
                   aria-current={isActive ? "page" : undefined}
-                  className={`relative shrink-0 rounded-lg px-2.5 md:px-3 py-1.5 text-[13px] transition-colors ${
+                  className={`relative shrink-0 rounded-lg px-3.5 py-1.5 text-[15px] font-medium transition-colors md:px-5 md:text-[17px] ${
                     isActive
                       ? "text-ink-100"
                       : "text-ink-500 hover:text-ink-100 hover:bg-surface-3"
