@@ -121,14 +121,24 @@ export function TopStar({ title, className = "" }) {
 
 // 접힘 영역 — max-height 트랜지션(300ms)으로 펼칠 때 레이아웃 점프를 막는다.
 // 닫힌 동안에는 visibility:hidden(=탭 포커스 제외)이 300ms 뒤에 걸린다 (index.css .collapse-region).
+//
+// ⚠️ 30차 §1 — 내용이 잘리던 원인과 처방 (되돌리지 말 것):
+//  ① 안쪽 래퍼는 `display: flow-root`여야 한다. 그냥 블록이면 첫 자식의 위 마진
+//     (`mt-2.5` = 10px)이 래퍼 밖으로 **마진 상쇄**돼 `scrollHeight`에 잡히지 않는다.
+//     그 결과 max-height가 실제 필요 높이보다 ~10px 모자라 마지막 줄이 반쯤 잘렸다.
+//  ② 소수점 높이(예: 61.5px)가 내림되지 않게 `Math.ceil`로 올린다.
+//  ③ 펼침 트랜지션이 끝나면 높이 고정을 풀고(`max-height: none`) `overflow: visible`로
+//     되돌린다 — 폰트 로드·언어 전환·줄바꿈 변화로 내용이 나중에 커져도 잘리지 않는다.
 export function Collapse({ open, children, className = "" }) {
   const innerRef = useRef(null);
   const [height, setHeight] = useState(0);
+  // 펼침이 끝난 뒤에만 true. 닫힐 때는 다시 false가 되어 px 높이에서 0으로 트랜지션한다.
+  const [settled, setSettled] = useState(false);
 
   useEffect(() => {
     const el = innerRef.current;
     if (!el) return;
-    const measure = () => setHeight(el.scrollHeight);
+    const measure = () => setHeight(Math.ceil(el.getBoundingClientRect().height));
     measure();
     if (typeof ResizeObserver === "undefined") return;
     const ro = new ResizeObserver(measure);
@@ -136,12 +146,23 @@ export function Collapse({ open, children, className = "" }) {
     return () => ro.disconnect();
   }, [children]);
 
+  useEffect(() => {
+    if (!open) {
+      setSettled(false);
+      return;
+    }
+    const t = setTimeout(() => setSettled(true), 340); // 트랜지션 300ms + 여유
+    return () => clearTimeout(t);
+  }, [open]);
+
   return (
     <div
-      className={`collapse-region ${open ? "is-open" : ""} ${className}`}
-      style={{ maxHeight: open ? height : 0 }}
+      className={`collapse-region ${open ? "is-open" : ""} ${settled ? "is-settled" : ""} ${className}`}
+      style={{ maxHeight: open ? (settled ? "none" : height) : 0 }}
     >
-      <div ref={innerRef}>{children}</div>
+      <div ref={innerRef} style={{ display: "flow-root" }}>
+        {children}
+      </div>
     </div>
   );
 }

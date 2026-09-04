@@ -417,6 +417,10 @@ html[lang="ja"] body {
     max-height 300ms cubic-bezier(0.22, 1, 0.36, 1),
     visibility 0s linear 0s;
 }
+/* 펼침이 끝난 뒤에는 높이 고정을 풀고 잘림 위험을 없앤다 (30차 §1) */
+.collapse-region.is-settled {
+  overflow: visible;
+}
 
 @media (prefers-reduced-motion: reduce) {
   .collapse-region {
