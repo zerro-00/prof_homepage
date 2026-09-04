@@ -253,6 +253,7 @@ export default function WorldMap({
           projectionConfig={PROJECTION_CONFIG}
           width={MAP_W}
           height={MAP_H}
+          className={compact ? undefined : "xl:max-h-[420px] [@media(min-width:1440px)]:max-h-[480px]"}
           style={compact ? { width: "100%", height: "100%" } : { width: "100%", height: "auto" }}
           aria-label={t("map.svgLabel")}
         >
